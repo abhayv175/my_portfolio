@@ -24,7 +24,7 @@ export default function About() {
 
 
       <p className="mb-3">
-        I am
+        I am a Software engineer
       </p>
 
 
