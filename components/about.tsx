@@ -24,20 +24,12 @@ export default function About() {
 
 
       <p className="mb-3">
-        I am a Software engineer
-      </p>
+       I am a Test Engineer based in Vilnius, specializing in mobile hardware and software quality. With professional experience at companies like Marquistech and Unity, I bring a meticulous approach to debugging, regression testing, and network analysis. Beyond testing, I am a Full-Stack Developer who loves building with React, Next.js, and Dart. I am dedicated to the "how it works" and "how to make it better" of technology, from the hardware modem level to the front-end user interface.      </p>
+       <p>
 
 
 
-
-
-      <p>
-        <span className="italic">When I'm not coding</span>, I enjoy playing
-        video games, watching movies, and playing with my dog. I also enjoy{" "}
-        <span className="font-medium">learning new things</span>. I am currently
-        learning about{" "}
-        <span className="font-medium">history and philosophy</span>. I'm also
-        learning how to play the guitar.
+        <span className="italic">When I'm not coding, I am reading about philosphy, history or geopolitics. </span>
       </p>
 
 

@@ -7,9 +7,7 @@ export default function Footer() {
         &copy; Created with ❤️ by Abhay Verma
       </small>
       <p className="text-xs">
-        <span className="font-semibold">About this website:</span> built with
-        React & Next.js (App Router & Server Actions), TypeScript, Tailwind CSS,
-        Framer Motion, React Email & Resend, Vercel hosting.
+        <span className="font-semibold">Thanks for scrolling all the way to the bottom </span>
       </p>
     </footer>
   );
