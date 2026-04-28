@@ -96,7 +96,7 @@ export const projectsData = [
       "Move It is a swift and secure courier service featuring a sleek, easy-to-navigate website for effortless pickup scheduling and real-time shipment tracking.",
     tags: ["CSS", "Bootstrap", "JavaScript","React js", "MongoDB"],
     imageUrl: rmtdevImg,
-    url: "https://abhayverma2108.github.io/MOVE-IT/"
+    url: "https://abhayv175.github.io/MOVE-IT/"
   },
   {
     title: "Passenger Text",
@@ -104,7 +104,7 @@ export const projectsData = [
       "A modern messenger clone that enables real-time communication and seamless media sharing through a robust, cloud-integrated architecture.",
     tags: ["React", "Typescript", "nextauth", "cloudinary", "pusher", "mongoDB"],
     imageUrl: corpcommentImg,
-    url: "https://abhayverma2108.github.io/MOVE-IT/"
+    url: "https://abhayv175.github.io/MOVE-IT/"
   },
   {
     title: "BANKING APPLICATION",
@@ -112,7 +112,7 @@ export const projectsData = [
       "This JavaFX-based banking application features a custom-styled, user-friendly interface that enables seamless execution of various financial operations.",
     tags: ["Java", "JavaFX", "CSS", "SceneBuilder(fxml)"],
     imageUrl: wordanalyticsImg,
-    url: "https://abhayverma2108.github.io/MOVE-IT/"
+    url: "https://abhayv175.github.io/MOVE-IT/"
   },
   {
     title: "GREEK VOC",
@@ -120,7 +120,7 @@ export const projectsData = [
       "This Dart-powered mobile application helps users master Greek travel and food vocabulary by tracking learning progress and tasks through efficient local storage.",
     tags: ["Flutter", "Dart", "Swift", "Android Studio", "Emulators"],
     imageUrl: wordanalyticsImg,
-    url: "https://abhayverma2108.github.io/MOVE-IT/"
+    url: "https://abhayv175.github.io/MOVE-IT/"
   },
   {
     title: "PIKA PANIC",
@@ -128,7 +128,7 @@ export const projectsData = [
       "Pika Panic is an immersive Unity game featuring levels inspired by real-world Vilnius landmarks that blend creative storytelling with technical precision.",
     tags: ["Unity", "C#", "Plastic SCM"],
     imageUrl: wordanalyticsImg,
-    url: "https://abhayverma2108.github.io/MOVE-IT/"
+    url: "https://abhayv175.github.io/MOVE-IT/"
   },
 ] as const;
 
