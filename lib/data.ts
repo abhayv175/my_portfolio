@@ -6,9 +6,12 @@ import { FaUnity } from "react-icons/fa";
 import { MdOutlineWork } from "react-icons/md";
 import { MdEngineering } from "react-icons/md";
 
-import corpcommentImg from "@/public/corpcomment.png";
-import rmtdevImg from "@/public/rmtdev.png";
-import wordanalyticsImg from "@/public/wordanalytics.png";
+import MoveIt from "@/public/Moveit.png";
+import PassengerText from "@/public/PassengerText.png";
+import BankingSystem from "@/public/BankingSystem.png";
+import PikaPanic from "@/public/PikaPanic.png";
+import GreekVoc from "@/public/GreekVoc.png";
+
 import { url } from "inspector";
 
 export const links = [
@@ -95,7 +98,7 @@ export const projectsData = [
     description:
       "Move It is a swift and secure courier service featuring a sleek, easy-to-navigate website for effortless pickup scheduling and real-time shipment tracking.",
     tags: ["CSS", "Bootstrap", "JavaScript","React js", "MongoDB"],
-    imageUrl: rmtdevImg,
+    imageUrl: MoveIt,
     url: "https://abhayv175.github.io/MOVE-IT/"
   },
   {
@@ -103,32 +106,32 @@ export const projectsData = [
     description:
       "A modern messenger clone that enables real-time communication and seamless media sharing through a robust, cloud-integrated architecture.",
     tags: ["React", "Typescript", "nextauth", "cloudinary", "pusher", "mongoDB"],
-    imageUrl: corpcommentImg,
-    url: "https://abhayv175.github.io/MOVE-IT/"
+    imageUrl: PassengerText,
+    url: "https://github.com/abhayv175/passenger-messenger"
   },
   {
     title: "BANKING APPLICATION",
     description:
       "This JavaFX-based banking application features a custom-styled, user-friendly interface that enables seamless execution of various financial operations.",
     tags: ["Java", "JavaFX", "CSS", "SceneBuilder(fxml)"],
-    imageUrl: wordanalyticsImg,
-    url: "https://abhayv175.github.io/MOVE-IT/"
+    imageUrl: BankingSystem,
+    url: "https://github.com/abhayv175/Bank_Application"
   },
   {
     title: "GREEK VOC",
     description:
       "This Dart-powered mobile application helps users master Greek travel and food vocabulary by tracking learning progress and tasks through efficient local storage.",
     tags: ["Flutter", "Dart", "Swift", "Android Studio", "Emulators"],
-    imageUrl: wordanalyticsImg,
-    url: "https://abhayv175.github.io/MOVE-IT/"
+    imageUrl: GreekVoc,
+    url: "https://github.com/BenBinary/greek_vocs"
   },
   {
     title: "PIKA PANIC",
     description:
       "Pika Panic is an immersive Unity game featuring levels inspired by real-world Vilnius landmarks that blend creative storytelling with technical precision.",
     tags: ["Unity", "C#", "Plastic SCM"],
-    imageUrl: wordanalyticsImg,
-    url: "https://abhayv175.github.io/MOVE-IT/"
+    imageUrl: PikaPanic,
+    url: "https://cloud.unity.com/home/organizations/24756934479511c6-4dab-94d2-c940bf45f6a4/details"
   },
 ] as const;
 
