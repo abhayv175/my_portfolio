@@ -6,7 +6,7 @@ import { FaUnity } from "react-icons/fa";
 import { MdOutlineWork } from "react-icons/md";
 import { MdEngineering } from "react-icons/md";
 
-import MoveIt from "@/public/Moveit.png";
+import MoveIt from "@/public/MoveIt.png";
 import PassengerText from "@/public/PassengerText.png";
 import BankingSystem from "@/public/BankingSystem.png";
 import PikaPanic from "@/public/PikaPanic.png";
