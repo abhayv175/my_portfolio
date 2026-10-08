@@ -53,7 +53,7 @@ export const experiencesData = [
     description:
       "I capture and analyze device and network logs using tools like QXDM, QCAT, and ADB to identify modem, RF, and protocol-level issues in new, unreleased 4G modems for major OEMs. My work involves reproducing and validating network-related problems, such as attach failures and handover issues, while performing root-cause analysis through detailed KPI tracking like RSRP and SINR. I document these findings with comprehensive logs and impact assessments, sharing structured reports with chipset and carrier teams to drive debugging and successful software acceptance testing.",
     icon: React.createElement(MdEngineering),
-    date: "2021 - present",
+    date: "December 9, 2025 - September 7, 2026",
   },
   {
     title: "Junior Test Engineer",
