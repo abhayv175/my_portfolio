@@ -2,7 +2,9 @@
 
 A modern, high-performance personal portfolio built with **Next.js 15 (App Router)**, **Tailwind CSS**, and **Framer Motion**. Designed around an Apple-inspired **Liquid Glass** aesthetic, featuring specular light highlights, dynamic multi-layer backdrop blurs, organic pill geometry, and 60fps GPU-accelerated micro-interactions.
 
-[![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=for-the-badge&logo=vercel)](https://vercel.com)
+🌐 **Live Website**: [https://abhayv175.netlify.app](https://abhayv175.netlify.app)
+
+[![Deployed on Netlify](https://img.shields.io/badge/Deployed%20on-Netlify-00C7B7?style=for-the-badge&logo=netlify&logoColor=white)](https://abhayv175.netlify.app)
 [![Next.js 15](https://img.shields.io/badge/Next.js-15-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4-38B2AC?style=for-the-badge&logo=tailwind-css)](https://tailwindcss.com/)
 [![Framer Motion](https://img.shields.io/badge/Framer_Motion-11-black?style=for-the-badge&logo=framer)](https://www.framer.com/motion/)
@@ -155,12 +157,17 @@ The portfolio's visual language is built upon Apple VisionOS and macOS liquid gl
 
 ## 🌐 Deployment
 
-The easiest way to deploy this portfolio is using the [Vercel Platform](https://vercel.com/new):
+This portfolio is deployed on [Netlify](https://www.netlify.com/):
 
+🔗 **Live Website**: [https://abhayv175.netlify.app](https://abhayv175.netlify.app)
+
+### Deploying to Netlify
 1. Push your code to a GitHub repository.
-2. Import the project into Vercel.
-3. Add the `RESEND_API_KEY` environment variable in the Vercel project settings.
-4. Click **Deploy**.
+2. Log into [Netlify](https://app.netlify.com/) and click **Add new site > Import an existing project**.
+3. Select your GitHub repository.
+4. Netlify will automatically detect Next.js with `@netlify/plugin-nextjs`.
+5. Add the `RESEND_API_KEY` environment variable under **Site configuration > Environment variables**.
+6. Click **Deploy portfolio**.
 
 ---
 
