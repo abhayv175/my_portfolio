@@ -1,40 +1,75 @@
+
 "use client";
 
-import React from "react";
+import React, { useRef } from "react";
 import SectionHeading from "./section-heading";
-import { motion } from "framer-motion";
+import { motion, useInView } from "framer-motion";
 import { useSectionInView } from "@/lib/hooks";
 
+const cardVariants = {
+  hidden: {
+    scale: 0.75,
+    opacity: 0,
+    y: 30,
+    transition: {
+      duration: 0.6,
+      ease: [0.25, 0.1, 0.25, 1],
+    },
+  },
+  visible: {
+    scale: 1,
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.6,
+      ease: [0.25, 0.1, 0.25, 1],
+    },
+  },
+};
+
 export default function About() {
-  const { ref } = useSectionInView("About");
+  const { ref: sectionRef } = useSectionInView("About", 0.4);
+  const motionRef = useRef<HTMLDivElement>(null);
+  const isInView = useInView(motionRef, {
+    once: false,
+    margin: "-80px 0px -80px 0px",
+  });
 
   return (
-    <motion.section
-      ref={ref}
-      className="mb-28 max-w-[45rem] text-center leading-8 sm:mb-40 scroll-mt-28"
-      initial={{ opacity: 0, y: 100 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.175 }}
+    <section
       id="about"
+      ref={sectionRef}
+      className="mb-24 max-w-[46rem] text-center sm:mb-32 scroll-mt-28"
     >
-      <SectionHeading>About me</SectionHeading>
+      <div ref={motionRef} className="w-full">
+        <motion.div
+          initial="hidden"
+          animate={isInView ? "visible" : "hidden"}
+          variants={cardVariants}
+        >
+          <SectionHeading>About me</SectionHeading>
 
+          <p className="mb-5 leading-relaxed font-normal text-lg sm:text-xl text-gray-800 dark:text-white/90">
+            I am a Software Engineer with experience in website and
+            application development, software testing, system design,
+            database management, and FTP server management. Having worked
+            with companies like Unity and Marquistech, I have developed a
+            strong foundation in building, testing, debugging, and improving
+            software systems. My development experience includes React,
+            Next.js, and Dart. I am currently shifting my focus toward
+            Artificial Intelligence and Machine Learning, exploring new
+            ways to solve complex problems and build smarter applications.
+            I enjoy understanding how technology works, from backend
+            infrastructure and databases to user-facing applications.
+          </p>
 
-
-
-
-      <p className="mb-3">
-       I am a Test Engineer based in Vilnius, specializing in mobile hardware and software quality. With professional experience at companies like Marquistech and Unity, I bring a meticulous approach to debugging, regression testing, and network analysis. Beyond testing, I am a Full-Stack Developer who loves building with React, Next.js, and Dart. I am dedicated to the "how it works" and "how to make it better" of technology, from the hardware modem level to the front-end user interface.      </p>
-       <p>
-
-
-
-        <span className="italic">When I'm not coding, I am reading about philosphy, history or geopolitics. </span>
-      </p>
-
-
-
-
-    </motion.section>
+          <p className="text-base sm:text-lg leading-relaxed text-gray-600 dark:text-gray-300 font-normal">
+            When I&apos;m not coding, I enjoy reading about philosophy,
+            history, and geopolitics.
+          </p>
+        </motion.div>
+      </div>
+    </section>
   );
 }
+

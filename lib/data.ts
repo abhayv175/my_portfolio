@@ -12,8 +12,6 @@ import BankingSystem from "@/public/BankingSystem.png";
 import PikaPanic from "@/public/PikaPanic.png";
 import GreekVoc from "@/public/GreekVoc.png";
 
-import { url } from "inspector";
-
 export const links = [
   {
     name: "Home",
@@ -76,65 +74,76 @@ export const experiencesData = [
   {
     title: "Software Developer Intern",
     company: "Infowiz",
-    location: "Chandigard, India",
+    location: "Chandigarh, India",
     description:
       "As my first professional internship, this experience provided a foundational understanding of industry standards and collaborative workflows. I worked closely with a team to develop entry-level projects, gaining practical insights into the software development lifecycle while simultaneously earning my CCNA certification to strengthen my networking expertise.",
     icon: React.createElement(MdOutlineWork),
     date: "May, 2023 - July, 2023",
   },
- 
-
 ] as const;
 
-
-
-
-
-
 export const projectsData = [
-  
-   {
-    title: "Move it",
+  {
+    title: "Move It",
     description:
       "Move It is a swift and secure courier service featuring a sleek, easy-to-navigate website for effortless pickup scheduling and real-time shipment tracking.",
-    tags: ["CSS", "Bootstrap", "JavaScript","React js", "MongoDB"],
+    tags: ["React.js", "JavaScript", "Bootstrap", "CSS", "MongoDB"],
     imageUrl: MoveIt,
-    url: "https://abhayv175.github.io/MOVE-IT/"
+    url: "https://abhayv175.github.io/MOVE-IT/",
   },
   {
     title: "Passenger Text",
     description:
       "A modern messenger clone that enables real-time communication and seamless media sharing through a robust, cloud-integrated architecture.",
-    tags: ["React", "Typescript", "nextauth", "cloudinary", "pusher", "mongoDB"],
+    tags: ["React", "TypeScript", "NextAuth", "Cloudinary", "Pusher", "MongoDB"],
     imageUrl: PassengerText,
-    url: "https://github.com/abhayv175/passenger-messenger"
+    url: "https://github.com/abhayv175/passenger-messenger",
   },
   {
-    title: "BANKING APPLICATION",
+    title: "Banking Application",
     description:
       "This JavaFX-based banking application features a custom-styled, user-friendly interface that enables seamless execution of various financial operations.",
-    tags: ["Java", "JavaFX", "CSS", "SceneBuilder(fxml)"],
+    tags: ["Java", "JavaFX", "CSS", "SceneBuilder"],
     imageUrl: BankingSystem,
-    url: "https://github.com/abhayv175/Bank_Application"
+    url: "https://github.com/abhayv175/Bank_Application",
   },
   {
-    title: "GREEK VOC",
+    title: "Greek Voc",
     description:
       "This Dart-powered mobile application helps users master Greek travel and food vocabulary by tracking learning progress and tasks through efficient local storage.",
-    tags: ["Flutter", "Dart", "Swift", "Android Studio", "Emulators"],
+    tags: ["Flutter", "Dart", "Swift", "Android Studio"],
     imageUrl: GreekVoc,
-    url: "https://github.com/BenBinary/greek_vocs"
+    url: "https://github.com/BenBinary/greek_vocs",
   },
   {
-    title: "PIKA PANIC",
+    title: "Pika Panic",
     description:
       "Pika Panic is an immersive Unity game featuring levels inspired by real-world Vilnius landmarks that blend creative storytelling with technical precision.",
     tags: ["Unity", "C#", "Plastic SCM"],
     imageUrl: PikaPanic,
-    url: "https://cloud.unity.com/home/organizations/24756934479511c6-4dab-94d2-c940bf45f6a4/details"
+    url: "https://cloud.unity.com/home/organizations/24756934479511c6-4dab-94d2-c940bf45f6a4/details",
   },
 ] as const;
 
 export const skillsData = [
-  "Cross Platform Testing", "regression", "Structured Debugging", "Jira", "API Testing", "REST API", "React Js", "Next Js", "UI/UX", "MongoDB", "MS SQL", "C#", "C++", "Python", "JavaScript", "Plastic SCM", "Android Studio", "GitHub", "Linux", "custom operating systems",
+  "Cross Platform Testing",
+  "Regression Testing",
+  "Structured Debugging",
+  "Jira",
+  "API Testing",
+  "REST API",
+  "React.js",
+  "Next.js",
+  "UI/UX",
+  "MongoDB",
+  "MS SQL",
+  "C#",
+  "C++",
+  "Python",
+  "JavaScript",
+  "Plastic SCM",
+  "Android Studio",
+  "GitHub",
+  "Linux",
+  "Custom OS Testing",
 ] as const;

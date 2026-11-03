@@ -1,8 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    // 1. Add the specific quality used in your project to satisfy the Next.js 16 requirement
-    qualities: [25, 50, 75, 95], 
+    formats: ["image/avif", "image/webp"],
+    qualities: [25, 50, 75, 80, 95], 
     remotePatterns: [
       {
         protocol: "https",

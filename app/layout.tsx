@@ -1,13 +1,11 @@
-import Header from "@/components/header";
 import "./globals.css";
-import { Inter } from "next/font/google";
+import Header from "@/components/header";
+import AmbientGlow from "@/components/ambient-glow";
 import ActiveSectionContextProvider from "@/context/active-section-context";
 import Footer from "@/components/footer";
 import ThemeSwitch from "@/components/theme-switch";
 import ThemeContextProvider from "@/context/theme-context";
 import { Toaster } from "react-hot-toast";
-
-const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
   title: "Abhay Verma | Personal Portfolio",
@@ -20,12 +18,26 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="!scroll-smooth">
+    <html lang="en" className="dark !scroll-smooth" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              try {
+                if (localStorage.getItem('theme') === 'light') {
+                  document.documentElement.classList.remove('dark');
+                } else {
+                  document.documentElement.classList.add('dark');
+                }
+              } catch (_) {}
+            `,
+          }}
+        />
+      </head>
       <body
-        className={`${inter.className} bg-gray-50 text-gray-950 relative pt-28 sm:pt-36 dark:bg-gray-900 dark:text-gray-50 dark:text-opacity-90`}
+        className="font-sans relative min-h-screen bg-transparent text-gray-950 dark:text-gray-50 overflow-x-clip"
       >
-        <div className="bg-[#CF9FFF] absolute top-[-6rem] -z-10 right-[1rem] h-[51.25rem] w-[41.25rem] rounded-full blur-[10rem] sm:w-[68.75rem]"></div>
-        <div className="bg-[#F08000] absolute top-[10rem] -z-10 left-[-10rem] h-[31.25rem] w-[50.25rem] rounded-full blur-[14rem] sm:w-[68.75rem] md:left-[-33rem] lg:left-[-28rem] xl:left-[-15rem] 2xl:elft-[-5rem] "></div>
+        <AmbientGlow />
 
         <ThemeContextProvider>
           <ActiveSectionContextProvider>

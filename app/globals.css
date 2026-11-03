@@ -2,14 +2,115 @@
 @tailwind components;
 @tailwind utilities;
 
-html {
-  --line-color: #e5e7eb;
+:root {
+  --line-color: #d1d5db;
+  --bg-color: #f8fafc;
+  --text-color: #0f172a;
 }
 
-html.dark {
-  --line-color: rgba(255, 255, 255, 0.2);
+.dark {
+  --line-color: rgba(255, 255, 255, 0.35);
+  --bg-color: #09090b;
+  --text-color: #f4f4f5;
+}
+
+html {
+  scroll-behavior: smooth !important;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+
+body {
+  font-family: "Plus Jakarta Sans", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  color: var(--text-color);
+  background-color: transparent;
+  overflow-x: clip;
 }
 
 .borderBlack {
-  @apply border border-black/10;
+  border: 1px solid rgba(0, 0, 0, 0.15);
 }
+
+.dark .borderBlack {
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Fast, smooth 0.8s entrance fade up */
+@keyframes entranceFadeUp {
+  0% {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-entrance {
+  animation: entranceFadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: opacity, transform;
+}
+
+/* Smooth ambient glow fade in */
+@keyframes glowFadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.animate-glow-in {
+  animation: glowFadeIn 0.8s ease-out forwards;
+}
+
+/* Header slide in */
+@keyframes headerSlideDown {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -100%);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+.animate-header-in {
+  animation: headerSlideDown 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: opacity, transform;
+}
+
+/* Frosted glass & hover for timeline elements */
+.vertical-timeline-element-content {
+  border-radius: 1rem !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  transition: background-color 300ms ease-in-out, border-color 300ms ease-in-out, box-shadow 300ms ease-in-out !important;
+}
+
+.vertical-timeline-element-content:hover {
+  background: rgba(0, 0, 0, 0.035) !important;
+  border-color: rgba(0, 0, 0, 0.25) !important;
+  box-shadow: 0 14px 28px -5px rgba(0, 0, 0, 0.12), 0 10px 14px -6px rgba(0, 0, 0, 0.08) !important;
+}
+
+.vertical-timeline-element-content:hover .vertical-timeline-element-content-arrow {
+  border-right-color: rgba(0, 0, 0, 0.25) !important;
+}
+
+.dark .vertical-timeline-element-content:hover {
+  background: rgba(255, 255, 255, 0.12) !important;
+  border-color: rgba(255, 255, 255, 0.35) !important;
+  box-shadow: 0 12px 32px -4px rgba(0, 0, 0, 0.6) !important;
+}
+
+.dark .vertical-timeline-element-content:hover .vertical-timeline-element-content-arrow {
+  border-right-color: rgba(255, 255, 255, 0.35) !important;
+}
+
+
+
+
