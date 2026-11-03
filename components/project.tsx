@@ -74,7 +74,7 @@ export default function Project({
         {/* Layer 2: Inner Visual Card - Scales on hover without hijacking pointer events from siblings */}
         <div
           style={{ backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden" }}
-          className="w-full origin-center pointer-events-none transform-gpu transition-[transform,opacity,box-shadow] duration-500 ease-out group-hover/list:opacity-40 group-hover/list:scale-95 group-hover/card:!opacity-100 group-hover/card:!scale-125 md:group-hover/card:!scale-[1.3] group-focus-within/card:!opacity-100 group-focus-within/card:!scale-125 md:group-focus-within/card:!scale-[1.3]"
+          className="w-full origin-center pointer-events-none transform-gpu transition-[transform,opacity,box-shadow] duration-500 ease-out group-hover/list:opacity-40 group-hover/list:scale-95 group-hover/card:!opacity-100 group-hover/card:!scale-[1.03] sm:group-hover/card:!scale-105 md:group-hover/card:!scale-[1.3] group-focus-within/card:!opacity-100 group-focus-within/card:!scale-[1.03] sm:group-focus-within/card:!scale-105 md:group-focus-within/card:!scale-[1.3]"
         >
           <section
             className="bg-transparent max-w-[42rem] border border-black/10 group-hover/card:border-black/25 rounded-2xl overflow-hidden relative sm:h-[20rem] group-hover/card:bg-black/[0.035] transition-[background-color,border-color,box-shadow] duration-500 ease-out sm:pr-8 sm:group-even:pl-8 dark:text-white dark:bg-white/5 dark:group-hover/card:bg-white/[0.12] dark:border-white/15 dark:group-hover/card:border-white/35 backdrop-blur-[16px] shadow-[0_4px_20px_-2px_rgba(0,0,0,0.08)] dark:shadow-[0_4px_20px_-2px_rgba(0,0,0,0.3)] group-hover/card:shadow-[0_25px_60px_rgba(0,0,0,0.35)] dark:group-hover/card:shadow-[0_25px_60px_rgba(0,0,0,0.7)]"
@@ -88,7 +88,7 @@ export default function Project({
               className="block sm:hidden w-full h-48 object-cover object-top"
             />
 
-            <div className="p-6 sm:py-8 sm:px-8 sm:max-w-[54%] flex flex-col h-full sm:group-even:ml-[18rem]">
+            <div className="p-5 sm:py-8 sm:px-8 sm:max-w-[54%] flex flex-col h-full sm:group-even:ml-[18rem]">
               <h3 className="text-2xl font-bold tracking-tight leading-snug text-gray-900 dark:text-white">
                 {title}
               </h3>
