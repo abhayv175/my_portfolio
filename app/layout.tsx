@@ -18,7 +18,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="dark !scroll-smooth" suppressHydrationWarning>
+    <html lang="en" className="dark !scroll-smooth min-h-[100dvh] w-full" suppressHydrationWarning>
       <head>
         <script
           dangerouslySetInnerHTML={{
@@ -35,7 +35,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className="font-sans relative min-h-screen bg-transparent text-gray-950 dark:text-gray-50 overflow-x-clip"
+        className="font-sans relative min-h-[100dvh] w-full bg-transparent text-gray-950 dark:text-gray-50 overflow-x-clip"
       >
         <AmbientGlow />
 

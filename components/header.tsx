@@ -145,7 +145,7 @@ export default function Header() {
           backfaceVisibility: "hidden",
           isolation: "isolate",
         }}
-        className="fixed top-4 right-4 sm:top-6 sm:right-6 z-[9999] pointer-events-auto isolate md:hidden w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center bg-black/30 hover:bg-black/45 dark:bg-black/50 dark:hover:bg-black/70 border border-white/20 hover:border-white/35 dark:border-white/10 dark:hover:border-white/25 shadow-[0_4px_20px_rgba(0,0,0,0.25)] backdrop-blur-md transform-gpu cursor-pointer outline-none transition-colors duration-300 group overflow-hidden"
+        className="fixed top-4 right-4 sm:top-6 sm:right-6 z-[9999] pointer-events-auto isolate md:hidden w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center bg-white/65 hover:bg-white/80 dark:bg-slate-900/55 dark:hover:bg-slate-900/75 border border-white/80 hover:border-white ring-1 ring-slate-900/10 dark:ring-0 dark:border-white/30 dark:hover:border-white/45 shadow-[0_8px_30px_rgba(0,0,0,0.12),inset_0_1px_2px_rgba(255,255,255,0.9)] hover:shadow-[0_12px_36px_rgba(0,0,0,0.16),inset_0_1px_2px_rgba(255,255,255,1)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.25),inset_0_1px_1px_rgba(255,255,255,0.35)] dark:hover:shadow-[0_12px_36px_rgba(0,0,0,0.35),inset_0_1px_1px_rgba(255,255,255,0.45)] backdrop-blur-2xl backdrop-saturate-150 transform-gpu cursor-pointer outline-none transition-colors duration-300 group overflow-hidden"
       >
         {/* Subtle radial sheen on hover */}
         <div
@@ -155,7 +155,7 @@ export default function Header() {
 
         <div className="flex items-center justify-center transform-gpu [backface-visibility:hidden] relative z-10 pointer-events-none select-none">
           <svg
-            className="w-5 h-5 sm:w-6 sm:h-6 text-white stroke-[2.5] drop-shadow-[0_0_8px_rgba(255,255,255,0.4)] select-none pointer-events-none"
+            className="w-5 h-5 sm:w-6 sm:h-6 text-slate-900 dark:text-white stroke-[2.5] drop-shadow-[0_0_6px_rgba(0,0,0,0.15)] dark:drop-shadow-[0_0_8px_rgba(255,255,255,0.4)] select-none pointer-events-none transition-colors duration-200"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
@@ -209,7 +209,7 @@ export default function Header() {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.25 }}
               onClick={() => setIsOpen(false)}
-              className="fixed inset-0 z-[9995] bg-black/40 dark:bg-black/60 backdrop-blur-sm md:hidden pointer-events-auto"
+              className="fixed inset-0 z-[9995] bg-black/20 dark:bg-black/60 backdrop-blur-sm md:hidden pointer-events-auto"
               aria-hidden="true"
             />
 
@@ -223,9 +223,9 @@ export default function Header() {
                 backdropFilter: "blur(28px) saturate(150%)",
                 WebkitBackdropFilter: "blur(28px) saturate(150%)",
               }}
-              className="fixed top-[4.5rem] right-4 sm:top-[5.5rem] sm:right-6 z-[9998] w-[calc(100vw-2rem)] max-w-xs md:hidden bg-slate-900/60 dark:bg-black/60 backdrop-blur-2xl backdrop-saturate-150 rounded-3xl border border-white/15 dark:border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] p-3 flex flex-col gap-1 pointer-events-auto"
+              className="fixed top-[4.5rem] right-4 sm:top-[5.5rem] sm:right-6 z-[9998] w-[78%] max-w-[260px] md:hidden bg-white/80 border border-black/10 text-slate-900 backdrop-blur-xl shadow-2xl dark:bg-slate-900/80 dark:border-white/10 dark:text-white dark:backdrop-blur-xl dark:shadow-[0_20px_50px_rgba(0,0,0,0.5)] rounded-3xl p-2.5 sm:p-3 flex flex-col gap-1 pointer-events-auto"
             >
-              <ul className="flex flex-col gap-1 w-full">
+              <ul className="flex flex-col gap-1 w-full rounded-2xl p-1 bg-white/60 border border-black/5 text-slate-800 dark:bg-white/10 dark:border-white/10 dark:text-white">
                 {links.map((link) => {
                   const isActive = activeSection === link.name;
 
@@ -239,10 +239,10 @@ export default function Header() {
                           setIsOpen(false);
                         }}
                         className={clsx(
-                          "flex items-center justify-between py-2.5 px-4 rounded-full text-[0.95rem] transition-colors duration-200 relative whitespace-nowrap cursor-pointer",
+                          "flex items-center justify-between py-2.5 px-4 rounded-full text-[0.92rem] transition-colors duration-200 relative whitespace-nowrap cursor-pointer",
                           isActive
-                            ? "text-white font-semibold"
-                            : "text-white/70 hover:text-white hover:bg-white/5 font-medium"
+                            ? "text-slate-900 dark:text-white font-semibold"
+                            : "text-slate-700 dark:text-white/80 hover:text-slate-900 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10 font-medium"
                         )}
                       >
                         <span className="relative z-10">{link.name}</span>
@@ -250,7 +250,7 @@ export default function Header() {
                         {isActive && (
                           <motion.div
                             layoutId="activeMobileSection"
-                            className="absolute inset-0 rounded-full bg-white/15 dark:bg-white/10 border border-white/10 shadow-sm"
+                            className="absolute inset-0 rounded-full bg-black/5 dark:bg-white/15 border border-black/5 dark:border-white/15 shadow-sm"
                             transition={{
                               type: "spring",
                               stiffness: 380,
@@ -260,7 +260,7 @@ export default function Header() {
                         )}
 
                         {isActive && (
-                          <span className="w-2 h-2 rounded-full bg-white/90 shadow-[0_0_8px_rgba(255,255,255,0.8)] relative z-10" />
+                          <span className="w-2 h-2 rounded-full bg-slate-900 dark:bg-white shadow-[0_0_8px_rgba(15,23,42,0.35)] dark:shadow-[0_0_8px_rgba(255,255,255,0.8)] relative z-10" />
                         )}
                       </motion.a>
                     </li>

@@ -8,7 +8,7 @@ export default function SubmitBtn() {
   return (
     <button
       type="submit"
-      className="w-fit mx-auto mt-6 px-8 py-3 rounded-full bg-white/15 hover:bg-white/25 text-white font-medium backdrop-blur-md border border-white/20 shadow-lg hover:scale-105 active:scale-95 transition-all duration-300 flex items-center justify-center gap-2 group disabled:scale-100 disabled:opacity-65 cursor-pointer disabled:cursor-not-allowed outline-none focus-visible:ring-2 focus-visible:ring-white/50"
+      className="px-8 py-3.5 rounded-full font-medium transition-all duration-300 flex items-center justify-center gap-2 w-fit mx-auto mt-6 active:scale-95 hover:scale-105 bg-slate-900 text-white hover:bg-slate-800 shadow-md dark:bg-white/20 dark:text-white dark:border dark:border-white/20 dark:hover:bg-white/30 dark:backdrop-blur-md group disabled:scale-100 disabled:opacity-65 cursor-pointer disabled:cursor-not-allowed outline-none focus-visible:ring-2 focus-visible:ring-slate-900/50 dark:focus-visible:ring-white/50"
       disabled={pending}
     >
       {pending ? (

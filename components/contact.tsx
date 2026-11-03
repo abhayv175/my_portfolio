@@ -138,7 +138,7 @@ export default function Contact() {
             <span>or through this form.</span>
           </p>
 
-          <div className="mt-8 w-full p-6 sm:p-10 rounded-3xl bg-white/5 dark:bg-black/20 backdrop-blur-2xl border border-white/15 dark:border-white/10 shadow-[0_20px_60px_rgba(0,0,0,0.3)]">
+          <div className="mt-8 w-full p-6 sm:p-10 rounded-3xl bg-white/70 border border-black/10 shadow-xl backdrop-blur-xl dark:bg-black/30 dark:border-white/10 dark:shadow-[0_20px_50px_rgba(0,0,0,0.4)]">
             <form
               ref={formRef}
               noValidate
@@ -159,10 +159,10 @@ export default function Contact() {
                     }
                   }}
                   className={clsx(
-                    "h-14 px-5 rounded-2xl bg-white/10 dark:bg-white/5 backdrop-blur-xl border text-white placeholder:text-white/70 dark:placeholder:text-white/60 focus:outline-none focus:bg-white/15 dark:focus:bg-white/10 transition-all duration-300 text-base shadow-sm",
+                    "h-14 px-5 rounded-2xl backdrop-blur-xl bg-black/5 text-slate-900 placeholder:text-slate-500 dark:bg-white/5 dark:text-white dark:placeholder:text-white/60 focus:outline-none transition-all duration-300 text-base shadow-sm",
                     errors.email
-                      ? "border-rose-500/50 focus:border-rose-400 focus:ring-2 focus:ring-rose-500/20"
-                      : "border-white/20 dark:border-white/10 focus:border-white/50 focus:ring-2 focus:ring-white/20"
+                      ? "border border-rose-500/50 focus:border-rose-400 focus:ring-2 focus:ring-rose-500/20"
+                      : "border border-black/15 dark:border-white/10 focus:ring-2 focus:ring-slate-900/20 dark:focus:ring-white/20"
                   )}
                 />
                 <AnimatePresence>
@@ -172,9 +172,9 @@ export default function Contact() {
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -6 }}
                       transition={{ duration: 0.2, ease: "easeOut" }}
-                      className="inline-flex items-center gap-1.5 px-3 py-1 mt-1.5 text-xs rounded-full bg-rose-500/15 border border-rose-500/30 text-rose-200 backdrop-blur-md w-fit"
+                      className="inline-flex items-center gap-1.5 px-3 py-1 mt-1.5 text-xs rounded-full bg-rose-500/15 border border-rose-500/30 text-rose-700 dark:text-rose-200 backdrop-blur-md w-fit"
                     >
-                      <BsExclamationCircle className="text-[0.75rem] text-rose-300 flex-shrink-0" />
+                      <BsExclamationCircle className="text-[0.75rem] text-rose-600 dark:text-rose-300 flex-shrink-0" />
                       <span>{errors.email}</span>
                     </motion.div>
                   )}
@@ -193,10 +193,10 @@ export default function Contact() {
                     }
                   }}
                   className={clsx(
-                    "h-48 p-5 rounded-2xl bg-white/10 dark:bg-white/5 backdrop-blur-xl border text-white placeholder:text-white/70 dark:placeholder:text-white/60 focus:outline-none focus:bg-white/15 dark:focus:bg-white/10 transition-all duration-300 text-base leading-relaxed resize-none shadow-sm",
+                    "h-48 p-5 rounded-2xl backdrop-blur-xl bg-black/5 text-slate-900 placeholder:text-slate-500 dark:bg-white/5 dark:text-white dark:placeholder:text-white/60 focus:outline-none transition-all duration-300 text-base leading-relaxed resize-none shadow-sm",
                     errors.message
-                      ? "border-rose-500/50 focus:border-rose-400 focus:ring-2 focus:ring-rose-500/20"
-                      : "border-white/20 dark:border-white/10 focus:border-white/50 focus:ring-2 focus:ring-white/20"
+                      ? "border border-rose-500/50 focus:border-rose-400 focus:ring-2 focus:ring-rose-500/20"
+                      : "border border-black/15 dark:border-white/10 focus:ring-2 focus:ring-slate-900/20 dark:focus:ring-white/20"
                   )}
                 />
                 <AnimatePresence>
@@ -206,9 +206,9 @@ export default function Contact() {
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -6 }}
                       transition={{ duration: 0.2, ease: "easeOut" }}
-                      className="inline-flex items-center gap-1.5 px-3 py-1 mt-1.5 text-xs rounded-full bg-rose-500/15 border border-rose-500/30 text-rose-200 backdrop-blur-md w-fit"
+                      className="inline-flex items-center gap-1.5 px-3 py-1 mt-1.5 text-xs rounded-full bg-rose-500/15 border border-rose-500/30 text-rose-700 dark:text-rose-200 backdrop-blur-md w-fit"
                     >
-                      <BsExclamationCircle className="text-[0.75rem] text-rose-300 flex-shrink-0" />
+                      <BsExclamationCircle className="text-[0.75rem] text-rose-600 dark:text-rose-300 flex-shrink-0" />
                       <span>{errors.message}</span>
                     </motion.div>
                   )}

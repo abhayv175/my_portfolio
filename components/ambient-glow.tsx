@@ -7,11 +7,11 @@ export default function AmbientGlow() {
   return (
     <div
       aria-hidden="true"
-      className="fixed inset-0 -z-50 pointer-events-none transform-gpu overflow-hidden select-none"
+      className="fixed inset-0 -z-10 w-full min-h-[100dvh] pointer-events-none transform-gpu overflow-hidden select-none"
     >
       {/* Light Mode Background & Gradient Layer (Base) */}
-      <div className="absolute inset-0 bg-slate-50 transform-gpu overflow-hidden">
-        <div className="absolute inset-0 pointer-events-none animate-glow-in">
+      <div className="absolute inset-0 w-full h-full min-h-[100dvh] bg-slate-50 transform-gpu overflow-hidden">
+        <div className="absolute inset-0 w-full h-full pointer-events-none animate-glow-in">
           {/* Top-Right Violet / Purple Glow (Vibrant Light Mode) */}
           <div className="absolute top-[-4rem] sm:top-[-6rem] right-[-8rem] sm:right-[1rem] opacity-90 pointer-events-none">
             <motion.div
@@ -54,10 +54,10 @@ export default function AmbientGlow() {
 
       {/* Dark Mode Background & Gradient Layer (Smooth GPU Opacity Cross-Fade) */}
       <div
-        className="absolute inset-0 bg-[#09090b] transform-gpu overflow-hidden opacity-0 dark:opacity-100 transition-opacity duration-300 ease-out will-change-[opacity]"
+        className="absolute inset-0 w-full h-full min-h-[100dvh] bg-[#09090b] transform-gpu overflow-hidden opacity-0 dark:opacity-100 transition-opacity duration-300 ease-out will-change-[opacity]"
         style={{ willChange: "opacity" }}
       >
-        <div className="absolute inset-0 pointer-events-none animate-glow-in">
+        <div className="absolute inset-0 w-full h-full pointer-events-none animate-glow-in">
           {/* Top-Right Soft Purple Glow (Dark Mode) */}
           <div className="absolute top-[-4rem] sm:top-[-6rem] right-[-8rem] sm:right-[1rem] opacity-100 pointer-events-none">
             <motion.div
