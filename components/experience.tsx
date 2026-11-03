@@ -15,28 +15,23 @@ import { motion, AnimatePresence } from "framer-motion";
 
 const cardVariants = {
   hidden: {
-    scale: 0.8,
     opacity: 0,
-    y: 50,
     transition: {
-      duration: 0.6,
+      duration: 0.5,
       ease: [0.25, 0.1, 0.25, 1],
     },
   },
   visible: {
-    scale: 1,
     opacity: 1,
-    y: 0,
     transition: {
-      duration: 0.6,
+      duration: 0.5,
       ease: [0.25, 0.1, 0.25, 1],
     },
   },
   exit: {
-    scale: 0.8,
     opacity: 0,
     transition: {
-      duration: 0.6,
+      duration: 0.3,
       ease: [0.25, 0.1, 0.25, 1],
     },
   },
@@ -71,10 +66,22 @@ export default function Experience() {
   }, [activeIndex]);
 
   return (
-    <section id="experience" ref={ref} className="scroll-mt-28 mb-24 sm:mb-32">
+    <section
+      id="experience"
+      ref={ref}
+      className="scroll-mt-28 mb-24 sm:mb-32 w-full max-w-xl md:max-w-6xl mx-auto px-4 sm:px-6 md:px-0"
+    >
       <style>{`
         #experience .vertical-timeline-element-content {
           transition: transform 500ms cubic-bezier(0.16, 1, 0.3, 1), background-color 300ms ease-in-out, border-color 300ms ease-in-out, box-shadow 300ms ease-in-out, opacity 300ms ease-in-out !important;
+        }
+        #experience .vertical-timeline-element {
+          margin: 0 !important;
+        }
+        @media (max-width: 640px) {
+          #experience .vertical-timeline-element-content {
+            padding: 1.25rem 1.25rem !important;
+          }
         }
       `}</style>
       <SectionHeading>My experience</SectionHeading>
@@ -82,6 +89,7 @@ export default function Experience() {
         <VerticalTimeline
           animate={false}
           lineColor={theme === "light" ? "#d1d5db" : "rgba(255, 255, 255, 0.35)"}
+          className="space-y-12 sm:space-y-16 md:space-y-24"
         >
           {experiencesData.map((item, index) => (
             <motion.div
@@ -90,12 +98,13 @@ export default function Experience() {
               initial="hidden"
               whileInView="visible"
               exit="exit"
-              viewport={{ once: false, margin: "-100px 0px -100px 0px" }}
+              viewport={{ once: true, margin: "-40px 0px" }}
+              className="mb-12 sm:mb-16 md:mb-24 last:mb-0 w-full"
             >
               <VerticalTimelineElement
                 position={index % 2 === 0 ? "left" : "right"}
                 onTimelineElementClick={() => setActiveIndex(index)}
-                textClassName="cursor-pointer group/card hover:scale-105 hover:shadow-2xl transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] transform-gpu will-change-transform select-none"
+                textClassName="cursor-pointer group/card hover:scale-[1.02] sm:hover:scale-105 hover:shadow-2xl transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] transform-gpu will-change-transform select-none"
                 contentStyle={{
                   background:
                     theme === "light" ? "transparent" : "rgba(255, 255, 255, 0.05)",
@@ -198,7 +207,7 @@ export default function Experience() {
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.25, ease: "easeInOut" }}
                 onClick={() => setActiveIndex(null)}
-                className="fixed inset-0 z-40 z-[10000] bg-black/40 dark:bg-black/60 backdrop-blur-xl cursor-pointer"
+                className="fixed inset-0 z-40 z-[10000] bg-black/40 dark:bg-black/60 backdrop-blur-xl cursor-pointer touch-none overscroll-none"
                 aria-label="Close modal overlay"
               />
             )}
@@ -210,7 +219,7 @@ export default function Experience() {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.25 }}
-                className="fixed inset-0 z-50 z-[10001] flex items-center justify-center p-4 sm:p-6 pointer-events-none [perspective:1200px]"
+                className="fixed inset-0 z-50 z-[10001] flex items-center justify-center p-3 sm:p-6 pointer-events-none [perspective:1200px]"
               >
                 <motion.div
                   key={`experience-card-${activeIndex}`}
@@ -224,7 +233,7 @@ export default function Experience() {
                   exit={{ opacity: 0, scale: 0.7, rotateY: 90, y: 20 }}
                   transition={{ type: "spring", stiffness: 220, damping: 24 }}
                   onClick={() => setActiveIndex(null)}
-                  className="pointer-events-auto cursor-pointer w-[90vw] md:w-[50vw] max-w-3xl min-h-[45vh] max-h-[85vh] overflow-y-auto p-8 sm:p-12 flex flex-col justify-center relative bg-white/75 dark:bg-slate-900/80 backdrop-blur-3xl backdrop-saturate-150 border border-white/50 dark:border-white/20 shadow-[0_30px_80px_rgba(0,0,0,0.45)] rounded-3xl select-none"
+                  className="pointer-events-auto cursor-pointer w-[92vw] max-w-lg md:w-[50vw] md:max-w-3xl min-h-[40vh] max-h-[85vh] overflow-y-auto p-5 sm:p-8 md:p-12 flex flex-col justify-center relative bg-white/75 dark:bg-slate-900/80 backdrop-blur-3xl backdrop-saturate-150 border border-white/50 dark:border-white/20 shadow-[0_30px_80px_rgba(0,0,0,0.45)] rounded-2xl sm:rounded-3xl select-none"
                 >
                   {/* Close Button Hint */}
                   <button
@@ -233,7 +242,7 @@ export default function Experience() {
                       e.stopPropagation();
                       setActiveIndex(null);
                     }}
-                    className="absolute top-5 right-5 sm:top-6 sm:right-6 w-9 h-9 rounded-full bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/20 transition-colors flex items-center justify-center text-gray-500 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
+                    className="absolute top-4 right-4 sm:top-6 sm:right-6 w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/20 transition-colors flex items-center justify-center text-gray-500 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
                     aria-label="Close experience details"
                   >
                     <svg
@@ -252,23 +261,23 @@ export default function Experience() {
                   </button>
 
                   {/* Header with Icon, Title, and Company */}
-                  <div className="flex items-start gap-4 sm:gap-5 mb-5 sm:mb-6 pr-8">
-                    <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-2xl flex-shrink-0 flex items-center justify-center text-2xl sm:text-3xl border border-white/50 dark:border-white/20 bg-white/80 dark:bg-white/10 shadow-lg text-gray-800 dark:text-white">
+                  <div className="flex items-start gap-3.5 sm:gap-5 mb-4 sm:mb-6 pr-8">
+                    <div className="w-11 h-11 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-xl sm:rounded-2xl flex-shrink-0 flex items-center justify-center text-xl sm:text-2xl md:text-3xl border border-white/50 dark:border-white/20 bg-white/80 dark:bg-white/10 shadow-lg text-gray-800 dark:text-white">
                       {experiencesData[activeIndex].icon}
                     </div>
                     <div>
-                      <h3 className="text-2xl sm:text-3xl font-bold tracking-tight text-gray-900 dark:text-white">
+                      <h3 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight text-gray-900 dark:text-white">
                         {experiencesData[activeIndex].title}
                       </h3>
-                      <p className="font-semibold text-gray-700 dark:text-white/85 text-base sm:text-lg mt-0.5">
+                      <p className="font-semibold text-gray-700 dark:text-white/85 text-sm sm:text-base md:text-lg mt-0.5">
                         {experiencesData[activeIndex].company}
                       </p>
                     </div>
                   </div>
 
                   {/* Location and Date Badges */}
-                  <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-6">
-                    <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-medium bg-black/5 dark:bg-white/10 text-gray-700 dark:text-gray-300 border border-black/5 dark:border-white/10">
+                  <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 md:gap-3 mb-4 sm:mb-6">
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 sm:px-3.5 sm:py-1.5 rounded-full text-[0.7rem] sm:text-xs md:text-sm font-medium bg-black/5 dark:bg-white/10 text-gray-700 dark:text-gray-300 border border-black/5 dark:border-white/10">
                       <svg
                         className="w-3.5 h-3.5 opacity-70"
                         fill="none"
@@ -290,7 +299,7 @@ export default function Experience() {
                       </svg>
                       {experiencesData[activeIndex].location}
                     </span>
-                    <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-medium bg-blue-500/10 text-blue-600 dark:bg-blue-400/15 dark:text-blue-300 border border-blue-500/20">
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 sm:px-3.5 sm:py-1.5 rounded-full text-[0.7rem] sm:text-xs md:text-sm font-medium bg-blue-500/10 text-blue-600 dark:bg-blue-400/15 dark:text-blue-300 border border-blue-500/20">
                       <svg
                         className="w-3.5 h-3.5 opacity-70"
                         fill="none"
@@ -309,12 +318,12 @@ export default function Experience() {
                   </div>
 
                   {/* Description */}
-                  <p className="text-base sm:text-lg leading-relaxed text-gray-700 dark:text-gray-200">
+                  <p className="text-sm sm:text-base md:text-lg leading-relaxed text-gray-700 dark:text-gray-200">
                     {experiencesData[activeIndex].description}
                   </p>
 
                   {/* Footer dismiss hint */}
-                  <div className="mt-8 pt-4 border-t border-black/5 dark:border-white/10 flex items-center justify-between text-xs text-gray-400 dark:text-gray-500">
+                  <div className="mt-6 pt-3 sm:mt-8 sm:pt-4 border-t border-black/5 dark:border-white/10 flex items-center justify-between text-[0.7rem] sm:text-xs text-gray-400 dark:text-gray-500">
                     <span>Click card or outside to close</span>
                     <span className="hidden sm:inline">ESC to close</span>
                   </div>

@@ -49,7 +49,7 @@ export default function About() {
         >
           <SectionHeading>About me</SectionHeading>
 
-          <p className="mb-5 leading-relaxed font-normal text-lg sm:text-xl text-gray-800 dark:text-white/90">
+          <p className="mb-5 leading-relaxed font-normal text-base sm:text-lg md:text-xl text-gray-800 dark:text-white/90">
             I am a Software Engineer with experience in website and
             application development, software testing, system design,
             database management, and FTP server management. Having worked

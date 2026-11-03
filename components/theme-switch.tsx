@@ -18,8 +18,9 @@ export default function ThemeSwitch() {
         WebkitBackdropFilter: "blur(28px) saturate(180%)",
         transform: "translateZ(0)",
         backfaceVisibility: "hidden",
+        isolation: "isolate",
       }}
-      className="fixed top-6 right-6 sm:top-7 sm:right-8 z-[9999] w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center bg-white/65 hover:bg-white/80 dark:bg-slate-900/55 dark:hover:bg-slate-900/75 border border-white/80 hover:border-white ring-1 ring-slate-900/10 dark:ring-0 dark:border-white/30 dark:hover:border-white/45 shadow-[0_8px_30px_rgba(0,0,0,0.12),inset_0_1px_2px_rgba(255,255,255,0.9)] hover:shadow-[0_12px_36px_rgba(0,0,0,0.16),inset_0_1px_2px_rgba(255,255,255,1)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.25),inset_0_1px_1px_rgba(255,255,255,0.35)] dark:hover:shadow-[0_12px_36px_rgba(0,0,0,0.35),inset_0_1px_1px_rgba(255,255,255,0.45)] backdrop-blur-2xl backdrop-saturate-150 transform-gpu cursor-pointer outline-none transition-colors duration-300 group overflow-hidden"
+      className="fixed top-4 left-4 sm:top-6 sm:left-6 z-[9999] pointer-events-auto isolate w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center bg-white/65 hover:bg-white/80 dark:bg-slate-900/55 dark:hover:bg-slate-900/75 border border-white/80 hover:border-white ring-1 ring-slate-900/10 dark:ring-0 dark:border-white/30 dark:hover:border-white/45 shadow-[0_8px_30px_rgba(0,0,0,0.12),inset_0_1px_2px_rgba(255,255,255,0.9)] hover:shadow-[0_12px_36px_rgba(0,0,0,0.16),inset_0_1px_2px_rgba(255,255,255,1)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.25),inset_0_1px_1px_rgba(255,255,255,0.35)] dark:hover:shadow-[0_12px_36px_rgba(0,0,0,0.35),inset_0_1px_1px_rgba(255,255,255,0.45)] backdrop-blur-2xl backdrop-saturate-150 transform-gpu cursor-pointer outline-none transition-colors duration-300 group overflow-hidden"
       onClick={toggleTheme}
       aria-label="Toggle theme"
     >
