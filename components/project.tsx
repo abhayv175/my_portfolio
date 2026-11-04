@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { projectsData } from "@/lib/data";
 import Image from "next/image";
 import { motion } from "framer-motion";
@@ -47,6 +47,20 @@ export default function Project({
   url,
 }: ProjectProps) {
   const ref = useRef<HTMLDivElement>(null);
+  const [isMobile, setIsMobile] = useState(false);
+  const [isInView, setIsInView] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
+  const isFocused = isMobile ? isInView : isHovered;
 
   return (
     <motion.div
@@ -68,7 +82,15 @@ export default function Project({
       className="group my-6 sm:my-8 py-2 w-full max-w-[42rem] flex justify-center relative transform-gpu will-change-transform backface-hidden [backface-visibility:hidden] [transform-style:preserve-3d] outline outline-1 outline-transparent"
     >
       {/* Layer 1: Outer Hit-Box Wrapper - Static layout box, never shifts layout */}
-      <div className="group/card relative z-10 hover:z-50 w-full py-3">
+      <div
+        onMouseEnter={() => {
+          if (!isMobile) setIsHovered(true);
+        }}
+        onMouseLeave={() => {
+          if (!isMobile) setIsHovered(false);
+        }}
+        className="group/card relative z-10 md:hover:z-50 w-full py-3"
+      >
         {/* Full-card link hit-box matching the exact static card boundaries */}
         <a
           href={url}
@@ -78,17 +100,32 @@ export default function Project({
           className="absolute inset-0 z-20 w-full h-full cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-white/50 rounded-3xl"
         />
 
-        {/* Layer 2: Inner Visual Card - Scales on hover with hardware acceleration and symmetric easing */}
-        <div
+        {/* Layer 2: Inner Visual Card - Scales on focus (mobile scroll / desktop hover) */}
+        <motion.div
+          viewport={{
+            margin: "-25% 0px -25% 0px",
+            amount: 0.5,
+            once: false,
+          }}
+          onViewportEnter={() => {
+            if (isMobile) setIsInView(true);
+          }}
+          onViewportLeave={() => {
+            if (isMobile) setIsInView(false);
+          }}
           style={{
-            transform: "translateZ(0)",
+            transform: isFocused ? "scale(1.02)" : undefined,
             backfaceVisibility: "hidden",
             WebkitBackfaceVisibility: "hidden",
             outline: "1px solid transparent",
             transition:
-              "transform 450ms cubic-bezier(0.22, 1, 0.36, 1), opacity 450ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 450ms cubic-bezier(0.22, 1, 0.36, 1)",
+              "transform 450ms cubic-bezier(0.16, 1, 0.3, 1), opacity 450ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 450ms cubic-bezier(0.16, 1, 0.3, 1)",
           }}
-          className="w-full origin-center pointer-events-none transform-gpu will-change-transform backface-hidden [backface-visibility:hidden] [transform-style:preserve-3d] transition-[transform,opacity,box-shadow] duration-[450ms] [transition-timing-function:cubic-bezier(0.22,1,0.36,1)] group-hover/list:opacity-40 group-hover/list:scale-95 group-hover/card:!opacity-100 group-hover/card:!scale-[1.03] sm:group-hover/card:!scale-105 md:group-hover/card:!scale-[1.3] group-focus-within/card:!opacity-100 group-focus-within/card:!scale-[1.03] sm:group-focus-within/card:!scale-105 md:group-focus-within/card:!scale-[1.3] outline outline-1 outline-transparent"
+          className={`w-full origin-center pointer-events-none transform-gpu will-change-transform backface-hidden [backface-visibility:hidden] [transform-style:preserve-3d] transition-[transform,opacity,box-shadow] duration-[450ms] [transition-timing-function:cubic-bezier(0.22,1,0.36,1)] outline outline-1 outline-transparent ${
+            isFocused
+              ? "scale-[1.02] opacity-100"
+              : "scale-100 opacity-70 md:group-hover/card:!opacity-100 md:group-hover/card:!scale-[1.02] md:group-focus-within/card:!opacity-100 md:group-focus-within/card:!scale-[1.02] md:group-hover/list:opacity-40"
+          }`}
         >
           <section
             style={{
@@ -99,9 +136,13 @@ export default function Project({
               WebkitBackfaceVisibility: "hidden",
               outline: "1px solid transparent",
               transition:
-                "background-color 450ms cubic-bezier(0.22, 1, 0.36, 1), border-color 450ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 450ms cubic-bezier(0.22, 1, 0.36, 1)",
+                "background-color 450ms cubic-bezier(0.16, 1, 0.3, 1), border-color 450ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 450ms cubic-bezier(0.16, 1, 0.3, 1)",
             }}
-            className="bg-transparent max-w-[42rem] border border-black/10 group-hover/card:border-black/25 rounded-3xl overflow-hidden relative sm:h-[20rem] group-hover/card:bg-black/[0.035] transition-[background-color,border-color,box-shadow] duration-[450ms] [transition-timing-function:cubic-bezier(0.22,1,0.36,1)] sm:pr-8 sm:group-even:pl-8 dark:text-white dark:bg-white/5 dark:group-hover/card:bg-white/[0.12] dark:border-white/15 dark:group-hover/card:border-white/35 backdrop-blur-[16px] shadow-[0_4px_20px_-2px_rgba(0,0,0,0.08)] dark:shadow-[0_4px_20px_-2px_rgba(0,0,0,0.3)] group-hover/card:shadow-[0_25px_60px_rgba(0,0,0,0.35)] dark:group-hover/card:shadow-[0_25px_60px_rgba(0,0,0,0.7)] transform-gpu will-change-transform backface-hidden [backface-visibility:hidden] [transform-style:preserve-3d] isolate outline outline-1 outline-transparent"
+            className={`bg-transparent max-w-[42rem] rounded-3xl overflow-hidden relative sm:h-[20rem] backdrop-blur-xl transition-[background-color,border-color,box-shadow] duration-[450ms] [transition-timing-function:cubic-bezier(0.22,1,0.36,1)] sm:pr-8 sm:group-even:pl-8 transform-gpu will-change-transform backface-hidden [backface-visibility:hidden] [transform-style:preserve-3d] isolate outline outline-1 outline-transparent ${
+              isFocused
+                ? "border border-white/30 dark:border-sky-400/30 bg-white/[0.08] dark:bg-slate-900/60 shadow-[0_10px_30px_rgba(0,0,0,0.5),0_0_20px_rgba(56,189,248,0.12)]"
+                : "border border-black/10 dark:border-white/10 bg-transparent dark:bg-white/5 shadow-[0_4px_20px_-2px_rgba(0,0,0,0.08)] dark:shadow-[0_4px_20px_-2px_rgba(0,0,0,0.3)] md:group-hover/card:border-white/30 dark:md:group-hover/card:border-sky-400/30 md:group-hover/card:bg-white/[0.08] dark:md:group-hover/card:bg-slate-900/60 md:group-hover/card:shadow-[0_10px_30px_rgba(0,0,0,0.5),0_0_20px_rgba(56,189,248,0.12)]"
+            }`}
           >
             {/* Mobile View Mockup Image Wrapper */}
             <div className="block sm:hidden w-full h-48 overflow-hidden rounded-t-3xl transform-gpu will-change-transform backface-hidden [backface-visibility:hidden] [transform-style:preserve-3d] relative">
@@ -117,7 +158,13 @@ export default function Project({
 
             {/* Project Content: Text & Tech Stack Badges */}
             <div className="p-5 sm:py-8 sm:px-8 sm:max-w-[54%] flex flex-col h-full sm:group-even:ml-[18rem] relative z-10 transform-gpu backface-hidden [backface-visibility:hidden]">
-              <h3 className="text-2xl font-bold tracking-tight leading-snug text-gray-900 dark:text-white">
+              <h3
+                className={`text-2xl font-bold tracking-tight leading-snug transition-colors duration-300 ${
+                  isFocused
+                    ? "text-sky-400 dark:text-sky-400 font-bold"
+                    : "text-gray-900 dark:text-white md:group-hover/card:text-sky-400 dark:md:group-hover/card:text-sky-400"
+                }`}
+              >
                 {title}
               </h3>
               <p className="mt-2 text-sm sm:text-base leading-relaxed text-gray-800 dark:text-white/90 font-normal">
@@ -145,14 +192,14 @@ export default function Project({
                 transition: "transform 450ms cubic-bezier(0.22, 1, 0.36, 1)",
               }}
               className="absolute hidden sm:block top-8 -right-40 w-[28.25rem] transform-gpu will-change-transform backface-hidden [backface-visibility:hidden] [transform-style:preserve-3d] transition-transform duration-[450ms] [transition-timing-function:cubic-bezier(0.22,1,0.36,1)]
-              group-hover/card:scale-[1.04]
-              group-hover/card:-translate-x-3
-              group-hover/card:translate-y-3
-              group-hover/card:-rotate-2
+              md:group-hover/card:scale-[1.04]
+              md:group-hover/card:-translate-x-3
+              md:group-hover/card:translate-y-3
+              md:group-hover/card:-rotate-2
 
-              group-even:group-hover/card:translate-x-3
-              group-even:group-hover/card:translate-y-3
-              group-even:group-hover/card:rotate-2
+              group-even:md:group-hover/card:translate-x-3
+              group-even:md:group-hover/card:translate-y-3
+              group-even:md:group-hover/card:rotate-2
 
               group-even:right-[initial] group-even:-left-40 pointer-events-none select-none"
             >
@@ -166,7 +213,7 @@ export default function Project({
               />
             </div>
           </section>
-        </div>
+        </motion.div>
       </div>
     </motion.div>
   );

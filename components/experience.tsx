@@ -13,38 +13,186 @@ import { useSectionInView } from "@/lib/hooks";
 import { useTheme } from "@/context/theme-context";
 import { motion, AnimatePresence } from "framer-motion";
 
-const cardVariants = {
-  hidden: {
-    opacity: 0,
-    transition: {
-      duration: 0.5,
-      ease: [0.25, 0.1, 0.25, 1],
-    },
-  },
-  visible: {
-    opacity: 1,
-    transition: {
-      duration: 0.5,
-      ease: [0.25, 0.1, 0.25, 1],
-    },
-  },
-  exit: {
-    opacity: 0,
-    transition: {
-      duration: 0.3,
-      ease: [0.25, 0.1, 0.25, 1],
-    },
-  },
-};
+
+
+interface ExperienceTimelineCardProps {
+  item: (typeof experiencesData)[number];
+  index: number;
+  theme: string;
+  isMobile: boolean;
+  activeIndex: number | null;
+  setActiveIndex: (index: number) => void;
+}
+
+function ExperienceTimelineCard({
+  item,
+  index,
+  theme,
+  isMobile,
+  activeIndex,
+  setActiveIndex,
+}: ExperienceTimelineCardProps) {
+  const cardRef = React.useRef<HTMLDivElement>(null);
+  const [isInView, setIsInView] = React.useState(false);
+  const [isHovered, setIsHovered] = React.useState(false);
+
+  const isCardFocused = isMobile ? isInView : isHovered;
+
+  return (
+    <motion.div
+      ref={cardRef}
+      key={index}
+      viewport={
+        isMobile
+          ? { margin: "-25% 0px -25% 0px", amount: 0.5, once: false }
+          : { once: true, margin: "-40px 0px" }
+      }
+      onViewportEnter={() => {
+        if (isMobile) setIsInView(true);
+      }}
+      onViewportLeave={() => {
+        if (isMobile) setIsInView(false);
+      }}
+      style={{
+        WebkitTapHighlightColor: "transparent",
+      }}
+      className="mb-12 sm:mb-16 md:mb-24 last:mb-0 w-full transform-gpu will-change-transform [-webkit-tap-highlight-color:transparent]"
+    >
+      <VerticalTimelineElement
+        position={index % 2 === 0 ? "left" : "right"}
+        onTimelineElementClick={() => setActiveIndex(index)}
+        textClassName="cursor-pointer group/card transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] transform-gpu will-change-transform select-none [-webkit-tap-highlight-color:transparent]"
+        contentStyle={{
+          background: isCardFocused
+            ? theme === "light"
+              ? "rgba(255, 255, 255, 0.08)"
+              : "rgba(15, 23, 42, 0.6)"
+            : theme === "light"
+              ? "rgba(255, 255, 255, 0.6)"
+              : "rgba(255, 255, 255, 0.05)",
+          backdropFilter: "blur(16px)",
+          WebkitBackdropFilter: "blur(16px)",
+          boxShadow: isCardFocused
+            ? "0 10px 30px rgba(0,0,0,0.5), 0 0 20px rgba(56,189,248,0.12)"
+            : theme === "light"
+              ? "0 4px 20px -2px rgba(0, 0, 0, 0.08)"
+              : "0 4px 20px -2px rgba(0, 0, 0, 0.3)",
+          border: isCardFocused
+            ? theme === "light"
+              ? "1px solid rgba(255, 255, 255, 0.3)"
+              : "1px solid rgba(56, 189, 248, 0.3)"
+            : theme === "light"
+              ? "1px solid rgba(0, 0, 0, 0.10)"
+              : "1px solid rgba(255, 255, 255, 0.10)",
+          transform: isCardFocused ? "scale(1.02)" : "scale(1)",
+          transformOrigin: isMobile ? "left center" : "center center",
+          textAlign: "left",
+          padding: "1.5rem 2rem",
+          borderRadius: "1rem",
+          opacity: activeIndex === index ? 0.35 : isCardFocused ? 1 : 0.7,
+          cursor: "pointer",
+          transition:
+            "transform 450ms cubic-bezier(0.16, 1, 0.3, 1), background-color 450ms cubic-bezier(0.16, 1, 0.3, 1), border-color 450ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 450ms cubic-bezier(0.16, 1, 0.3, 1), opacity 450ms cubic-bezier(0.16, 1, 0.3, 1)",
+        }}
+        contentArrowStyle={{
+          borderRight: isCardFocused
+            ? theme === "light"
+              ? "0.4rem solid rgba(255, 255, 255, 0.3)"
+              : "0.4rem solid rgba(56, 189, 248, 0.3)"
+            : theme === "light"
+              ? "0.4rem solid rgba(0, 0, 0, 0.10)"
+              : "0.4rem solid rgba(255, 255, 255, 0.10)",
+        }}
+        date={item.date}
+        icon={item.icon}
+        iconOnClick={() => setActiveIndex(index)}
+        iconClassName="cursor-pointer md:hover:scale-110 transition-transform duration-300 [-webkit-tap-highlight-color:transparent]"
+        iconStyle={{
+          background:
+            theme === "light" ? "rgba(255, 255, 255, 0.7)" : "rgba(24, 24, 27, 0.85)",
+          border:
+            theme === "light"
+              ? "2px solid rgba(0, 0, 0, 0.08)"
+              : "2px solid rgba(255, 255, 255, 0.15)",
+          color: theme === "light" ? "#1e293b" : "#f8fafc",
+          fontSize: "1.5rem",
+          boxShadow:
+            theme === "light"
+              ? "0 4px 6px -1px rgba(0, 0, 0, 0.05)"
+              : "0 4px 12px rgba(0, 0, 0, 0.4)",
+          backdropFilter: "blur(12px)",
+          WebkitBackdropFilter: "blur(12px)",
+          cursor: "pointer",
+        }}
+      >
+        <div
+          className="cursor-pointer select-none [-webkit-tap-highlight-color:transparent]"
+          onMouseEnter={() => {
+            if (!isMobile) setIsHovered(true);
+          }}
+          onMouseLeave={() => {
+            if (!isMobile) setIsHovered(false);
+          }}
+          onClick={() => setActiveIndex(index)}
+        >
+          <div className="flex items-center justify-between gap-2">
+            <h3
+              className={`text-xl font-bold tracking-tight capitalize transition-colors duration-300 ${
+                isCardFocused
+                  ? "text-sky-400 dark:text-sky-400 font-bold"
+                  : "text-gray-900 dark:text-white md:group-hover/card:text-sky-400 dark:md:group-hover/card:text-sky-400"
+              }`}
+            >
+              {item.title}
+            </h3>
+            <span className="text-xs font-medium text-gray-400 dark:text-gray-500 opacity-0 md:group-hover/card:opacity-100 transition-opacity flex items-center gap-1">
+              <span>Expand</span>
+              <svg
+                className="w-3.5 h-3.5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"
+                />
+              </svg>
+            </span>
+          </div>
+          <p className="font-medium text-gray-800 dark:text-white/90 !mt-0.5 text-sm sm:text-base">
+            {item.company}
+          </p>
+          <p className="font-normal text-gray-500 dark:text-white/60 !mt-0 text-xs sm:text-sm">
+            {item.location}
+          </p>
+
+          <p className="!mt-2 font-normal leading-relaxed text-sm sm:text-base text-gray-700 dark:text-white/90">
+            {item.description}
+          </p>
+        </div>
+      </VerticalTimelineElement>
+    </motion.div>
+  );
+}
 
 export default function Experience() {
   const { ref } = useSectionInView("Experience", 0.2);
   const { theme } = useTheme();
   const [mounted, setMounted] = React.useState(false);
+  const [isMobile, setIsMobile] = React.useState(false);
   const [activeIndex, setActiveIndex] = React.useState<number | null>(null);
 
   React.useEffect(() => {
     setMounted(true);
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
   React.useEffect(() => {
@@ -73,7 +221,7 @@ export default function Experience() {
     >
       <style>{`
         #experience .vertical-timeline-element-content {
-          transition: transform 500ms cubic-bezier(0.16, 1, 0.3, 1), background-color 300ms ease-in-out, border-color 300ms ease-in-out, box-shadow 300ms ease-in-out, opacity 300ms ease-in-out !important;
+          transition: transform 450ms cubic-bezier(0.16, 1, 0.3, 1), background-color 300ms ease-in-out, border-color 300ms ease-in-out, box-shadow 300ms ease-in-out, opacity 300ms ease-in-out !important;
         }
         #experience .vertical-timeline-element {
           margin: 0 !important;
@@ -81,6 +229,28 @@ export default function Experience() {
         @media (max-width: 640px) {
           #experience .vertical-timeline-element-content {
             padding: 1.25rem 1.25rem !important;
+          }
+        }
+        @media (hover: hover) and (pointer: fine) {
+          #experience .vertical-timeline-element-content:hover {
+            transform: scale(1.02) !important;
+            opacity: 1 !important;
+          }
+          html.dark #experience .vertical-timeline-element-content:hover {
+            border-color: rgba(56, 189, 248, 0.3) !important;
+            background-color: rgba(15, 23, 42, 0.6) !important;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5), 0 0 20px rgba(56,189,248,0.12) !important;
+          }
+          html.dark #experience .vertical-timeline-element-content:hover h3 {
+            color: rgb(56, 189, 248) !important;
+          }
+          html:not(.dark) #experience .vertical-timeline-element-content:hover {
+            border-color: rgba(255, 255, 255, 0.3) !important;
+            background-color: rgba(255, 255, 255, 0.08) !important;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1), 0 0 20px rgba(56,189,248,0.12) !important;
+          }
+          html:not(.dark) #experience .vertical-timeline-element-content:hover h3 {
+            color: rgb(2, 132, 199) !important;
           }
         }
       `}</style>
@@ -92,105 +262,15 @@ export default function Experience() {
           className="space-y-12 sm:space-y-16 md:space-y-24"
         >
           {experiencesData.map((item, index) => (
-            <motion.div
+            <ExperienceTimelineCard
               key={index}
-              variants={cardVariants}
-              initial="hidden"
-              whileInView="visible"
-              exit="exit"
-              viewport={{ once: true, margin: "-40px 0px" }}
-              className="mb-12 sm:mb-16 md:mb-24 last:mb-0 w-full"
-            >
-              <VerticalTimelineElement
-                position={index % 2 === 0 ? "left" : "right"}
-                onTimelineElementClick={() => setActiveIndex(index)}
-                textClassName="cursor-pointer group/card hover:scale-[1.02] sm:hover:scale-105 hover:shadow-2xl transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] transform-gpu will-change-transform select-none"
-                contentStyle={{
-                  background:
-                    theme === "light" ? "transparent" : "rgba(255, 255, 255, 0.05)",
-                  backdropFilter: "blur(16px)",
-                  WebkitBackdropFilter: "blur(16px)",
-                  boxShadow:
-                    theme === "light"
-                      ? "0 4px 20px -2px rgba(0, 0, 0, 0.08)"
-                      : "0 4px 20px -2px rgba(0, 0, 0, 0.3)",
-                  border:
-                    theme === "light"
-                      ? "1px solid rgba(0, 0, 0, 0.10)"
-                      : "1px solid rgba(255, 255, 255, 0.15)",
-                  textAlign: "left",
-                  padding: "1.5rem 2rem",
-                  borderRadius: "1rem",
-                  opacity: activeIndex === index ? 0.35 : 1,
-                  cursor: "pointer",
-                  transition: "all 500ms cubic-bezier(0.16, 1, 0.3, 1)",
-                }}
-                contentArrowStyle={{
-                  borderRight:
-                    theme === "light"
-                      ? "0.4rem solid rgba(0, 0, 0, 0.10)"
-                      : "0.4rem solid rgba(255, 255, 255, 0.15)",
-                }}
-                date={item.date}
-                icon={item.icon}
-                iconOnClick={() => setActiveIndex(index)}
-                iconClassName="cursor-pointer hover:scale-110 transition-transform duration-300"
-                iconStyle={{
-                  background:
-                    theme === "light" ? "rgba(255, 255, 255, 0.7)" : "rgba(24, 24, 27, 0.85)",
-                  border:
-                    theme === "light"
-                      ? "2px solid rgba(0, 0, 0, 0.08)"
-                      : "2px solid rgba(255, 255, 255, 0.15)",
-                  color: theme === "light" ? "#1e293b" : "#f8fafc",
-                  fontSize: "1.5rem",
-                  boxShadow:
-                    theme === "light"
-                      ? "0 4px 6px -1px rgba(0, 0, 0, 0.05)"
-                      : "0 4px 12px rgba(0, 0, 0, 0.4)",
-                  backdropFilter: "blur(12px)",
-                  WebkitBackdropFilter: "blur(12px)",
-                  cursor: "pointer",
-                }}
-              >
-                <div
-                  className="cursor-pointer"
-                  onClick={() => setActiveIndex(index)}
-                >
-                  <div className="flex items-center justify-between gap-2">
-                    <h3 className="text-xl font-bold tracking-tight capitalize text-gray-900 dark:text-white group-hover/card:text-blue-600 dark:group-hover/card:text-blue-400 transition-colors">
-                      {item.title}
-                    </h3>
-                    <span className="text-xs font-medium text-gray-400 dark:text-gray-500 opacity-0 group-hover/card:opacity-100 transition-opacity flex items-center gap-1">
-                      <span>Expand</span>
-                      <svg
-                        className="w-3.5 h-3.5"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"
-                        />
-                      </svg>
-                    </span>
-                  </div>
-                  <p className="font-medium text-gray-800 dark:text-white/90 !mt-0.5 text-sm sm:text-base">
-                    {item.company}
-                  </p>
-                  <p className="font-normal text-gray-500 dark:text-white/60 !mt-0 text-xs sm:text-sm">
-                    {item.location}
-                  </p>
-
-                  <p className="!mt-2 font-normal leading-relaxed text-sm sm:text-base text-gray-700 dark:text-white/90">
-                    {item.description}
-                  </p>
-                </div>
-              </VerticalTimelineElement>
-            </motion.div>
+              item={item}
+              index={index}
+              theme={theme}
+              isMobile={isMobile}
+              activeIndex={activeIndex}
+              setActiveIndex={setActiveIndex}
+            />
           ))}
         </VerticalTimeline>
       ) : null}
