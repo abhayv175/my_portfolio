@@ -94,7 +94,7 @@ export default function Project({
           <motion.div
             viewport={
               isMobile
-                ? { margin: "-25% 0px -25% 0px", amount: 0.5, once: false }
+                ? { margin: "-25% 0px -25% 0px", amount: 0.2, once: false }
                 : undefined
             }
             onViewportEnter={() => {

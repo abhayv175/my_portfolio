@@ -87,34 +87,11 @@ body {
   will-change: opacity, transform;
 }
 
-/* Frosted glass & hover for timeline elements */
+/* Frosted glass base for timeline elements */
 .vertical-timeline-element-content {
   border-radius: 1rem !important;
   backdrop-filter: blur(16px) !important;
   -webkit-backdrop-filter: blur(16px) !important;
   transition: background-color 300ms ease-in-out, border-color 300ms ease-in-out, box-shadow 300ms ease-in-out !important;
 }
-
-.vertical-timeline-element-content:hover {
-  background: rgba(0, 0, 0, 0.035) !important;
-  border-color: rgba(0, 0, 0, 0.25) !important;
-  box-shadow: 0 14px 28px -5px rgba(0, 0, 0, 0.12), 0 10px 14px -6px rgba(0, 0, 0, 0.08) !important;
-}
-
-.vertical-timeline-element-content:hover .vertical-timeline-element-content-arrow {
-  border-right-color: rgba(0, 0, 0, 0.25) !important;
-}
-
-.dark .vertical-timeline-element-content:hover {
-  background: rgba(255, 255, 255, 0.12) !important;
-  border-color: rgba(255, 255, 255, 0.35) !important;
-  box-shadow: 0 12px 32px -4px rgba(0, 0, 0, 0.6) !important;
-}
-
-.dark .vertical-timeline-element-content:hover .vertical-timeline-element-content-arrow {
-  border-right-color: rgba(255, 255, 255, 0.35) !important;
-}
-
-
-
 

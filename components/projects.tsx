@@ -14,9 +14,7 @@ export default function Projects() {
       <SectionHeading>My projects</SectionHeading>
       <div className="flex flex-col items-center relative">
         {projectsData.map((project, index) => (
-          <React.Fragment key={index}>
-            <Project {...project} />
-          </React.Fragment>
+          <Project key={index} {...project} />
         ))}
       </div>
     </section>

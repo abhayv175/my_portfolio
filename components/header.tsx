@@ -39,6 +39,8 @@ export default function Header() {
     e.preventDefault();
     setActiveSection(linkName);
     setTimeOfLastClick(Date.now());
+    document.body.style.overflow = "";
+    setIsOpen(false);
 
     const targetId = hash.replace("#", "");
     const element = document.getElementById(targetId);

@@ -69,7 +69,7 @@ function ExperienceTimelineCard({
         variants={cardVariants}
         viewport={
           isMobile
-            ? { margin: "-25% 0px -25% 0px", amount: 0.5, once: false }
+            ? { margin: "-25% 0px -25% 0px", amount: 0.2, once: false }
             : undefined
         }
         onViewportEnter={() => {
@@ -244,7 +244,7 @@ export default function Experience() {
     <section
       id="experience"
       ref={ref}
-      className="scroll-mt-28 mb-24 sm:mb-32 w-full max-w-xl md:max-w-6xl mx-auto px-4 sm:px-6 md:px-0"
+      className="scroll-mt-28 mb-24 sm:mb-32 w-full max-w-xl md:max-w-6xl mx-auto px-0 sm:px-4 md:px-0"
     >
       <style>{`
         #experience .vertical-timeline-element-content {
@@ -340,7 +340,7 @@ export default function Experience() {
                   exit={{ opacity: 0, scale: 0.7, rotateY: 90, y: 20 }}
                   transition={{ type: "spring", stiffness: 220, damping: 24 }}
                   onClick={() => setActiveIndex(null)}
-                  className="pointer-events-auto cursor-pointer w-[92vw] max-w-lg md:w-[50vw] md:max-w-3xl min-h-[40vh] max-h-[85vh] overflow-y-auto p-5 sm:p-8 md:p-12 flex flex-col justify-center relative bg-white/75 dark:bg-slate-900/80 backdrop-blur-3xl backdrop-saturate-150 border border-white/50 dark:border-white/20 shadow-[0_30px_80px_rgba(0,0,0,0.45)] rounded-2xl sm:rounded-3xl select-none"
+                  className="pointer-events-auto cursor-pointer w-[92vw] max-w-lg md:w-[50vw] md:max-w-3xl min-h-[40vh] max-h-[85vh] overflow-y-auto p-5 sm:p-8 md:p-12 flex flex-col justify-start sm:justify-center relative bg-white/75 dark:bg-slate-900/80 backdrop-blur-3xl backdrop-saturate-150 border border-white/50 dark:border-white/20 shadow-[0_30px_80px_rgba(0,0,0,0.45)] rounded-2xl sm:rounded-3xl select-none"
                 >
                   {/* Close Button Hint */}
                   <button
