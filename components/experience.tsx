@@ -11,9 +11,28 @@ import "react-vertical-timeline-component/style.min.css";
 import { experiencesData } from "@/lib/data";
 import { useSectionInView } from "@/lib/hooks";
 import { useTheme } from "@/context/theme-context";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useInView } from "framer-motion";
 
-
+const cardVariants = {
+  hidden: {
+    scale: 0.75,
+    opacity: 0,
+    y: 30,
+    transition: {
+      duration: 0.6,
+      ease: [0.25, 0.1, 0.25, 1],
+    },
+  },
+  visible: {
+    scale: 1,
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.6,
+      ease: [0.25, 0.1, 0.25, 1],
+    },
+  },
+};
 
 interface ExperienceTimelineCardProps {
   item: (typeof experiencesData)[number];
@@ -33,31 +52,38 @@ function ExperienceTimelineCard({
   setActiveIndex,
 }: ExperienceTimelineCardProps) {
   const cardRef = React.useRef<HTMLDivElement>(null);
+  const isInScroll = useInView(cardRef, {
+    once: false,
+    margin: "-80px 0px -80px 0px",
+  });
   const [isInView, setIsInView] = React.useState(false);
   const [isHovered, setIsHovered] = React.useState(false);
 
   const isCardFocused = isMobile ? isInView : isHovered;
 
   return (
-    <motion.div
-      ref={cardRef}
-      key={index}
-      viewport={
-        isMobile
-          ? { margin: "-25% 0px -25% 0px", amount: 0.5, once: false }
-          : { once: true, margin: "-40px 0px" }
-      }
-      onViewportEnter={() => {
-        if (isMobile) setIsInView(true);
-      }}
-      onViewportLeave={() => {
-        if (isMobile) setIsInView(false);
-      }}
-      style={{
-        WebkitTapHighlightColor: "transparent",
-      }}
-      className="mb-12 sm:mb-16 md:mb-24 last:mb-0 w-full transform-gpu will-change-transform [-webkit-tap-highlight-color:transparent]"
-    >
+    <div ref={cardRef} className="w-full mb-12 sm:mb-16 md:mb-24 last:mb-0">
+      <motion.div
+        initial="hidden"
+        animate={isInScroll ? "visible" : "hidden"}
+        variants={cardVariants}
+        viewport={
+          isMobile
+            ? { margin: "-25% 0px -25% 0px", amount: 0.5, once: false }
+            : undefined
+        }
+        onViewportEnter={() => {
+          if (isMobile) setIsInView(true);
+        }}
+        onViewportLeave={() => {
+          if (isMobile) setIsInView(false);
+        }}
+        style={{
+          transform: "translateZ(0)",
+          WebkitTapHighlightColor: "transparent",
+        }}
+        className="w-full transform-gpu will-change-transform [-webkit-tap-highlight-color:transparent]"
+      >
       <VerticalTimelineElement
         position={index % 2 === 0 ? "left" : "right"}
         onTimelineElementClick={() => setActiveIndex(index)}
@@ -175,6 +201,7 @@ function ExperienceTimelineCard({
         </div>
       </VerticalTimelineElement>
     </motion.div>
+  </div>
   );
 }
 
@@ -287,7 +314,7 @@ export default function Experience() {
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.25, ease: "easeInOut" }}
                 onClick={() => setActiveIndex(null)}
-                className="fixed inset-0 z-40 z-[10000] bg-black/40 dark:bg-black/60 backdrop-blur-xl cursor-pointer touch-none overscroll-none"
+                className="fixed inset-0 z-[10000] bg-black/40 dark:bg-black/60 backdrop-blur-xl cursor-pointer touch-none overscroll-none"
                 aria-label="Close modal overlay"
               />
             )}
@@ -299,7 +326,7 @@ export default function Experience() {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.25 }}
-                className="fixed inset-0 z-50 z-[10001] flex items-center justify-center p-3 sm:p-6 pointer-events-none [perspective:1200px]"
+                className="fixed inset-0 z-[10001] flex items-center justify-center p-3 sm:p-6 pointer-events-none [perspective:1200px]"
               >
                 <motion.div
                   key={`experience-card-${activeIndex}`}

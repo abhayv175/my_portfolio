@@ -10,7 +10,7 @@ import MoveIt from "@/public/MoveIt.png";
 import PassengerText from "@/public/PassengerText.png";
 import BankingSystem from "@/public/BankingSystem.png";
 import PikaPanic from "@/public/PikaPanic.png";
-import GreekVoc from "@/public/GreekVoc.png";
+import PrintPulse from "@/public/PrintPulse.png";
 
 export const links = [
   {
@@ -46,7 +46,7 @@ export const experiencesData = [
 
   {
     title: "Test Engineer",
-    company: "Marquiestech",
+    company: "Marquistech",
     location: "Vilnius, Lithuania",
     description:
       "I capture and analyze device and network logs using tools like QXDM, QCAT, and ADB to identify modem, RF, and protocol-level issues in new, unreleased 4G modems for major OEMs. My work involves reproducing and validating network-related problems, such as attach failures and handover issues, while performing root-cause analysis through detailed KPI tracking like RSRP and SINR. I document these findings with comprehensive logs and impact assessments, sharing structured reports with chipset and carrier teams to drive debugging and successful software acceptance testing.",
@@ -84,6 +84,14 @@ export const experiencesData = [
 
 export const projectsData = [
   {
+    title: "PrintPulse",
+    description:
+      "A zero-friction campus and retail print-on-demand infrastructure eliminating pen drives and kiosk queues with instant web uploads, zero-fee direct UPI settlements, and sub-50ms WebSocket push spooling to vendor Android tablets.",
+    tags: ["FastAPI", "Flutter", "Python", "WebSockets", "Docker", "UPI"],
+    imageUrl: PrintPulse,
+    url: "https://github.com/abhayv175/PrintPulse",
+  },
+  {
     title: "Move It",
     description:
       "Move It is a swift and secure courier service featuring a sleek, easy-to-navigate website for effortless pickup scheduling and real-time shipment tracking.",
@@ -106,14 +114,6 @@ export const projectsData = [
     tags: ["Java", "JavaFX", "CSS", "SceneBuilder"],
     imageUrl: BankingSystem,
     url: "https://github.com/abhayv175/Bank_Application",
-  },
-  {
-    title: "Greek Voc",
-    description:
-      "This Dart-powered mobile application helps users master Greek travel and food vocabulary by tracking learning progress and tasks through efficient local storage.",
-    tags: ["Flutter", "Dart", "Swift", "Android Studio"],
-    imageUrl: GreekVoc,
-    url: "https://github.com/BenBinary/greek_vocs",
   },
   {
     title: "Pika Panic",

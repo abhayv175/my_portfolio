@@ -12,16 +12,22 @@ export default function Header() {
     useActiveSectionContext();
   const [isOpen, setIsOpen] = useState(false);
 
-  // Close drawer on Escape key press
+  // Lock background scroll and close drawer on Escape key press
   useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        setIsOpen(false);
-      }
-    };
     if (isOpen) {
+      document.body.style.overflow = "hidden";
+      const handleKeyDown = (e: KeyboardEvent) => {
+        if (e.key === "Escape") {
+          setIsOpen(false);
+        }
+      };
       window.addEventListener("keydown", handleKeyDown);
-      return () => window.removeEventListener("keydown", handleKeyDown);
+      return () => {
+        document.body.style.overflow = "";
+        window.removeEventListener("keydown", handleKeyDown);
+      };
+    } else {
+      document.body.style.overflow = "";
     }
   }, [isOpen]);
 
@@ -91,7 +97,7 @@ export default function Header() {
                       outline: "1px solid transparent",
                     }}
                     className={clsx(
-                      "flex items-center justify-center px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-full hover:text-gray-950 dark:hover:text-white transition-all duration-200 ease-out whitespace-nowrap cursor-pointer relative transform-gpu will-change-[transform,opacity] [backface-visibility:hidden] [transform-style:preserve-3d] outline outline-1 outline-transparent",
+                      "flex items-center justify-center px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-full hover:text-gray-950 dark:hover:text-white transition-colors duration-200 ease-out whitespace-nowrap cursor-pointer relative transform-gpu will-change-[transform,opacity] [backface-visibility:hidden] [transform-style:preserve-3d] outline outline-1 outline-transparent",
                       {
                         "text-gray-950 dark:text-white font-semibold": isActive,
                         "hover:bg-white/25 dark:hover:bg-white/10": !isActive,

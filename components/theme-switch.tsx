@@ -7,6 +7,11 @@ import { motion, AnimatePresence } from "framer-motion";
 
 export default function ThemeSwitch() {
   const { theme, toggleTheme } = useTheme();
+  const [mounted, setMounted] = React.useState(false);
+
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
 
   return (
     <motion.button
@@ -33,7 +38,7 @@ export default function ThemeSwitch() {
       <AnimatePresence mode="wait" initial={false}>
         <motion.span
           key={theme}
-          initial={{ opacity: 0, rotate: -90, scale: 0.5 }}
+          initial={mounted ? { opacity: 0, rotate: -90, scale: 0.5 } : false}
           animate={{ opacity: 1, rotate: 0, scale: 1 }}
           exit={{ opacity: 0, rotate: 90, scale: 0.5 }}
           transition={{ type: "spring", stiffness: 350, damping: 22 }}
