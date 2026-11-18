@@ -136,8 +136,8 @@ export default function Project({
               }}
               className={`max-w-[42rem] rounded-3xl overflow-hidden relative sm:h-[20rem] backdrop-blur-xl sm:pr-8 sm:group-even:pl-8 transform-gpu will-change-transform backface-hidden [backface-visibility:hidden] [transform-style:preserve-3d] isolate outline outline-1 outline-transparent ${
                 isFocused
-                  ? "border border-white/30 dark:border-sky-400/30 bg-white/[0.08] dark:bg-slate-900/60 shadow-[0_10px_30px_rgba(0,0,0,0.5),0_0_20px_rgba(56,189,248,0.12)]"
-                  : "border border-black/10 dark:border-white/10 bg-transparent dark:bg-white/5 shadow-[0_4px_20px_-2px_rgba(0,0,0,0.08)] dark:shadow-[0_4px_20px_-2px_rgba(0,0,0,0.3)]"
+                  ? "border border-indigo-500/40 dark:border-indigo-400/50 bg-white/80 dark:bg-zinc-900/70 shadow-[0_10px_35px_rgba(0,0,0,0.4),0_0_25px_rgba(99,102,241,0.15)]"
+                  : "border border-black/10 dark:border-white/10 bg-white/40 dark:bg-zinc-900/30 shadow-[0_4px_20px_-2px_rgba(0,0,0,0.06)] dark:shadow-[0_4px_20px_-2px_rgba(0,0,0,0.3)]"
               }`}
             >
               {/* Mobile View Mockup Image Wrapper */}
@@ -154,15 +154,34 @@ export default function Project({
 
               {/* Project Content: Text & Tech Stack Badges */}
               <div className="p-5 sm:py-8 sm:px-8 sm:max-w-[54%] flex flex-col h-full sm:group-even:ml-[18rem] relative z-10 transform-gpu backface-hidden [backface-visibility:hidden]">
-                <h3
-                  className={`text-2xl font-bold tracking-tight leading-snug transition-colors duration-300 ${
-                    isFocused
-                      ? "text-sky-400 dark:text-sky-400 font-bold"
-                      : "text-gray-900 dark:text-white"
-                  }`}
-                >
-                  {title}
-                </h3>
+                <div className="flex items-center justify-between gap-2">
+                  <h3
+                    className={`text-2xl font-bold tracking-tight leading-snug transition-colors duration-300 ${
+                      isFocused
+                        ? "text-indigo-600 dark:text-indigo-400 font-bold"
+                        : "text-gray-900 dark:text-white"
+                    }`}
+                  >
+                    {title}
+                  </h3>
+                  <svg
+                    className={`w-4 h-4 transition-all duration-300 shrink-0 ${
+                      isFocused
+                        ? "text-indigo-600 dark:text-indigo-400 translate-x-0.5 -translate-y-0.5 opacity-100"
+                        : "text-gray-400 opacity-0"
+                    }`}
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                    />
+                  </svg>
+                </div>
                 <p className="mt-2 text-sm sm:text-base leading-relaxed text-gray-800 dark:text-white/90 font-normal">
                   {description}
                 </p>

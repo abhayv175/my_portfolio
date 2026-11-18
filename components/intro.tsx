@@ -3,20 +3,17 @@
 import Image from "next/image";
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import Link from "next/link";
-import { BsArrowRight, BsLinkedin } from "react-icons/bs";
+import { BsLinkedin } from "react-icons/bs";
 import { HiDownload } from "react-icons/hi";
 import { FaGithubSquare } from "react-icons/fa";
 import { SiLeetcode } from "react-icons/si";
 import { useSectionInView } from "@/lib/hooks";
-import { useActiveSectionContext } from "@/context/active-section-context";
 import { useTheme } from "@/context/theme-context";
 
 const EMOJIS = ["👋", "🚀", "💻", "⚡", "🎯", "🔥"];
 
 export default function Intro() {
   const { ref } = useSectionInView("Home", 0.5);
-  const { setActiveSection, setTimeOfLastClick } = useActiveSectionContext();
   const { theme } = useTheme();
   const [emojiIndex, setEmojiIndex] = useState(0);
   const [mounted, setMounted] = useState(false);
@@ -72,7 +69,7 @@ export default function Intro() {
                   backfaceVisibility: "hidden",
                   WebkitBackfaceVisibility: "hidden",
                 }}
-                className="absolute inset-0 w-full h-full rounded-full p-[3px] bg-gradient-to-tr from-amber-500/40 via-purple-500/40 to-cyan-500/40 shadow-2xl transition-all duration-500 group-hover:shadow-[0_0_35px_rgba(192,132,252,0.35)]"
+                className="absolute inset-0 w-full h-full rounded-full p-[2.5px] bg-gradient-to-tr from-indigo-500/30 via-slate-500/20 to-sky-500/30 shadow-xl transition-all duration-500 group-hover:shadow-[0_0_30px_rgba(99,102,241,0.25)]"
               >
                 <div className="relative w-full h-full rounded-full overflow-hidden bg-white/95 border-2 border-black/10 shadow-xl backdrop-blur-md">
                   <Image
@@ -80,7 +77,6 @@ export default function Intro() {
                     alt="Abhay Verma portrait"
                     fill
                     sizes="(max-width: 640px) 96px, (max-width: 768px) 112px, 128px"
-                    quality={80}
                     priority={true}
                     className="object-cover"
                   />
@@ -94,7 +90,7 @@ export default function Intro() {
                   backfaceVisibility: "hidden",
                   WebkitBackfaceVisibility: "hidden",
                 }}
-                className="absolute inset-0 w-full h-full rounded-full p-[3px] bg-gradient-to-tr from-amber-400/30 via-purple-500/40 to-cyan-400/30 shadow-2xl transition-all duration-500 group-hover:shadow-[0_0_35px_rgba(192,132,252,0.35)]"
+                className="absolute inset-0 w-full h-full rounded-full p-[2.5px] bg-gradient-to-tr from-indigo-500/30 via-slate-500/20 to-sky-500/30 shadow-xl transition-all duration-500 group-hover:shadow-[0_0_30px_rgba(99,102,241,0.25)]"
               >
                 <div className="relative w-full h-full rounded-full overflow-hidden bg-zinc-950 border-2 border-white/20 shadow-xl backdrop-blur-md">
                   <Image
@@ -102,7 +98,6 @@ export default function Intro() {
                     alt="Abhay Verma portrait"
                     fill
                     sizes="(max-width: 640px) 96px, (max-width: 768px) 112px, 128px"
-                    quality={80}
                     priority={true}
                     className="object-cover"
                   />
@@ -128,83 +123,78 @@ export default function Intro() {
         </div>
       </motion.div>
 
-      <motion.h1
-        initial={{ opacity: 0, y: 30, filter: "blur(8px)" }}
-        animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-        transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1], delay: 0.15 }}
-        className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-gray-950 dark:text-white mb-4 sm:mb-6 leading-[1.15] max-w-4xl mx-auto px-4"
-      >
-        Hello, I&apos;m Abhay Verma.
-      </motion.h1>
-
-      <motion.p
-        initial={{ opacity: 0, y: 30, filter: "blur(8px)" }}
-        animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-        transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1], delay: 0.45 }}
-        className="mb-0 px-4 text-base sm:text-lg md:text-xl lg:text-2xl font-normal leading-relaxed text-gray-700 dark:text-white/80 max-w-4xl mx-auto"
-      >
-        Developer, Software Engineer, and Lifelong Learner with over 2 years of professional experience building and optimizing digital products that people love to use.
-      </motion.p>
-
-      <motion.div
-        initial={{ opacity: 0, y: 30, filter: "blur(8px)" }}
-        animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-        transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1], delay: 0.75 }}
-        className="mt-8 sm:mt-12 md:mt-14 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-3 md:gap-4 px-4 text-base md:text-lg font-medium w-full sm:w-auto"
-      >
-        <a
-          href="#contact"
-          className="w-full max-w-xs sm:w-auto justify-center group bg-slate-900/45 hover:bg-slate-900/65 text-white px-6 md:px-7 py-2.5 sm:py-3 flex items-center gap-2 rounded-full outline-none focus:scale-110 hover:scale-110 active:scale-105 transition-all duration-300 ease-in-out cursor-pointer border border-white/25 hover:border-white/40 backdrop-blur-2xl shadow-[0_4px_20px_-2px_rgba(0,0,0,0.25)] hover:shadow-[0_12px_32px_-4px_rgba(0,0,0,0.45)] whitespace-nowrap shrink-0"
-          onClick={() => {
-            setActiveSection("Contact");
-            setTimeOfLastClick(Date.now());
-          }}
+        <motion.h1
+          initial={{ opacity: 0, y: 30, filter: "blur(8px)" }}
+          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+          transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1], delay: 0.15 }}
+          className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-gray-950 dark:text-white mb-4 sm:mb-6 leading-[1.15] max-w-4xl mx-auto px-4"
         >
-          <span className="whitespace-nowrap">Contact me here</span>{" "}
-          <BsArrowRight className="opacity-90 group-hover:translate-x-1 transition shrink-0" />
-        </a>
+          Hello, I&apos;m{" "}
+          <span className="text-gray-950 dark:text-white font-black">
+            Abhay Verma
+          </span>
+          .
+        </motion.h1>
 
-        <a
-          className="w-full max-w-xs sm:w-auto justify-center group bg-transparent px-6 md:px-7 py-2.5 sm:py-3 flex items-center gap-2 rounded-full outline-none focus:scale-110 hover:scale-110 active:scale-105 transition-all duration-300 ease-in-out cursor-pointer border border-black/10 hover:border-black/25 shadow-[0_4px_20px_-2px_rgba(0,0,0,0.08)] hover:shadow-[0_14px_28px_-5px_rgba(0,0,0,0.12),0_10px_14px_-6px_rgba(0,0,0,0.08)] dark:bg-white/5 dark:text-white/90 dark:border-white/15 dark:hover:border-white/35 dark:shadow-[0_4px_20px_-2px_rgba(0,0,0,0.3)] dark:hover:shadow-[0_12px_32px_-4px_rgba(0,0,0,0.6)] dark:hover:bg-white/[0.12] hover:bg-black/[0.035] backdrop-blur-[16px] whitespace-nowrap shrink-0"
-          href="/CV.pdf"
-          download
+        <motion.p
+          initial={{ opacity: 0, y: 30, filter: "blur(8px)" }}
+          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+          transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1], delay: 0.45 }}
+          className="mb-0 px-4 text-base sm:text-lg md:text-xl lg:text-2xl font-normal leading-relaxed text-gray-700 dark:text-white/80 max-w-4xl mx-auto"
         >
-          <span className="whitespace-nowrap">Download CV</span>{" "}
-          <HiDownload className="opacity-80 group-hover:translate-y-1 transition shrink-0" />
-        </a>
+          Developer, Software Engineer, and Lifelong Learner with over 2 years of professional experience building and optimizing digital products that people love to use.
+        </motion.p>
 
-        <div className="flex items-center justify-center gap-2.5 sm:gap-3 md:gap-3.5 mt-1 sm:mt-0 shrink-0">
+        {/* Realigned Hero Action Buttons & Social Profile Links */}
+        <motion.div
+          initial={{ opacity: 0, y: 30, filter: "blur(8px)" }}
+          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+          transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1], delay: 0.75 }}
+          className="mt-8 sm:mt-12 md:mt-14 flex flex-wrap items-center justify-center gap-3.5 sm:gap-4 px-4 text-base md:text-lg font-medium w-full sm:w-auto"
+        >
+          {/* Primary Action Button: Download CV */}
           <a
-            className="bg-transparent p-3 sm:p-3.5 md:p-4 text-gray-700 hover:text-gray-950 flex items-center gap-2 rounded-full focus:scale-[1.15] hover:scale-[1.15] active:scale-105 transition-all duration-300 ease-in-out cursor-pointer border border-black/10 hover:border-black/25 shadow-[0_4px_20px_-2px_rgba(0,0,0,0.08)] hover:shadow-[0_14px_28px_-5px_rgba(0,0,0,0.12),0_10px_14px_-6px_rgba(0,0,0,0.08)] dark:bg-white/5 dark:text-white/90 dark:border-white/15 dark:hover:border-white/35 dark:shadow-[0_4px_20px_-2px_rgba(0,0,0,0.3)] dark:hover:shadow-[0_12px_32px_-4px_rgba(0,0,0,0.6)] dark:hover:bg-white/[0.12] hover:bg-black/[0.035] backdrop-blur-[16px]"
-            href="https://www.linkedin.com/in/abhay-verma-4b6b0b421/"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="LinkedIn profile"
+            className="group bg-zinc-900 text-white hover:bg-zinc-800 dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-100 px-7 py-3 flex items-center justify-center gap-2.5 rounded-full outline-none focus:scale-105 hover:scale-105 active:scale-95 transition-all duration-300 ease-in-out cursor-pointer border border-black/10 dark:border-white/20 shadow-md hover:shadow-xl dark:shadow-[0_0_20px_rgba(255,255,255,0.15)] whitespace-nowrap shrink-0 text-base font-semibold"
+            href="/CV.pdf"
+            download
           >
-            <BsLinkedin />
+            <span className="whitespace-nowrap">Download CV</span>{" "}
+            <HiDownload className="opacity-90 group-hover:translate-y-1 transition duration-300 shrink-0 text-lg" />
           </a>
 
-          <a
-            className="bg-transparent p-3 sm:p-3.5 md:p-4 text-gray-700 flex items-center gap-2 text-[1.2rem] md:text-[1.35rem] rounded-full focus:scale-[1.15] hover:scale-[1.15] hover:text-gray-950 active:scale-105 transition-all duration-300 ease-in-out cursor-pointer border border-black/10 hover:border-black/25 shadow-[0_4px_20px_-2px_rgba(0,0,0,0.08)] hover:shadow-[0_14px_28px_-5px_rgba(0,0,0,0.12),0_10px_14px_-6px_rgba(0,0,0,0.08)] dark:bg-white/5 dark:text-white/90 dark:border-white/15 dark:hover:border-white/35 dark:shadow-[0_4px_20px_-2px_rgba(0,0,0,0.3)] dark:hover:shadow-[0_12px_32px_-4px_rgba(0,0,0,0.6)] dark:hover:bg-white/[0.12] hover:bg-black/[0.035] backdrop-blur-[16px]"
-            href="https://github.com/abhayv175"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="GitHub profile"
-          >
-            <FaGithubSquare />
-          </a>
+          {/* Social Quick Links with Clean Frosted Glass Styling */}
+          <div className="flex items-center justify-center gap-3 shrink-0">
+            <a
+              className="bg-white/80 dark:bg-zinc-900/80 p-3.5 text-zinc-700 hover:text-black dark:text-zinc-300 dark:hover:text-white flex items-center justify-center rounded-full hover:scale-110 active:scale-95 transition-all duration-300 cursor-pointer border border-black/10 hover:border-black/30 dark:border-white/10 dark:hover:border-white/30 shadow-sm hover:shadow-md backdrop-blur-md text-lg"
+              href="https://www.linkedin.com/in/abhay-verma-4b6b0b421/"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="LinkedIn profile"
+            >
+              <BsLinkedin />
+            </a>
 
-          <a
-            className="bg-transparent p-3 sm:p-3.5 md:p-4 text-gray-700 flex items-center gap-2 text-[1.2rem] md:text-[1.35rem] rounded-full focus:scale-[1.15] hover:scale-[1.15] hover:text-gray-950 active:scale-105 transition-all duration-300 ease-in-out cursor-pointer border border-black/10 hover:border-black/25 shadow-[0_4px_20px_-2px_rgba(0,0,0,0.08)] hover:shadow-[0_14px_28px_-5px_rgba(0,0,0,0.12),0_10px_14px_-6px_rgba(0,0,0,0.08)] dark:bg-white/5 dark:text-white/90 dark:border-white/15 dark:hover:border-white/35 dark:shadow-[0_4px_20px_-2px_rgba(0,0,0,0.3)] dark:hover:shadow-[0_12px_32px_-4px_rgba(0,0,0,0.6)] dark:hover:bg-white/[0.12] hover:bg-black/[0.035] backdrop-blur-[16px]"
-            href="https://leetcode.com/u/abhayv175/"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="LeetCode profile"
-          >
-            <SiLeetcode />
-          </a>
-        </div>
-      </motion.div>
+            <a
+              className="bg-white/80 dark:bg-zinc-900/80 p-3.5 text-zinc-700 hover:text-black dark:text-zinc-300 dark:hover:text-white flex items-center justify-center rounded-full hover:scale-110 active:scale-95 transition-all duration-300 cursor-pointer border border-black/10 hover:border-black/30 dark:border-white/10 dark:hover:border-white/30 shadow-sm hover:shadow-md backdrop-blur-md text-lg"
+              href="https://github.com/abhayv175"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="GitHub profile"
+            >
+              <FaGithubSquare />
+            </a>
+
+            <a
+              className="bg-white/80 dark:bg-zinc-900/80 p-3.5 text-zinc-700 hover:text-black dark:text-zinc-300 dark:hover:text-white flex items-center justify-center rounded-full hover:scale-110 active:scale-95 transition-all duration-300 cursor-pointer border border-black/10 hover:border-black/30 dark:border-white/10 dark:hover:border-white/30 shadow-sm hover:shadow-md backdrop-blur-md text-lg"
+              href="https://leetcode.com/u/abhayv175/"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="LeetCode profile"
+            >
+              <SiLeetcode />
+            </a>
+          </div>
+        </motion.div>
     </section>
   );
 }

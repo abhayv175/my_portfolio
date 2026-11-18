@@ -4,13 +4,13 @@
 
 :root {
   --line-color: #d1d5db;
-  --bg-color: #f8fafc;
+  --bg-color: #f3f0ff;
   --text-color: #0f172a;
 }
 
 .dark {
   --line-color: rgba(255, 255, 255, 0.35);
-  --bg-color: #09090b;
+  --bg-color: #0a0818;
   --text-color: #f4f4f5;
 }
 

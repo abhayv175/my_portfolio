@@ -125,7 +125,7 @@ export default function Contact() {
               type="button"
               onClick={handleCopyEmail}
               title="Click to copy email address"
-              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 dark:bg-white/5 border border-white/15 text-sm hover:bg-white/20 text-gray-900 dark:text-white transition-all duration-200 cursor-pointer group active:scale-95"
+              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 text-sm hover:bg-black/10 dark:hover:bg-white/10 hover:border-indigo-500/30 dark:hover:border-indigo-400/30 text-gray-900 dark:text-white transition-all duration-200 cursor-pointer group active:scale-95"
             >
               <BsEnvelope className="text-xs opacity-70 group-hover:opacity-100 transition-opacity" />
               <span className="font-medium">abhayv175@gmail.com</span>
@@ -138,7 +138,7 @@ export default function Contact() {
             <span>or through this form.</span>
           </p>
 
-          <div className="mt-8 w-full p-6 sm:p-10 rounded-3xl bg-white/70 border border-black/10 shadow-xl backdrop-blur-xl dark:bg-black/30 dark:border-white/10 dark:shadow-[0_20px_50px_rgba(0,0,0,0.4)]">
+          <div className="mt-8 w-full p-6 sm:p-10 rounded-3xl bg-white/70 border border-black/10 shadow-xl backdrop-blur-xl dark:bg-zinc-900/50 dark:border-white/10 dark:shadow-[0_20px_50px_rgba(0,0,0,0.6)]">
             <form
               ref={formRef}
               noValidate

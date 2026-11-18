@@ -6,6 +6,7 @@ import { links } from "@/lib/data";
 import clsx from "clsx";
 import { useActiveSectionContext } from "@/context/active-section-context";
 import type { SectionName } from "@/lib/types";
+import { BsArrowRight } from "react-icons/bs";
 
 export default function Header() {
   const { activeSection, setActiveSection, setTimeOfLastClick } =
@@ -49,16 +50,25 @@ export default function Header() {
     }
   };
 
+  const navLinks = links.filter((link) => link.name !== "Contact");
+  const isActiveContact = activeSection === "Contact";
+
   return (
     <>
       {/* Top Viewport Soft Fade Mask (Apple scroll-edge diffusion) */}
       <div
-        className="fixed top-0 inset-x-0 h-28 z-[9990] pointer-events-none bg-gradient-to-b from-slate-50/80 via-slate-50/40 to-transparent dark:from-[#09090b]/80 dark:via-[#09090b]/40 dark:to-transparent backdrop-blur-[8px] [mask-image:linear-gradient(to_bottom,black_25%,transparent_100%)] [-webkit-mask-image:linear-gradient(to_bottom,black_25%,transparent_100%)]"
+        className="fixed top-0 inset-x-0 h-28 z-[9990] pointer-events-none bg-gradient-to-b from-[#f3f0ff]/80 via-[#f3f0ff]/40 to-transparent dark:from-[#0a0818]/80 dark:via-[#0a0818]/40 dark:to-transparent backdrop-blur-[8px] [mask-image:linear-gradient(to_bottom,black_25%,transparent_100%)] [-webkit-mask-image:linear-gradient(to_bottom,black_25%,transparent_100%)]"
+        aria-hidden="true"
+      />
+
+      {/* Subtle top ambient glow hairline (inspired by screenshot) */}
+      <div
+        className="fixed top-0 inset-x-0 h-[1px] z-[9991] pointer-events-none bg-gradient-to-r from-transparent via-indigo-500/30 dark:via-indigo-400/30 to-transparent shadow-[0_0_12px_rgba(99,102,241,0.25)]"
         aria-hidden="true"
       />
 
       {/* Desktop Navigation Pill (Hidden on Mobile, Visible on Desktop/Tablet) */}
-      <header className="fixed top-6 left-1/2 -translate-x-1/2 z-[9999] pointer-events-none hidden md:flex items-center justify-center max-w-[calc(100vw-2rem)] animate-header-in">
+      <header className="fixed top-5 left-1/2 -translate-x-1/2 z-[9999] pointer-events-none hidden md:flex items-center justify-center max-w-[calc(100vw-2rem)] animate-header-in">
         <nav
           style={{
             backdropFilter: "blur(28px) saturate(180%)",
@@ -66,10 +76,10 @@ export default function Header() {
             backfaceVisibility: "hidden",
             outline: "1px solid transparent",
           }}
-          className="flex items-center justify-center rounded-full border border-white/40 dark:border-white/15 bg-white/65 dark:bg-slate-900/65 p-1 sm:p-1.5 shadow-xl shadow-black/[0.06] dark:shadow-black/50 pointer-events-auto transform-gpu origin-center will-change-transform backface-hidden [backface-visibility:hidden] [transform-style:preserve-3d] outline outline-1 outline-transparent hover:scale-105 active:scale-[1.02] transition-transform duration-300 ease-out"
+          className="flex items-center justify-center rounded-full border border-black/10 dark:border-white/10 bg-white/80 dark:bg-zinc-950/75 p-1 sm:p-1.5 shadow-lg shadow-black/[0.04] dark:shadow-[0_12px_40px_rgba(0,0,0,0.65)] pointer-events-auto transform-gpu origin-center will-change-transform backface-hidden [backface-visibility:hidden] [transform-style:preserve-3d] outline outline-1 outline-transparent hover:border-black/20 dark:hover:border-white/20 transition-all duration-300 ease-out"
         >
-          <ul className="flex items-center justify-center gap-0 text-[0.8rem] sm:text-[0.9rem] font-medium text-gray-700 dark:text-gray-300">
-            {links.map((link) => {
+          <ul className="flex items-center justify-center gap-0.5 text-[0.8rem] sm:text-[0.88rem] font-medium text-gray-700 dark:text-gray-300">
+            {navLinks.map((link) => {
               const isActive = activeSection === link.name;
 
               return (
@@ -99,10 +109,10 @@ export default function Header() {
                       outline: "1px solid transparent",
                     }}
                     className={clsx(
-                      "flex items-center justify-center px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-full hover:text-gray-950 dark:hover:text-white transition-colors duration-200 ease-out whitespace-nowrap cursor-pointer relative transform-gpu will-change-[transform,opacity] [backface-visibility:hidden] [transform-style:preserve-3d] outline outline-1 outline-transparent",
+                      "flex items-center justify-center px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-full transition-colors duration-200 ease-out whitespace-nowrap cursor-pointer relative transform-gpu will-change-[transform,opacity] [backface-visibility:hidden] [transform-style:preserve-3d] outline outline-1 outline-transparent",
                       {
-                        "text-gray-950 dark:text-white font-semibold": isActive,
-                        "hover:bg-white/25 dark:hover:bg-white/10": !isActive,
+                        "text-zinc-950 dark:text-white font-semibold": isActive,
+                        "text-zinc-600 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5 font-medium": !isActive,
                       }
                     )}
                     href={link.hash}
@@ -114,7 +124,7 @@ export default function Header() {
 
                     {isActive && (
                       <motion.span
-                        className="bg-white/40 dark:bg-white/20 rounded-full absolute inset-0 -z-0 backdrop-blur-xl border border-white/40 dark:border-white/30 shadow-sm transform-gpu will-change-[transform,opacity] [backface-visibility:hidden] [transform-style:preserve-3d] outline outline-1 outline-transparent"
+                        className="rounded-full absolute inset-0 -z-0 border border-indigo-500/40 dark:border-indigo-400/50 bg-indigo-500/10 dark:bg-indigo-950/60 shadow-[0_0_20px_rgba(99,102,241,0.3),inset_0_1px_1px_rgba(255,255,255,0.15)] backdrop-blur-xl transform-gpu will-change-[transform,opacity] [backface-visibility:hidden] [transform-style:preserve-3d]"
                         layoutId="activeSection"
                         layoutDependency={false}
                         transition={{
@@ -134,6 +144,31 @@ export default function Header() {
               );
             })}
           </ul>
+
+          {/* Elegant Vertical Divider */}
+          <div className="h-4 w-px bg-black/10 dark:bg-white/15 mx-1" aria-hidden="true" />
+
+          {/* Contact Me Here CTA Button at End of Navbar */}
+          <motion.a
+            href="#contact"
+            onClick={(e) => handleNavClick(e, "Contact", "#contact")}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            transition={{
+              type: "spring",
+              stiffness: 400,
+              damping: 25,
+            }}
+            className={clsx(
+              "group flex items-center gap-1.5 px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-full text-[0.8rem] sm:text-[0.88rem] font-semibold transition-all duration-300 whitespace-nowrap cursor-pointer relative transform-gpu will-change-[transform,opacity] [backface-visibility:hidden]",
+              isActiveContact
+                ? "bg-indigo-600 dark:bg-white text-white dark:text-zinc-950 shadow-[0_0_20px_rgba(99,102,241,0.5)] dark:shadow-[0_0_20px_rgba(255,255,255,0.2)] border border-indigo-500 dark:border-white"
+                : "bg-zinc-900 text-white hover:bg-zinc-800 dark:bg-white/10 dark:hover:bg-white/15 dark:text-white border border-black/10 dark:border-white/15 shadow-sm hover:shadow-md dark:hover:border-white/25"
+            )}
+          >
+            <span>Contact me</span>
+            <BsArrowRight className="text-xs transition-transform duration-300 group-hover:translate-x-1" />
+          </motion.a>
         </nav>
       </header>
 
@@ -153,7 +188,7 @@ export default function Header() {
           backfaceVisibility: "hidden",
           isolation: "isolate",
         }}
-        className="fixed top-4 right-4 sm:top-6 sm:right-6 z-[9999] pointer-events-auto isolate md:hidden w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center bg-white/65 hover:bg-white/80 dark:bg-slate-900/55 dark:hover:bg-slate-900/75 border border-white/80 hover:border-white ring-1 ring-slate-900/10 dark:ring-0 dark:border-white/30 dark:hover:border-white/45 shadow-[0_8px_30px_rgba(0,0,0,0.12),inset_0_1px_2px_rgba(255,255,255,0.9)] hover:shadow-[0_12px_36px_rgba(0,0,0,0.16),inset_0_1px_2px_rgba(255,255,255,1)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.25),inset_0_1px_1px_rgba(255,255,255,0.35)] dark:hover:shadow-[0_12px_36px_rgba(0,0,0,0.35),inset_0_1px_1px_rgba(255,255,255,0.45)] backdrop-blur-2xl backdrop-saturate-150 transform-gpu cursor-pointer outline-none transition-colors duration-300 group overflow-hidden"
+        className="fixed top-4 right-4 sm:top-6 sm:right-6 z-[9999] pointer-events-auto isolate md:hidden w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center bg-white/80 hover:bg-white/95 dark:bg-zinc-950/80 dark:hover:bg-zinc-950/95 border border-black/10 dark:border-white/15 shadow-lg dark:shadow-[0_8px_30px_rgba(0,0,0,0.5)] backdrop-blur-2xl backdrop-saturate-150 transform-gpu cursor-pointer outline-none transition-all duration-300 group overflow-hidden"
       >
         {/* Subtle radial sheen on hover */}
         <div
@@ -217,7 +252,7 @@ export default function Header() {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.25 }}
               onClick={() => setIsOpen(false)}
-              className="fixed inset-0 z-[9995] bg-black/20 dark:bg-black/60 backdrop-blur-sm md:hidden pointer-events-auto"
+              className="fixed inset-0 z-[9995] bg-black/30 dark:bg-black/70 backdrop-blur-sm md:hidden pointer-events-auto"
               aria-hidden="true"
             />
 
@@ -231,10 +266,10 @@ export default function Header() {
                 backdropFilter: "blur(28px) saturate(150%)",
                 WebkitBackdropFilter: "blur(28px) saturate(150%)",
               }}
-              className="fixed top-[4.5rem] right-4 sm:top-[5.5rem] sm:right-6 z-[9998] w-[78%] max-w-[260px] md:hidden bg-white/80 border border-black/10 text-slate-900 backdrop-blur-xl shadow-2xl dark:bg-slate-900/80 dark:border-white/10 dark:text-white dark:backdrop-blur-xl dark:shadow-[0_20px_50px_rgba(0,0,0,0.5)] rounded-3xl p-2.5 sm:p-3 flex flex-col gap-1 pointer-events-auto"
+              className="fixed top-[4.5rem] right-4 sm:top-[5.5rem] sm:right-6 z-[9998] w-[82%] max-w-[280px] md:hidden bg-white/90 dark:bg-zinc-950/90 border border-black/10 dark:border-white/15 text-slate-900 backdrop-blur-2xl shadow-2xl dark:text-white dark:shadow-[0_20px_50px_rgba(0,0,0,0.6)] rounded-3xl p-3 flex flex-col gap-2 pointer-events-auto"
             >
-              <ul className="flex flex-col gap-1 w-full rounded-2xl p-1 bg-white/60 border border-black/5 text-slate-800 dark:bg-white/10 dark:border-white/10 dark:text-white">
-                {links.map((link) => {
+              <ul className="flex flex-col gap-1 w-full rounded-2xl p-1 bg-white/60 border border-black/5 text-slate-800 dark:bg-white/5 dark:border-white/10 dark:text-white">
+                {navLinks.map((link) => {
                   const isActive = activeSection === link.name;
 
                   return (
@@ -242,15 +277,12 @@ export default function Header() {
                       <motion.a
                         href={link.hash}
                         whileTap={{ scale: 0.97 }}
-                        onClick={(e) => {
-                          handleNavClick(e, link.name, link.hash);
-                          setIsOpen(false);
-                        }}
+                        onClick={(e) => handleNavClick(e, link.name, link.hash)}
                         className={clsx(
                           "flex items-center justify-between py-2.5 px-4 rounded-full text-[0.92rem] transition-colors duration-200 relative whitespace-nowrap cursor-pointer",
                           isActive
-                            ? "text-slate-900 dark:text-white font-semibold"
-                            : "text-slate-700 dark:text-white/80 hover:text-slate-900 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10 font-medium"
+                            ? "text-zinc-950 dark:text-white font-semibold"
+                            : "text-slate-700 dark:text-zinc-300 hover:text-slate-900 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5 font-medium"
                         )}
                       >
                         <span className="relative z-10">{link.name}</span>
@@ -258,7 +290,7 @@ export default function Header() {
                         {isActive && (
                           <motion.div
                             layoutId="activeMobileSection"
-                            className="absolute inset-0 rounded-full bg-black/5 dark:bg-white/15 border border-black/5 dark:border-white/15 shadow-sm"
+                            className="absolute inset-0 rounded-full border border-indigo-500/40 dark:border-indigo-400/50 bg-indigo-500/10 dark:bg-indigo-950/60 shadow-[0_0_16px_rgba(99,102,241,0.25)]"
                             transition={{
                               type: "spring",
                               stiffness: 380,
@@ -268,13 +300,29 @@ export default function Header() {
                         )}
 
                         {isActive && (
-                          <span className="w-2 h-2 rounded-full bg-slate-900 dark:bg-white shadow-[0_0_8px_rgba(15,23,42,0.35)] dark:shadow-[0_0_8px_rgba(255,255,255,0.8)] relative z-10" />
+                          <span className="w-2 h-2 rounded-full bg-indigo-600 dark:bg-indigo-400 shadow-[0_0_8px_rgba(99,102,241,0.8)] relative z-10" />
                         )}
                       </motion.a>
                     </li>
                   );
                 })}
               </ul>
+
+              {/* Mobile Featured Contact Me CTA Button */}
+              <motion.a
+                href="#contact"
+                whileTap={{ scale: 0.96 }}
+                onClick={(e) => handleNavClick(e, "Contact", "#contact")}
+                className={clsx(
+                  "flex items-center justify-center gap-2 py-3 px-4 rounded-full text-[0.92rem] font-semibold transition-all duration-300 cursor-pointer shadow-lg",
+                  isActiveContact
+                    ? "bg-indigo-600 dark:bg-white text-white dark:text-zinc-950 shadow-[0_0_20px_rgba(99,102,241,0.5)] border border-indigo-500 dark:border-white"
+                    : "bg-zinc-900 text-white hover:bg-zinc-800 dark:bg-indigo-600 dark:hover:bg-indigo-500 border border-black/10 dark:border-indigo-400/30"
+                )}
+              >
+                <span>Contact me here</span>
+                <BsArrowRight className="text-sm" />
+              </motion.a>
             </motion.nav>
           </>
         )}

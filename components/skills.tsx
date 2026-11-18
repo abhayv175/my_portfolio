@@ -52,7 +52,7 @@ export default function Skills() {
             {skillsData.map((skill, index) => (
               <motion.li
                 key={index}
-                whileHover={{ scale: 1.08 }}
+                whileHover={{ scale: 1.08, y: -2 }}
                 whileTap={{ scale: 0.96 }}
                 transition={{
                   type: "spring",
@@ -64,7 +64,7 @@ export default function Skills() {
                   backfaceVisibility: "hidden",
                   WebkitBackfaceVisibility: "hidden",
                 }}
-                className="list-none bg-transparent rounded-2xl px-4 py-2 text-sm sm:px-5 sm:py-2.5 sm:text-base font-semibold text-gray-900 shadow-[0_4px_20px_-2px_rgba(0,0,0,0.08)] hover:shadow-[0_14px_28px_-5px_rgba(0,0,0,0.12),0_10px_14px_-6px_rgba(0,0,0,0.08)] transition-[background-color,border-color,box-shadow] duration-200 ease-out cursor-default border border-black/10 hover:border-black/25 dark:bg-white/5 dark:text-white/90 dark:border-white/10 dark:hover:border-white/35 dark:shadow-[0_4px_20px_-2px_rgba(0,0,0,0.3)] dark:hover:shadow-[0_12px_32px_-4px_rgba(0,0,0,0.6)] dark:backdrop-blur-md dark:hover:bg-white/[0.15] hover:bg-black/[0.03] backdrop-blur-md relative hover:z-10 transform-gpu will-change-transform backface-hidden [backface-visibility:hidden] [transform-style:preserve-3d]"
+                className="list-none bg-white/70 rounded-2xl px-4 py-2 text-sm sm:px-5 sm:py-2.5 sm:text-base font-medium text-gray-900 shadow-[0_4px_20px_-2px_rgba(0,0,0,0.05)] hover:shadow-[0_8px_24px_-4px_rgba(99,102,241,0.18)] transition-[background-color,border-color,box-shadow] duration-200 ease-out cursor-default border border-black/10 hover:border-indigo-500/30 dark:bg-zinc-900/40 dark:text-white/90 dark:border-white/10 dark:hover:border-indigo-400/40 dark:shadow-[0_4px_20px_-2px_rgba(0,0,0,0.3)] dark:hover:shadow-[0_8px_24px_-4px_rgba(99,102,241,0.2)] dark:backdrop-blur-md dark:hover:bg-indigo-950/30 hover:bg-indigo-50/60 backdrop-blur-md relative hover:z-10 transform-gpu will-change-transform backface-hidden [backface-visibility:hidden] [transform-style:preserve-3d]"
               >
                 {skill}
               </motion.li>

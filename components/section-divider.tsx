@@ -13,15 +13,15 @@ export default function SectionDivider() {
       aria-hidden="true"
     >
       <motion.div
-        className="h-full w-full rounded-full bg-slate-400/50 dark:bg-white/35 backdrop-blur-md shadow-[0_0_15px_rgba(0,0,0,0.12)] dark:shadow-[0_0_15px_rgba(255,255,255,0.4)] border border-black/5 dark:border-white/20 transform-gpu will-change-transform origin-top"
+        className="h-full w-full rounded-full bg-gradient-to-b from-indigo-500/40 via-sky-500/30 to-transparent dark:from-indigo-400/50 dark:via-sky-400/40 dark:to-transparent backdrop-blur-md shadow-[0_0_12px_rgba(99,102,241,0.25)] border border-indigo-500/20 dark:border-indigo-400/25 transform-gpu will-change-transform origin-top"
         style={{ transformOrigin: "top center" }}
         animate={{
-          opacity: [0.3, 0.9, 0.3],
-          scaleY: [0.92, 1.04, 0.92],
+          opacity: [0.4, 1.0, 0.4],
+          scaleY: [0.94, 1.05, 0.94],
           y: [0, 8, 0],
         }}
         transition={{
-          duration: 2,
+          duration: 2.2,
           repeat: Infinity,
           ease: "easeInOut",
         }}
