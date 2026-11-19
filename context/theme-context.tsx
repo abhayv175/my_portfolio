@@ -10,7 +10,7 @@ type ThemeContextProviderProps = {
 
 type ThemeContextType = {
   theme: Theme;
-  toggleTheme: () => void;
+  toggleTheme: (options?: { x?: number; y?: number }) => void;
 };
 
 const ThemeContext = createContext<ThemeContextType | null>(null);
@@ -20,16 +20,56 @@ export default function ThemeContextProvider({
 }: ThemeContextProviderProps) {
   const [theme, setTheme] = useState<Theme>("dark");
 
-  const toggleTheme = () => {
-    if (theme === "light") {
-      setTheme("dark");
-      window.localStorage.setItem("theme", "dark");
-      document.documentElement.classList.add("dark");
-    } else {
-      setTheme("light");
-      window.localStorage.setItem("theme", "light");
-      document.documentElement.classList.remove("dark");
+  const toggleTheme = (options?: { x?: number; y?: number }) => {
+    const nextTheme: Theme = theme === "light" ? "dark" : "light";
+
+    const updateDOM = () => {
+      setTheme(nextTheme);
+      window.localStorage.setItem("theme", nextTheme);
+      if (nextTheme === "dark") {
+        document.documentElement.classList.add("dark");
+      } else {
+        document.documentElement.classList.remove("dark");
+      }
+    };
+
+    if (
+      typeof document === "undefined" ||
+      !("startViewTransition" in document) ||
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    ) {
+      updateDOM();
+      return;
     }
+
+    const x = options?.x ?? window.innerWidth / 2;
+    const y = options?.y ?? window.innerHeight / 2;
+    const endRadius = Math.hypot(
+      Math.max(x, window.innerWidth - x),
+      Math.max(y, window.innerHeight - y)
+    );
+
+    const transition = (document as any).startViewTransition(() => {
+      updateDOM();
+    });
+
+    transition.ready
+      .then(() => {
+        document.documentElement.animate(
+          {
+            clipPath: [
+              `circle(0px at ${x}px ${y}px)`,
+              `circle(${endRadius}px at ${x}px ${y}px)`,
+            ],
+          },
+          {
+            duration: 520,
+            easing: "cubic-bezier(0.2, 0.9, 0.3, 1)",
+            pseudoElement: "::view-transition-new(root)",
+          }
+        );
+      })
+      .catch(() => {});
   };
 
   useEffect(() => {

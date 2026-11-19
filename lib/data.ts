@@ -89,7 +89,7 @@ export const projectsData = [
       "A zero-friction campus and retail print-on-demand infrastructure eliminating pen drives and kiosk queues with instant web uploads, zero-fee direct UPI settlements, and sub-50ms WebSocket push spooling to vendor Android tablets.",
     tags: ["FastAPI", "Flutter", "Python", "WebSockets", "Docker", "UPI"],
     imageUrl: PrintPulse,
-    url: "https://github.com/abhayv175/PrintPulse",
+    url: "https://printpulse-info.netlify.app/",
   },
   {
     title: "Move It",

@@ -13,6 +13,17 @@ import { Toaster } from "react-hot-toast";
 export const metadata = {
   title: "Abhay Verma | Personal Portfolio",
   description: "Abhay Verma is a Software Developer and QA engineer with 2 years of experience.",
+  openGraph: {
+    title: "Abhay Verma | Personal Portfolio",
+    description: "Abhay Verma is a Software Developer and QA engineer with 2 years of experience.",
+    type: "website",
+    siteName: "Abhay Verma Portfolio",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Abhay Verma | Personal Portfolio",
+    description: "Abhay Verma is a Software Developer and QA engineer with 2 years of experience.",
+  },
 };
 
 export default function RootLayout({

@@ -65,7 +65,7 @@ function ProjectCardScrollWrapper({
   const cardRef = useRef<HTMLDivElement>(null);
   const isInScroll = useInView(cardRef, {
     once: false,
-    margin: "0px 0px -20px 0px",
+    margin: "-80px 0px -80px 0px",
   });
   const [isMobile, setIsMobile] = useState(false);
   const [isInView, setIsInView] = useState(false);
@@ -89,7 +89,7 @@ function ProjectCardScrollWrapper({
         variants={cardVariants}
         viewport={
           isMobile
-            ? { margin: "0px 0px 0px 0px", amount: 0.05, once: false }
+            ? { margin: "-25% 0px -25% 0px", amount: 0.2, once: false }
             : undefined
         }
         onViewportEnter={() => {
@@ -282,7 +282,7 @@ function PrintPulseFeaturedCard({
       }`}
     >
       {/* Background Top Ambient Accent */}
-      <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-bl from-cyan-500/20 via-sky-500/15 to-transparent rounded-full blur-3xl pointer-events-none" />
+      <div className="hidden sm:block absolute top-0 right-0 w-96 h-96 bg-gradient-to-bl from-cyan-500/20 via-sky-500/15 to-transparent rounded-full blur-3xl pointer-events-none" />
       <div className={`absolute inset-0 rounded-3xl bg-gradient-to-br from-cyan-500/20 via-sky-500/10 to-transparent ${isFocused ? "opacity-100" : "opacity-0"} group-hover:opacity-100 transition-opacity duration-150 ease-out pointer-events-none`} />
 
       {/* Left Column: Project Overview & Meta */}

@@ -110,10 +110,34 @@ function ExperienceTimelineCard({
   const isCardFocused = isMobile ? isInView : isHovered;
   const itemTheme = EXPERIENCE_THEMES[index % EXPERIENCE_THEMES.length];
 
+  React.useEffect(() => {
+    const el = cardRef.current?.querySelector<HTMLElement>(
+      ".vertical-timeline-element-content"
+    );
+    if (!el) return;
+    const handleMouseEnter = () => setIsHovered(true);
+    const handleMouseLeave = () => setIsHovered(false);
+
+    el.addEventListener("mouseenter", handleMouseEnter);
+    el.addEventListener("mouseleave", handleMouseLeave);
+    return () => {
+      el.removeEventListener("mouseenter", handleMouseEnter);
+      el.removeEventListener("mouseleave", handleMouseLeave);
+    };
+  }, []);
+
   return (
     <div
       ref={cardRef}
-      className="experience-card-item w-full transition-all duration-300"
+      className={`experience-card-wrapper w-full pointer-events-none transition-all duration-300 ${
+        index === 0
+          ? "mb-14 sm:mb-16 min-[1170px]:mb-0"
+          : index === 1
+          ? "mb-14 sm:mb-16 min-[1170px]:mb-0 timeline-stagger-1"
+          : index === 2
+          ? "mb-14 sm:mb-16 min-[1170px]:mb-0 timeline-stagger-2"
+          : "mb-14 sm:mb-16 min-[1170px]:mb-0 timeline-stagger-3"
+      }`}
     >
       <motion.div
         initial="hidden"
@@ -134,19 +158,14 @@ function ExperienceTimelineCard({
           transform: "translateZ(0)",
           WebkitTapHighlightColor: "transparent",
         }}
-        onMouseEnter={() => {
-          if (!isMobile) setIsHovered(true);
-        }}
-        onMouseLeave={() => {
-          if (!isMobile) setIsHovered(false);
-        }}
-        className="w-full transform-gpu will-change-transform [-webkit-tap-highlight-color:transparent]"
+        className="w-full pointer-events-none transform-gpu will-change-transform [-webkit-tap-highlight-color:transparent]"
       >
       <VerticalTimelineElement
         position={index % 2 === 0 ? "left" : "right"}
         onTimelineElementClick={() => setActiveIndex(index)}
-        textClassName="cursor-pointer group/card transition-all duration-300 ease-out transform-gpu will-change-transform select-none [-webkit-tap-highlight-color:transparent] relative overflow-hidden"
+        textClassName="cursor-pointer group/card transition-all duration-300 ease-out transform-gpu will-change-transform select-none [-webkit-tap-highlight-color:transparent] relative overflow-hidden pointer-events-auto"
         contentStyle={{
+          zIndex: isCardFocused ? 30 : 2,
           background: isCardFocused
             ? theme === "light"
               ? "rgba(255, 255, 255, 0.95)"
@@ -211,14 +230,21 @@ function ExperienceTimelineCard({
         />
 
         <div
-          className="relative z-10 cursor-pointer select-none [-webkit-tap-highlight-color:transparent]"
-          onMouseEnter={() => {
-            if (!isMobile) setIsHovered(true);
-          }}
-          onMouseLeave={() => {
-            if (!isMobile) setIsHovered(false);
-          }}
+          role="button"
+          tabIndex={0}
+          aria-haspopup="dialog"
+          aria-expanded={activeIndex === index}
+          aria-label={`View details for ${item.title} at ${item.company}`}
+          className="relative z-10 cursor-pointer select-none [-webkit-tap-highlight-color:transparent] pointer-events-auto focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 rounded-xl"
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
           onClick={() => setActiveIndex(index)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              setActiveIndex(index);
+            }
+          }}
         >
           <div className="flex items-center justify-between gap-2">
             <h3
@@ -281,7 +307,7 @@ export default function Experience() {
   React.useEffect(() => {
     setMounted(true);
     const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
+      setIsMobile(window.innerWidth < 1170);
     };
     checkMobile();
     window.addEventListener("resize", checkMobile);
@@ -313,56 +339,47 @@ export default function Experience() {
       className="scroll-mt-28 mb-24 sm:mb-32 w-full max-w-xl md:max-w-6xl mx-auto px-0 sm:px-4 md:px-0"
     >
       <style>{`
-        #experience .experience-card-item {
-          margin-bottom: 2.75rem !important;
-        }
-        #experience .experience-card-item:last-child {
-          margin-bottom: 0 !important;
-        }
-        @media (min-width: 640px) {
-          #experience .experience-card-item {
-            margin-bottom: 3.5rem !important;
-          }
-        }
-        @media (min-width: 1024px) {
-          #experience .experience-card-item {
-            margin-bottom: 4.5rem !important;
-          }
-        }
         #experience .vertical-timeline-element-content {
           transition: transform 450ms cubic-bezier(0.16, 1, 0.3, 1), background-color 300ms ease-in-out, border-color 300ms ease-in-out, box-shadow 300ms ease-in-out, opacity 300ms ease-in-out !important;
         }
         #experience .vertical-timeline-element {
-          margin: 0 !important;
+          pointer-events: none;
+        }
+        #experience .vertical-timeline-element-content,
+        #experience .vertical-timeline-element-icon {
+          pointer-events: auto;
         }
         #experience .vertical-timeline-element-date {
           display: none !important;
         }
+        @media only screen and (max-width: 1169px) {
+          #experience .vertical-timeline-element {
+            margin: 1.5rem 0 3rem 0 !important;
+          }
+          #experience .experience-card-wrapper {
+            margin-bottom: 3.5rem !important;
+          }
+          #experience .experience-card-wrapper:last-child {
+            margin-bottom: 1rem !important;
+          }
+        }
+        @media only screen and (min-width: 1170px) {
+          #experience .vertical-timeline-element {
+            margin: 0 !important;
+          }
+          #experience .timeline-stagger-1 {
+            margin-top: -190px !important;
+          }
+          #experience .timeline-stagger-2 {
+            margin-top: -70px !important;
+          }
+          #experience .timeline-stagger-3 {
+            margin-top: -160px !important;
+          }
+        }
         @media (max-width: 640px) {
           #experience .vertical-timeline-element-content {
             padding: 1.25rem 1.25rem !important;
-          }
-        }
-        @media (hover: hover) and (pointer: fine) {
-          #experience .vertical-timeline-element-content:hover {
-            transform: scale(1.02) !important;
-            opacity: 1 !important;
-          }
-          html.dark #experience .vertical-timeline-element-content:hover {
-            border-color: rgba(56, 189, 248, 0.3) !important;
-            background-color: rgba(15, 23, 42, 0.6) !important;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5), 0 0 20px rgba(56,189,248,0.12) !important;
-          }
-          html.dark #experience .vertical-timeline-element-content:hover h3 {
-            color: rgb(56, 189, 248) !important;
-          }
-          html:not(.dark) #experience .vertical-timeline-element-content:hover {
-            border-color: rgba(255, 255, 255, 0.3) !important;
-            background-color: rgba(255, 255, 255, 0.08) !important;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1), 0 0 20px rgba(56,189,248,0.12) !important;
-          }
-          html:not(.dark) #experience .vertical-timeline-element-content:hover h3 {
-            color: rgb(2, 132, 199) !important;
           }
         }
       `}</style>
@@ -376,7 +393,7 @@ export default function Experience() {
         <VerticalTimeline
           animate={false}
           lineColor={theme === "light" ? "#d1d5db" : "rgba(255, 255, 255, 0.35)"}
-          className="!p-0"
+          className="!space-y-0 !p-0"
         >
           {experiencesData.map((item, index) => (
             <ExperienceTimelineCard
@@ -418,6 +435,9 @@ export default function Experience() {
                   exit={{ opacity: 0, scale: 0.94, y: 12 }}
                   transition={{ type: "spring", stiffness: 380, damping: 28 }}
                   onClick={(e) => e.stopPropagation()}
+                  role="dialog"
+                  aria-modal="true"
+                  aria-labelledby="experience-modal-title"
                   className={`pointer-events-auto w-[94vw] sm:w-[92vw] max-w-lg md:max-w-2xl max-h-[88vh] sm:max-h-[85vh] overflow-y-auto p-5 sm:p-8 md:p-10 flex flex-col justify-start relative bg-white/85 dark:bg-zinc-900/90 backdrop-blur-2xl border ${
                     EXPERIENCE_THEMES[activeIndex % EXPERIENCE_THEMES.length].modalBorder
                   } ${
@@ -461,7 +481,10 @@ export default function Experience() {
                           {experiencesData[activeIndex].company}
                         </span>
                       </div>
-                      <h3 className="text-lg sm:text-2xl md:text-3xl font-extrabold tracking-tight text-gray-950 dark:text-white">
+                      <h3
+                        id="experience-modal-title"
+                        className="text-lg sm:text-2xl md:text-3xl font-extrabold tracking-tight text-gray-950 dark:text-white"
+                      >
                         {experiencesData[activeIndex].title}
                       </h3>
                     </div>
