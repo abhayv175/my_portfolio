@@ -11,83 +11,137 @@ export default function AmbientGlow() {
     >
       {/* =========================================================================
           LIGHT MODE BACKGROUND & DYNAMIC MESH GRADIENT
-          (Rich pearlescent daylight atmosphere — vibrant, airy, never plain white)
+          (Rich, vibrant, living chromatic aura with visible fluid color morphing)
          ========================================================================= */}
-      <div className="absolute inset-0 w-full h-full min-h-[100dvh] bg-gradient-to-b from-[#f3f0ff] via-[#edf5ff] to-[#fbf7ff] transform-gpu overflow-hidden">
-        {/* Top radial ambient daylight sheen */}
-        <div className="absolute inset-0 w-full h-full bg-[radial-gradient(ellipse_100%_80%_at_50%_-10%,rgba(129,140,248,0.25),rgba(255,255,255,0))] pointer-events-none" />
+      <div className="absolute inset-0 w-full h-full min-h-[100dvh] bg-gradient-to-b from-[#f5f2ff] via-[#edf4ff] to-[#faf5ff] transform-gpu overflow-hidden">
+        {/* Top radial ambient daylight sheen with richer violet-indigo warmth */}
+        <div className="absolute inset-0 w-full h-full bg-[radial-gradient(ellipse_100%_80%_at_50%_-10%,rgba(99,102,241,0.32),rgba(255,255,255,0))] pointer-events-none" />
 
         <div className="absolute inset-0 w-full h-full pointer-events-none animate-glow-in">
-          {/* Node 1: Top-Right Soft Indigo/Lavender Aura */}
-          <div className="absolute top-[-6rem] sm:top-[-10rem] right-[-6rem] sm:right-[3rem] pointer-events-none">
+          {/* Node 1: Top-Right Dynamic Morphing Violet / Rose / Indigo / Azure */}
+          <div className="absolute top-[-8rem] sm:top-[-12rem] right-[-6rem] sm:right-[2rem] pointer-events-none">
             <motion.div
-              className="pointer-events-none h-[28rem] w-[28rem] sm:h-[50rem] sm:w-[55rem] rounded-full bg-[#818cf8] blur-[7rem] sm:blur-[11rem] md:blur-[13rem] transform-gpu will-change-transform"
+              className="pointer-events-none h-[30rem] w-[30rem] sm:h-[52rem] sm:w-[56rem] rounded-full blur-[5.5rem] sm:blur-[7.5rem] md:blur-[9rem] transform-gpu will-change-transform"
               style={{ transform: "translateZ(0)" }}
               animate={{
-                scale: [1, 1.08, 0.96, 1.05, 1],
-                opacity: [0.28, 0.42, 0.32, 0.38, 0.28],
-                x: ["0%", "-4%", "3%", "-2%", "0%"],
-                y: ["0%", "-2%", "3%", "-1%", "0%"],
-              }}
-              transition={{
-                duration: 7,
-                ease: "easeInOut",
-                repeat: Infinity,
-              }}
-            />
-          </div>
-
-          {/* Node 2: Top-Left Crisp Sky/Cyan Breeze */}
-          <div className="absolute top-[2rem] sm:top-[4rem] left-[-8rem] sm:left-[-6rem] md:left-[-12rem] pointer-events-none">
-            <motion.div
-              className="pointer-events-none h-[26rem] w-[26rem] sm:h-[45rem] sm:w-[50rem] rounded-full bg-[#38bdf8] blur-[7rem] sm:blur-[11rem] md:blur-[13rem] transform-gpu will-change-transform"
-              style={{ transform: "translateZ(0)" }}
-              animate={{
-                scale: [1, 1.06, 0.95, 1.04, 1],
-                opacity: [0.24, 0.38, 0.28, 0.35, 0.24],
-                x: ["0%", "4%", "-3%", "2%", "0%"],
-                y: ["0%", "3%", "-2%", "2%", "0%"],
-              }}
-              transition={{
-                duration: 8.5,
-                ease: "easeInOut",
-                repeat: Infinity,
-              }}
-            />
-          </div>
-
-          {/* Node 3: Mid-Page Soft Rose-Violet Quartz Glow */}
-          <div className="absolute top-[38%] sm:top-[35%] right-[-10rem] sm:right-[-8rem] pointer-events-none">
-            <motion.div
-              className="pointer-events-none h-[24rem] w-[24rem] sm:h-[40rem] sm:w-[44rem] rounded-full bg-[#c084fc] blur-[8rem] sm:blur-[12rem] md:blur-[14rem] transform-gpu will-change-transform"
-              style={{ transform: "translateZ(0)" }}
-              animate={{
-                scale: [1, 1.07, 0.94, 1.03, 1],
-                opacity: [0.20, 0.34, 0.24, 0.30, 0.20],
-                x: ["0%", "-3%", "2%", "-1%", "0%"],
-                y: ["0%", "4%", "-3%", "1%", "0%"],
-              }}
-              transition={{
-                duration: 10,
-                ease: "easeInOut",
-                repeat: Infinity,
-              }}
-            />
-          </div>
-
-          {/* Node 4: Lower-Left Azure Wave */}
-          <div className="absolute top-[65%] sm:top-[60%] left-[-10rem] sm:left-[-8rem] pointer-events-none">
-            <motion.div
-              className="pointer-events-none h-[26rem] w-[26rem] sm:h-[44rem] sm:w-[48rem] rounded-full bg-[#67e8f9] blur-[8rem] sm:blur-[12rem] md:blur-[14rem] transform-gpu will-change-transform"
-              style={{ transform: "translateZ(0)" }}
-              animate={{
-                scale: [1, 1.05, 0.97, 1.04, 1],
-                opacity: [0.22, 0.35, 0.26, 0.32, 0.22],
-                x: ["0%", "3%", "-2%", "1%", "0%"],
-                y: ["0%", "-3%", "2%", "-1%", "0%"],
+                backgroundColor: [
+                  "#6366f1", // Royal Indigo
+                  "#ec4899", // Vivid Rose Fuchsia
+                  "#8b5cf6", // Electric Violet
+                  "#3b82f6", // Vibrant Azure
+                  "#6366f1", // Royal Indigo
+                ],
+                scale: [1, 1.18, 0.94, 1.14, 1],
+                opacity: [0.52, 0.70, 0.56, 0.68, 0.52],
+                x: ["0%", "-14%", "10%", "-8%", "0%"],
+                y: ["0%", "12%", "-10%", "8%", "0%"],
               }}
               transition={{
                 duration: 11,
+                ease: "easeInOut",
+                repeat: Infinity,
+              }}
+            />
+          </div>
+
+          {/* Node 2: Top-Left Dynamic Morphing Cyan / Emerald Teal / Sky / Cobalt */}
+          <div className="absolute top-[0rem] sm:top-[2rem] left-[-8rem] sm:left-[-6rem] md:left-[-10rem] pointer-events-none">
+            <motion.div
+              className="pointer-events-none h-[28rem] w-[28rem] sm:h-[48rem] sm:w-[52rem] rounded-full blur-[5.5rem] sm:blur-[7.5rem] md:blur-[9rem] transform-gpu will-change-transform"
+              style={{ transform: "translateZ(0)" }}
+              animate={{
+                backgroundColor: [
+                  "#06b6d4", // Electric Cyan
+                  "#0ea5e9", // Bright Sky Blue
+                  "#10b981", // Luminous Emerald Teal
+                  "#6366f1", // Indigo
+                  "#06b6d4", // Electric Cyan
+                ],
+                scale: [1, 1.16, 0.92, 1.15, 1],
+                opacity: [0.48, 0.68, 0.52, 0.64, 0.48],
+                x: ["0%", "14%", "-12%", "8%", "0%"],
+                y: ["0%", "-10%", "14%", "-6%", "0%"],
+              }}
+              transition={{
+                duration: 12.5,
+                ease: "easeInOut",
+                repeat: Infinity,
+              }}
+            />
+          </div>
+
+          {/* Node 3: Center-Hero Radiant Core (Eliminates the empty white center hole) */}
+          <div className="absolute top-[-2rem] sm:top-[2rem] left-1/2 -translate-x-1/2 pointer-events-none">
+            <motion.div
+              className="pointer-events-none h-[24rem] w-[32rem] sm:h-[42rem] sm:w-[54rem] rounded-full blur-[6rem] sm:blur-[8rem] md:blur-[9.5rem] transform-gpu will-change-transform"
+              style={{ transform: "translateZ(0)" }}
+              animate={{
+                backgroundColor: [
+                  "#818cf8", // Soft Royal Violet
+                  "#f43f5e", // Radiant Coral
+                  "#fb923c", // Warm Amber Sunset
+                  "#c084fc", // Lavender Amethyst
+                  "#818cf8", // Soft Royal Violet
+                ],
+                scale: [1, 1.20, 0.90, 1.15, 1],
+                opacity: [0.38, 0.58, 0.42, 0.54, 0.38],
+                x: ["0%", "-10%", "12%", "-6%", "0%"],
+                y: ["0%", "8%", "-10%", "6%", "0%"],
+              }}
+              transition={{
+                duration: 14,
+                ease: "easeInOut",
+                repeat: Infinity,
+              }}
+            />
+          </div>
+
+          {/* Node 4: Mid-Page Dynamic Morphing Fuchsia / Coral / Amethyst / Apricot */}
+          <div className="absolute top-[36%] sm:top-[34%] right-[-8rem] sm:right-[-6rem] pointer-events-none">
+            <motion.div
+              className="pointer-events-none h-[26rem] w-[26rem] sm:h-[44rem] sm:w-[48rem] rounded-full blur-[6rem] sm:blur-[8rem] md:blur-[9.5rem] transform-gpu will-change-transform"
+              style={{ transform: "translateZ(0)" }}
+              animate={{
+                backgroundColor: [
+                  "#d946ef", // Electric Fuchsia
+                  "#f43f5e", // Sunset Coral
+                  "#8b5cf6", // Deep Amethyst
+                  "#f59e0b", // Radiant Amber
+                  "#d946ef", // Electric Fuchsia
+                ],
+                scale: [1, 1.18, 0.93, 1.12, 1],
+                opacity: [0.46, 0.66, 0.50, 0.62, 0.46],
+                x: ["0%", "-12%", "10%", "-6%", "0%"],
+                y: ["0%", "14%", "-10%", "8%", "0%"],
+              }}
+              transition={{
+                duration: 13,
+                ease: "easeInOut",
+                repeat: Infinity,
+              }}
+            />
+          </div>
+
+          {/* Node 5: Lower-Left Dynamic Morphing Ocean Azure / Seafoam Teal / Purple */}
+          <div className="absolute top-[62%] sm:top-[58%] left-[-8rem] sm:left-[-6rem] pointer-events-none">
+            <motion.div
+              className="pointer-events-none h-[28rem] w-[28rem] sm:h-[46rem] sm:w-[50rem] rounded-full blur-[6rem] sm:blur-[8rem] md:blur-[9.5rem] transform-gpu will-change-transform"
+              style={{ transform: "translateZ(0)" }}
+              animate={{
+                backgroundColor: [
+                  "#0ea5e9", // Vivid Sky
+                  "#14b8a6", // Seafoam Teal
+                  "#6366f1", // Royal Indigo
+                  "#06b6d4", // Deep Cyan
+                  "#0ea5e9", // Vivid Sky
+                ],
+                scale: [1, 1.16, 0.94, 1.14, 1],
+                opacity: [0.48, 0.68, 0.52, 0.64, 0.48],
+                x: ["0%", "12%", "-10%", "8%", "0%"],
+                y: ["0%", "-12%", "10%", "-6%", "0%"],
+              }}
+              transition={{
+                duration: 15,
                 ease: "easeInOut",
                 repeat: Infinity,
               }}

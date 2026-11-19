@@ -12,6 +12,7 @@ import { experiencesData } from "@/lib/data";
 import { useSectionInView } from "@/lib/hooks";
 import { useTheme } from "@/context/theme-context";
 import { motion, AnimatePresence, useInView } from "framer-motion";
+import { FiX, FiMapPin, FiCalendar } from "react-icons/fi";
 
 const cardVariants = {
   hidden: {
@@ -33,6 +34,53 @@ const cardVariants = {
     },
   },
 };
+
+const EXPERIENCE_THEMES = [
+  {
+    // Marquistech - 4G Modems & Protocols
+    accentGradient: "from-sky-500/30 via-cyan-500/20 to-transparent",
+    borderFocus: "rgba(56, 189, 248, 0.6)",
+    shadowFocus: "0 16px 40px rgba(0,0,0,0.3), 0 0 30px rgba(56, 189, 248, 0.25)",
+    textFocus: "text-sky-600 dark:text-sky-400",
+    badge: "bg-sky-500/10 text-sky-700 dark:text-sky-300 border-sky-500/25",
+    iconBorder: "rgba(56, 189, 248, 0.5)",
+    modalBorder: "border-sky-500/40 dark:border-sky-400/50",
+    modalShadow: "shadow-[0_25px_60px_rgba(0,0,0,0.12),0_0_40px_rgba(56,189,248,0.22)] dark:shadow-[0_25px_60px_rgba(0,0,0,0.7),0_0_45px_rgba(56,189,248,0.25)]",
+  },
+  {
+    // Unity - Engine, Physics & Regression
+    accentGradient: "from-purple-500/30 via-violet-500/20 to-transparent",
+    borderFocus: "rgba(168, 85, 247, 0.6)",
+    shadowFocus: "0 16px 40px rgba(0,0,0,0.3), 0 0 30px rgba(168, 85, 247, 0.25)",
+    textFocus: "text-purple-600 dark:text-purple-400",
+    badge: "bg-purple-500/10 text-purple-700 dark:text-purple-300 border-purple-500/25",
+    iconBorder: "rgba(168, 85, 247, 0.5)",
+    modalBorder: "border-purple-500/40 dark:border-purple-400/50",
+    modalShadow: "shadow-[0_25px_60px_rgba(0,0,0,0.12),0_0_40px_rgba(168,85,247,0.22)] dark:shadow-[0_25px_60px_rgba(0,0,0,0.7),0_0_45px_rgba(168,85,247,0.25)]",
+  },
+  {
+    // UAB First Riddle - Full Stack Web & Data
+    accentGradient: "from-emerald-500/30 via-teal-500/20 to-transparent",
+    borderFocus: "rgba(16, 185, 129, 0.6)",
+    shadowFocus: "0 16px 40px rgba(0,0,0,0.3), 0 0 30px rgba(16, 185, 129, 0.25)",
+    textFocus: "text-emerald-600 dark:text-emerald-400",
+    badge: "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border-emerald-500/25",
+    iconBorder: "rgba(16, 185, 129, 0.5)",
+    modalBorder: "border-emerald-500/40 dark:border-emerald-400/50",
+    modalShadow: "shadow-[0_25px_60px_rgba(0,0,0,0.12),0_0_40px_rgba(16,185,129,0.22)] dark:shadow-[0_25px_60px_rgba(0,0,0,0.7),0_0_45px_rgba(16,185,129,0.25)]",
+  },
+  {
+    // Infowiz - Software Development Intern
+    accentGradient: "from-amber-500/30 via-orange-500/20 to-transparent",
+    borderFocus: "rgba(245, 158, 11, 0.6)",
+    shadowFocus: "0 16px 40px rgba(0,0,0,0.3), 0 0 30px rgba(245, 158, 11, 0.25)",
+    textFocus: "text-amber-600 dark:text-amber-400",
+    badge: "bg-amber-500/10 text-amber-700 dark:text-amber-300 border-amber-500/25",
+    iconBorder: "rgba(245, 158, 11, 0.5)",
+    modalBorder: "border-amber-500/40 dark:border-amber-400/50",
+    modalShadow: "shadow-[0_25px_60px_rgba(0,0,0,0.12),0_0_40px_rgba(245,158,11,0.22)] dark:shadow-[0_25px_60px_rgba(0,0,0,0.7),0_0_45px_rgba(245,158,11,0.25)]",
+  },
+];
 
 interface ExperienceTimelineCardProps {
   item: (typeof experiencesData)[number];
@@ -60,9 +108,13 @@ function ExperienceTimelineCard({
   const [isHovered, setIsHovered] = React.useState(false);
 
   const isCardFocused = isMobile ? isInView : isHovered;
+  const itemTheme = EXPERIENCE_THEMES[index % EXPERIENCE_THEMES.length];
 
   return (
-    <div ref={cardRef} className="w-full mb-12 sm:mb-16 md:mb-24 last:mb-0">
+    <div
+      ref={cardRef}
+      className="experience-card-item w-full transition-all duration-300"
+    >
       <motion.div
         initial="hidden"
         animate={isInScroll ? "visible" : "hidden"}
@@ -82,49 +134,51 @@ function ExperienceTimelineCard({
           transform: "translateZ(0)",
           WebkitTapHighlightColor: "transparent",
         }}
+        onMouseEnter={() => {
+          if (!isMobile) setIsHovered(true);
+        }}
+        onMouseLeave={() => {
+          if (!isMobile) setIsHovered(false);
+        }}
         className="w-full transform-gpu will-change-transform [-webkit-tap-highlight-color:transparent]"
       >
       <VerticalTimelineElement
         position={index % 2 === 0 ? "left" : "right"}
         onTimelineElementClick={() => setActiveIndex(index)}
-        textClassName="cursor-pointer group/card transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] transform-gpu will-change-transform select-none [-webkit-tap-highlight-color:transparent]"
+        textClassName="cursor-pointer group/card transition-all duration-300 ease-out transform-gpu will-change-transform select-none [-webkit-tap-highlight-color:transparent] relative overflow-hidden"
         contentStyle={{
           background: isCardFocused
             ? theme === "light"
-              ? "rgba(255, 255, 255, 0.08)"
-              : "rgba(15, 23, 42, 0.6)"
+              ? "rgba(255, 255, 255, 0.95)"
+              : "rgba(15, 23, 42, 0.85)"
             : theme === "light"
-              ? "rgba(255, 255, 255, 0.6)"
+              ? "rgba(255, 255, 255, 0.7)"
               : "rgba(255, 255, 255, 0.05)",
-          backdropFilter: "blur(16px)",
-          WebkitBackdropFilter: "blur(16px)",
+          backdropFilter: "blur(20px)",
+          WebkitBackdropFilter: "blur(20px)",
           boxShadow: isCardFocused
-            ? "0 10px 30px rgba(0,0,0,0.5), 0 0 20px rgba(56,189,248,0.12)"
+            ? itemTheme.shadowFocus
             : theme === "light"
               ? "0 4px 20px -2px rgba(0, 0, 0, 0.08)"
               : "0 4px 20px -2px rgba(0, 0, 0, 0.3)",
           border: isCardFocused
-            ? theme === "light"
-              ? "1px solid rgba(255, 255, 255, 0.3)"
-              : "1px solid rgba(56, 189, 248, 0.3)"
+            ? `1.5px solid ${itemTheme.borderFocus}`
             : theme === "light"
               ? "1px solid rgba(0, 0, 0, 0.10)"
               : "1px solid rgba(255, 255, 255, 0.10)",
-          transform: isCardFocused ? "scale(1.02)" : "scale(1)",
+          transform: isCardFocused ? "scale(1.03) translateY(-4px)" : "scale(1)",
           transformOrigin: isMobile ? "left center" : "center center",
           textAlign: "left",
           padding: "1.5rem 2rem",
-          borderRadius: "1rem",
-          opacity: activeIndex === index ? 0.35 : isCardFocused ? 1 : 0.7,
+          borderRadius: "1.25rem",
+          opacity: activeIndex === index ? 0.35 : isCardFocused ? 1 : 0.75,
           cursor: "pointer",
           transition:
-            "transform 450ms cubic-bezier(0.16, 1, 0.3, 1), background-color 450ms cubic-bezier(0.16, 1, 0.3, 1), border-color 450ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 450ms cubic-bezier(0.16, 1, 0.3, 1), opacity 450ms cubic-bezier(0.16, 1, 0.3, 1)",
+            "transform 250ms ease-out, background-color 250ms ease-out, border-color 250ms ease-out, box-shadow 250ms ease-out, opacity 250ms ease-out",
         }}
         contentArrowStyle={{
           borderRight: isCardFocused
-            ? theme === "light"
-              ? "0.4rem solid rgba(255, 255, 255, 0.3)"
-              : "0.4rem solid rgba(56, 189, 248, 0.3)"
+            ? `0.4rem solid ${itemTheme.borderFocus}`
             : theme === "light"
               ? "0.4rem solid rgba(0, 0, 0, 0.10)"
               : "0.4rem solid rgba(255, 255, 255, 0.10)",
@@ -135,15 +189,13 @@ function ExperienceTimelineCard({
         iconClassName="cursor-pointer md:hover:scale-110 transition-transform duration-300 [-webkit-tap-highlight-color:transparent]"
         iconStyle={{
           background:
-            theme === "light" ? "rgba(255, 255, 255, 0.7)" : "rgba(24, 24, 27, 0.85)",
-          border:
-            theme === "light"
-              ? "2px solid rgba(0, 0, 0, 0.08)"
-              : "2px solid rgba(255, 255, 255, 0.15)",
+            theme === "light" ? "rgba(255, 255, 255, 0.9)" : "rgba(24, 24, 27, 0.9)",
+          border: `2px solid ${isCardFocused ? itemTheme.iconBorder : theme === "light" ? "rgba(0, 0, 0, 0.08)" : "rgba(255, 255, 255, 0.15)"}`,
           color: theme === "light" ? "#1e293b" : "#f8fafc",
           fontSize: "1.5rem",
-          boxShadow:
-            theme === "light"
+          boxShadow: isCardFocused
+            ? itemTheme.shadowFocus
+            : theme === "light"
               ? "0 4px 6px -1px rgba(0, 0, 0, 0.05)"
               : "0 4px 12px rgba(0, 0, 0, 0.4)",
           backdropFilter: "blur(12px)",
@@ -151,8 +203,15 @@ function ExperienceTimelineCard({
           cursor: "pointer",
         }}
       >
+        {/* Colorful Gradient Sheen On Hover & Enlargement (Matching Skills Container) */}
         <div
-          className="cursor-pointer select-none [-webkit-tap-highlight-color:transparent]"
+          className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${itemTheme.accentGradient} ${
+            isCardFocused ? "opacity-100" : "opacity-0"
+          } group-hover/card:opacity-100 transition-opacity duration-300 pointer-events-none`}
+        />
+
+        <div
+          className="relative z-10 cursor-pointer select-none [-webkit-tap-highlight-color:transparent]"
           onMouseEnter={() => {
             if (!isMobile) setIsHovered(true);
           }}
@@ -163,15 +222,15 @@ function ExperienceTimelineCard({
         >
           <div className="flex items-center justify-between gap-2">
             <h3
-              className={`text-xl font-bold tracking-tight capitalize transition-colors duration-300 ${
+              className={`text-xl font-bold tracking-tight capitalize transition-colors duration-200 ${
                 isCardFocused
-                  ? "text-sky-400 dark:text-sky-400 font-bold"
-                  : "text-gray-900 dark:text-white md:group-hover/card:text-sky-400 dark:md:group-hover/card:text-sky-400"
+                  ? itemTheme.textFocus
+                  : "text-gray-900 dark:text-white group-hover/card:text-gray-950 dark:group-hover/card:text-white"
               }`}
             >
               {item.title}
             </h3>
-            <span className="text-xs font-medium text-gray-400 dark:text-gray-500 opacity-0 md:group-hover/card:opacity-100 transition-opacity flex items-center gap-1">
+            <span className="text-xs font-medium text-gray-400 dark:text-gray-500 opacity-0 group-hover/card:opacity-100 transition-opacity flex items-center gap-1">
               <span>Expand</span>
               <svg
                 className="w-3.5 h-3.5"
@@ -188,9 +247,16 @@ function ExperienceTimelineCard({
               </svg>
             </span>
           </div>
-          <p className="font-medium text-gray-800 dark:text-white/90 !mt-0.5 text-sm sm:text-base">
-            {item.company}
-          </p>
+          <div className="flex flex-wrap items-center justify-between gap-1.5 !mt-0.5">
+            <p className="font-semibold text-gray-800 dark:text-white/90 text-sm sm:text-base">
+              {item.company}
+            </p>
+            <span
+              className={`text-[0.68rem] sm:text-xs font-semibold px-2.5 py-0.5 rounded-full border ${itemTheme.badge}`}
+            >
+              {item.date}
+            </span>
+          </div>
           <p className="font-normal text-gray-500 dark:text-white/60 !mt-0 text-xs sm:text-sm">
             {item.location}
           </p>
@@ -247,11 +313,30 @@ export default function Experience() {
       className="scroll-mt-28 mb-24 sm:mb-32 w-full max-w-xl md:max-w-6xl mx-auto px-0 sm:px-4 md:px-0"
     >
       <style>{`
+        #experience .experience-card-item {
+          margin-bottom: 2.75rem !important;
+        }
+        #experience .experience-card-item:last-child {
+          margin-bottom: 0 !important;
+        }
+        @media (min-width: 640px) {
+          #experience .experience-card-item {
+            margin-bottom: 3.5rem !important;
+          }
+        }
+        @media (min-width: 1024px) {
+          #experience .experience-card-item {
+            margin-bottom: 4.5rem !important;
+          }
+        }
         #experience .vertical-timeline-element-content {
           transition: transform 450ms cubic-bezier(0.16, 1, 0.3, 1), background-color 300ms ease-in-out, border-color 300ms ease-in-out, box-shadow 300ms ease-in-out, opacity 300ms ease-in-out !important;
         }
         #experience .vertical-timeline-element {
           margin: 0 !important;
+        }
+        #experience .vertical-timeline-element-date {
+          display: none !important;
         }
         @media (max-width: 640px) {
           #experience .vertical-timeline-element-content {
@@ -281,12 +366,17 @@ export default function Experience() {
           }
         }
       `}</style>
-      <SectionHeading>My experience</SectionHeading>
+      <div className="flex justify-center mb-2">
+        <span className="text-xs font-bold uppercase tracking-widest px-3.5 py-1 rounded-full bg-sky-500/10 text-sky-600 dark:text-sky-400 border border-sky-500/20 shadow-sm">
+          Experience
+        </span>
+      </div>
+      <SectionHeading>Experience</SectionHeading>
       {mounted ? (
         <VerticalTimeline
           animate={false}
           lineColor={theme === "light" ? "#d1d5db" : "rgba(255, 255, 255, 0.35)"}
-          className="space-y-12 sm:space-y-16 md:space-y-24"
+          className="!p-0"
         >
           {experiencesData.map((item, index) => (
             <ExperienceTimelineCard
@@ -302,7 +392,7 @@ export default function Experience() {
         </VerticalTimeline>
       ) : null}
 
-      {/* Interactive Click-to-Expand 3D Modal (Portaled to document.body for true viewport centering) */}
+      {/* Interactive Click-to-Expand Modal (Portaled to document.body for true viewport centering) */}
       {mounted &&
         createPortal(
           <AnimatePresence>
@@ -312,130 +402,100 @@ export default function Experience() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                transition={{ duration: 0.25, ease: "easeInOut" }}
+                transition={{ duration: 0.2 }}
                 onClick={() => setActiveIndex(null)}
-                className="fixed inset-0 z-[10000] bg-black/40 dark:bg-black/60 backdrop-blur-xl cursor-pointer touch-none overscroll-none"
+                className="fixed inset-0 z-[10000] bg-slate-900/25 dark:bg-black/70 backdrop-blur-md cursor-pointer touch-none overscroll-none"
                 aria-label="Close modal overlay"
               />
             )}
 
             {activeIndex !== null && experiencesData[activeIndex] && (
-              <motion.div
-                key="experience-modal-container"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.25 }}
-                className="fixed inset-0 z-[10001] flex items-center justify-center p-3 sm:p-6 pointer-events-none [perspective:1200px]"
-              >
+              <div className="fixed inset-0 z-[10001] flex items-center justify-center p-3 sm:p-6 pointer-events-none">
                 <motion.div
                   key={`experience-card-${activeIndex}`}
-                  style={{
-                    transformStyle: "preserve-3d",
-                    WebkitBackdropFilter: "blur(64px) saturate(150%)",
-                    backdropFilter: "blur(64px) saturate(150%)",
-                  }}
-                  initial={{ opacity: 0, scale: 0.7, rotateY: -90, y: 40 }}
-                  animate={{ opacity: 1, scale: 1, rotateY: 0, y: 0 }}
-                  exit={{ opacity: 0, scale: 0.7, rotateY: 90, y: 20 }}
-                  transition={{ type: "spring", stiffness: 220, damping: 24 }}
-                  onClick={() => setActiveIndex(null)}
-                  className="pointer-events-auto cursor-pointer w-[92vw] max-w-lg md:w-[50vw] md:max-w-3xl min-h-[40vh] max-h-[85vh] overflow-y-auto p-5 sm:p-8 md:p-12 flex flex-col justify-start sm:justify-center relative bg-white/75 dark:bg-slate-900/80 backdrop-blur-3xl backdrop-saturate-150 border border-white/50 dark:border-white/20 shadow-[0_30px_80px_rgba(0,0,0,0.45)] rounded-2xl sm:rounded-3xl select-none"
+                  initial={{ opacity: 0, scale: 0.94, y: 16 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.94, y: 12 }}
+                  transition={{ type: "spring", stiffness: 380, damping: 28 }}
+                  onClick={(e) => e.stopPropagation()}
+                  className={`pointer-events-auto w-[94vw] sm:w-[92vw] max-w-lg md:max-w-2xl max-h-[88vh] sm:max-h-[85vh] overflow-y-auto p-5 sm:p-8 md:p-10 flex flex-col justify-start relative bg-white/85 dark:bg-zinc-900/90 backdrop-blur-2xl border ${
+                    EXPERIENCE_THEMES[activeIndex % EXPERIENCE_THEMES.length].modalBorder
+                  } ${
+                    EXPERIENCE_THEMES[activeIndex % EXPERIENCE_THEMES.length].modalShadow
+                  } rounded-3xl overflow-hidden text-left select-none`}
                 >
-                  {/* Close Button Hint */}
+                  {/* Dynamic Themed Ambient Corner Glow */}
+                  <div
+                    className={`absolute top-0 right-0 w-80 h-80 bg-gradient-to-bl ${
+                      EXPERIENCE_THEMES[activeIndex % EXPERIENCE_THEMES.length].accentGradient
+                    } rounded-full blur-3xl pointer-events-none opacity-90 dark:opacity-80`}
+                  />
+                  <div
+                    className={`absolute inset-0 rounded-3xl bg-gradient-to-br ${
+                      EXPERIENCE_THEMES[activeIndex % EXPERIENCE_THEMES.length].accentGradient
+                    } pointer-events-none opacity-40 dark:opacity-25`}
+                  />
+
+                  {/* Close Button */}
                   <button
                     type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setActiveIndex(null);
-                    }}
-                    className="absolute top-4 right-4 sm:top-6 sm:right-6 w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/20 transition-colors flex items-center justify-center text-gray-500 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
+                    onClick={() => setActiveIndex(null)}
+                    className="absolute top-4 right-4 sm:top-6 sm:right-6 w-9 h-9 sm:w-9 sm:h-9 rounded-full bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/20 transition-all flex items-center justify-center text-gray-700 dark:text-zinc-300 hover:text-gray-950 dark:hover:text-white hover:scale-110 active:scale-95 border border-black/10 dark:border-white/10 z-20 cursor-pointer"
                     aria-label="Close experience details"
                   >
-                    <svg
-                      className="w-4 h-4"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      strokeWidth={2.5}
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M6 18L18 6M6 6l12 12"
-                      />
-                    </svg>
+                    <FiX className="text-base" />
                   </button>
 
-                  {/* Header with Icon, Title, and Company */}
-                  <div className="flex items-start gap-3.5 sm:gap-5 mb-4 sm:mb-6 pr-8">
-                    <div className="w-11 h-11 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-xl sm:rounded-2xl flex-shrink-0 flex items-center justify-center text-xl sm:text-2xl md:text-3xl border border-white/50 dark:border-white/20 bg-white/80 dark:bg-white/10 shadow-lg text-gray-800 dark:text-white">
+                  {/* Header with Icon, Company Pill, and Title */}
+                  <div className="flex items-start gap-3.5 sm:gap-5 mb-5 pr-8 relative z-10">
+                    <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-2xl flex-shrink-0 flex items-center justify-center text-xl sm:text-2xl md:text-3xl border border-black/10 dark:border-white/10 bg-white/80 dark:bg-white/10 shadow-sm text-gray-950 dark:text-white">
                       {experiencesData[activeIndex].icon}
                     </div>
-                    <div>
-                      <h3 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight text-gray-900 dark:text-white">
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-2 mb-1.5 flex-wrap">
+                        <span
+                          className={`text-xs font-semibold px-2.5 py-0.5 rounded-full border ${
+                            EXPERIENCE_THEMES[activeIndex % EXPERIENCE_THEMES.length].badge
+                          }`}
+                        >
+                          {experiencesData[activeIndex].company}
+                        </span>
+                      </div>
+                      <h3 className="text-lg sm:text-2xl md:text-3xl font-extrabold tracking-tight text-gray-950 dark:text-white">
                         {experiencesData[activeIndex].title}
                       </h3>
-                      <p className="font-semibold text-gray-700 dark:text-white/85 text-sm sm:text-base md:text-lg mt-0.5">
-                        {experiencesData[activeIndex].company}
-                      </p>
                     </div>
                   </div>
 
-                  {/* Location and Date Badges */}
-                  <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 md:gap-3 mb-4 sm:mb-6">
-                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 sm:px-3.5 sm:py-1.5 rounded-full text-[0.7rem] sm:text-xs md:text-sm font-medium bg-black/5 dark:bg-white/10 text-gray-700 dark:text-gray-300 border border-black/5 dark:border-white/10">
-                      <svg
-                        className="w-3.5 h-3.5 opacity-70"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                        />
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                        />
-                      </svg>
-                      {experiencesData[activeIndex].location}
+                  {/* Location & Date Pills */}
+                  <div className="flex flex-wrap items-center gap-2 mb-5 sm:mb-6 relative z-10">
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-black/5 dark:bg-white/5 text-gray-800 dark:text-zinc-200 border border-black/10 dark:border-white/10">
+                      <FiMapPin className="text-xs opacity-70 shrink-0" />
+                      <span>{experiencesData[activeIndex].location}</span>
                     </span>
-                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 sm:px-3.5 sm:py-1.5 rounded-full text-[0.7rem] sm:text-xs md:text-sm font-medium bg-blue-500/10 text-blue-600 dark:bg-blue-400/15 dark:text-blue-300 border border-blue-500/20">
-                      <svg
-                        className="w-3.5 h-3.5 opacity-70"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                        />
-                      </svg>
-                      {experiencesData[activeIndex].date}
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-black/5 dark:bg-white/5 text-gray-800 dark:text-zinc-200 border border-black/10 dark:border-white/10">
+                      <FiCalendar className="text-xs opacity-70 shrink-0" />
+                      <span>{experiencesData[activeIndex].date}</span>
                     </span>
                   </div>
 
                   {/* Description */}
-                  <p className="text-sm sm:text-base md:text-lg leading-relaxed text-gray-700 dark:text-gray-200">
+                  <p className="text-sm sm:text-base leading-relaxed text-gray-700 dark:text-zinc-300 font-normal mb-6 relative z-10">
                     {experiencesData[activeIndex].description}
                   </p>
 
                   {/* Footer dismiss hint */}
-                  <div className="mt-6 pt-3 sm:mt-8 sm:pt-4 border-t border-black/5 dark:border-white/10 flex items-center justify-between text-[0.7rem] sm:text-xs text-gray-400 dark:text-gray-500">
-                    <span>Click card or outside to close</span>
-                    <span className="hidden sm:inline">ESC to close</span>
+                  <div className="pt-4 border-t border-black/10 dark:border-white/10 flex items-center justify-between text-xs text-gray-600 dark:text-zinc-400 relative z-10">
+                    <span className="flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500/80 animate-pulse" />
+                      <span>Click card or outside to close</span>
+                    </span>
+                    <kbd className="hidden sm:inline-block px-2 py-0.5 text-[0.68rem] font-mono font-medium rounded-md bg-black/5 dark:bg-white/10 border border-black/10 dark:border-white/10 text-gray-700 dark:text-zinc-300">
+                      ESC to close
+                    </kbd>
                   </div>
                 </motion.div>
-              </motion.div>
+              </div>
             )}
           </AnimatePresence>,
           document.body

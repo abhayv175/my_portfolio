@@ -25,7 +25,7 @@ export default function ThemeSwitch() {
         backfaceVisibility: "hidden",
         isolation: "isolate",
       }}
-      className="fixed top-4 left-4 sm:top-5 sm:left-6 z-[9999] pointer-events-auto isolate w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center bg-white/80 hover:bg-white/95 dark:bg-zinc-950/80 dark:hover:bg-zinc-950/95 border border-black/10 hover:border-black/20 dark:border-white/15 dark:hover:border-white/25 shadow-lg shadow-black/[0.04] dark:shadow-[0_8px_30px_rgba(0,0,0,0.5)] backdrop-blur-2xl backdrop-saturate-150 transform-gpu cursor-pointer outline-none transition-all duration-300 group overflow-hidden"
+      className="fixed top-[calc(1rem+env(safe-area-inset-top,0px))] left-[calc(1rem+env(safe-area-inset-left,0px))] sm:top-5 sm:left-6 z-[9999] pointer-events-auto isolate w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center bg-white/80 hover:bg-white/95 dark:bg-zinc-950/80 dark:hover:bg-zinc-950/95 border border-black/10 hover:border-black/20 dark:border-white/15 dark:hover:border-white/25 shadow-lg shadow-black/[0.04] dark:shadow-[0_8px_30px_rgba(0,0,0,0.5)] backdrop-blur-2xl backdrop-saturate-150 transform-gpu cursor-pointer outline-none transition-all duration-300 group overflow-hidden"
       onClick={toggleTheme}
       aria-label="Toggle theme"
     >

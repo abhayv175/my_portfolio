@@ -39,7 +39,7 @@ export default function About() {
     <section
       id="about"
       ref={sectionRef}
-      className="mb-24 max-w-[46rem] text-center sm:mb-32 scroll-mt-28"
+      className="mb-24 max-w-[46rem] text-center sm:mb-32 scroll-mt-28 px-4 sm:px-0"
     >
       <div ref={motionRef} className="w-full">
         <motion.div
@@ -47,9 +47,14 @@ export default function About() {
           animate={isInView ? "visible" : "hidden"}
           variants={cardVariants}
         >
+          <div className="flex justify-center mb-2">
+            <span className="text-xs font-bold uppercase tracking-widest px-3.5 py-1 rounded-full bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border border-cyan-500/20 shadow-sm">
+              About Me
+            </span>
+          </div>
           <SectionHeading>About me</SectionHeading>
 
-          <p className="mb-5 leading-relaxed font-normal text-base sm:text-lg md:text-xl text-gray-800 dark:text-white/90">
+          <p className="mb-5 leading-relaxed font-normal text-base sm:text-lg md:text-xl text-gray-800 dark:text-white/90 text-pretty">
             I am a Software Engineer with experience in website and
             application development, software testing, system design,
             database management, and FTP server management. Having worked

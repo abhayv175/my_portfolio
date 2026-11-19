@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import SectionHeading from "./section-heading";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { useSectionInView } from "@/lib/hooks";
@@ -31,6 +31,48 @@ const cardVariants = {
   },
 };
 
+function ContactCardScrollWrapper({
+  children,
+  className = "",
+  isMobile,
+  setIsInView,
+}: {
+  children: React.ReactNode;
+  className?: string;
+  isMobile: boolean;
+  setIsInView: (inView: boolean) => void;
+}) {
+  const cardRef = useRef<HTMLDivElement>(null);
+  const isInScroll = useInView(cardRef, {
+    once: false,
+    margin: "-80px 0px -80px 0px",
+  });
+
+  return (
+    <div ref={cardRef} className={`w-full ${className}`}>
+      <motion.div
+        initial="hidden"
+        animate={isInScroll ? "visible" : "hidden"}
+        variants={cardVariants}
+        viewport={
+          isMobile
+            ? { margin: "-25% 0px -25% 0px", amount: 0.2, once: false }
+            : undefined
+        }
+        onViewportEnter={() => {
+          if (isMobile) setIsInView(true);
+        }}
+        onViewportLeave={() => {
+          if (isMobile) setIsInView(false);
+        }}
+        className="w-full transform-gpu will-change-transform"
+      >
+        {children}
+      </motion.div>
+    </div>
+  );
+}
+
 interface FormErrors {
   email?: string;
   message?: string;
@@ -38,14 +80,23 @@ interface FormErrors {
 
 export default function Contact() {
   const { ref: sectionRef } = useSectionInView("Contact", 0.25);
-  const motionRef = useRef<HTMLDivElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
-  const isInView = useInView(motionRef, {
-    once: false,
-    margin: "-80px 0px -80px 0px",
-  });
   const [copied, setCopied] = useState(false);
   const [errors, setErrors] = useState<FormErrors>({});
+  const [isMobile, setIsMobile] = useState(false);
+  const [isInView, setIsInView] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
+  const isCardFocused = isMobile ? isInView : isHovered;
 
   const handleCopyEmail = async () => {
     try {
@@ -111,40 +162,63 @@ export default function Contact() {
       ref={sectionRef}
       className="mb-20 sm:mb-28 w-full max-w-2xl mx-auto px-4 text-center scroll-mt-28"
     >
-      <div ref={motionRef} className="w-full">
-        <motion.div
-          initial="hidden"
-          animate={isInView ? "visible" : "hidden"}
-          variants={cardVariants}
+      <div className="w-full">
+        <div className="flex justify-center mb-2">
+          <span className="text-xs font-bold uppercase tracking-widest px-3.5 py-1 rounded-full bg-violet-500/10 text-violet-600 dark:text-violet-400 border border-violet-500/20 shadow-sm">
+            Contact
+          </span>
+        </div>
+        <SectionHeading>Contact me</SectionHeading>
+
+        <p className="text-gray-700 -mt-4 dark:text-white/80 font-normal leading-relaxed text-sm sm:text-base max-w-[34rem] mx-auto flex flex-wrap items-center justify-center gap-1.5 sm:gap-2">
+          <span>Please contact me directly at</span>
+          <button
+            type="button"
+            onClick={handleCopyEmail}
+            title="Click to copy email address"
+            className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 text-sm hover:bg-black/10 dark:hover:bg-white/10 hover:border-indigo-500/30 dark:hover:border-indigo-400/30 text-gray-900 dark:text-white transition-all duration-200 cursor-pointer group active:scale-95"
+          >
+            <BsEnvelope className="text-xs opacity-70 group-hover:opacity-100 transition-opacity" />
+            <span className="font-medium">abhayv175@gmail.com</span>
+            {copied ? (
+              <BsCheck className="text-sm text-emerald-500 transition-transform duration-200 scale-110" />
+            ) : (
+              <BsCopy className="text-xs opacity-60 group-hover:opacity-100 transition-opacity" />
+            )}
+          </button>
+          <span>or through this form.</span>
+        </p>
+
+        <ContactCardScrollWrapper
+          className="mt-8"
+          isMobile={isMobile}
+          setIsInView={setIsInView}
         >
-          <SectionHeading>Contact me</SectionHeading>
+          <motion.div
+            whileHover={{ y: -6, scale: 1.02 }}
+            transition={{ type: "spring", stiffness: 450, damping: 28, mass: 0.6 }}
+            onMouseEnter={() => {
+              if (!isMobile) setIsHovered(true);
+            }}
+            onMouseLeave={() => {
+              if (!isMobile) setIsHovered(false);
+            }}
+            className={`w-full p-6 sm:p-10 rounded-3xl backdrop-blur-xl transition-[border-color,background-color,box-shadow,transform] duration-300 relative overflow-hidden group ${
+              isCardFocused
+                ? "bg-white/95 dark:bg-zinc-900/80 border-violet-400/80 dark:border-violet-400/80 shadow-[0_20px_50px_rgba(0,0,0,0.18),0_0_35px_rgba(168,85,247,0.32)] scale-[1.02] -translate-y-1.5"
+                : "bg-white/70 dark:bg-zinc-900/40 border border-black/10 dark:border-white/10 shadow-xl dark:shadow-[0_20px_50px_rgba(0,0,0,0.6)] hover:shadow-[0_20px_50px_rgba(0,0,0,0.18),0_0_35px_rgba(168,85,247,0.32)] hover:border-violet-400/70 dark:hover:border-violet-400/70 hover:bg-white/90 dark:hover:bg-zinc-900/75"
+            }`}
+          >
+            {/* Ambient Violet Glow Sheen on Hover (not cursor-dependent) */}
+            <div className={`absolute top-0 right-0 w-80 h-80 bg-gradient-to-bl from-violet-500/25 via-purple-500/15 to-transparent rounded-full blur-3xl pointer-events-none transition-opacity duration-300 ${isCardFocused ? "opacity-100" : "opacity-0"} group-hover:opacity-100`} />
+            <div className={`absolute inset-0 rounded-3xl bg-gradient-to-br from-violet-500/20 via-purple-500/15 to-transparent pointer-events-none transition-opacity duration-300 ${isCardFocused ? "opacity-100" : "opacity-0"} group-hover:opacity-100`} />
 
-          <p className="text-gray-700 -mt-4 dark:text-white/80 font-normal leading-relaxed text-sm sm:text-base max-w-[34rem] mx-auto flex flex-wrap items-center justify-center gap-1.5 sm:gap-2">
-            <span>Please contact me directly at</span>
-            <button
-              type="button"
-              onClick={handleCopyEmail}
-              title="Click to copy email address"
-              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 text-sm hover:bg-black/10 dark:hover:bg-white/10 hover:border-indigo-500/30 dark:hover:border-indigo-400/30 text-gray-900 dark:text-white transition-all duration-200 cursor-pointer group active:scale-95"
-            >
-              <BsEnvelope className="text-xs opacity-70 group-hover:opacity-100 transition-opacity" />
-              <span className="font-medium">abhayv175@gmail.com</span>
-              {copied ? (
-                <BsCheck className="text-sm text-emerald-500 transition-transform duration-200 scale-110" />
-              ) : (
-                <BsCopy className="text-xs opacity-60 group-hover:opacity-100 transition-opacity" />
-              )}
-            </button>
-            <span>or through this form.</span>
-          </p>
-
-          <div className="mt-8 w-full p-6 sm:p-10 rounded-3xl bg-white/70 border border-black/10 shadow-xl backdrop-blur-xl dark:bg-zinc-900/50 dark:border-white/10 dark:shadow-[0_20px_50px_rgba(0,0,0,0.6)]">
             <form
               ref={formRef}
               noValidate
               onSubmit={handleSubmit}
               action={formAction}
-              className="flex flex-col gap-4 text-left"
+              className="flex flex-col gap-4 text-left relative z-10"
             >
               {/* Email Input Field & Custom Liquid Glass Error Badge */}
               <div className="flex flex-col w-full">
@@ -217,8 +291,8 @@ export default function Contact() {
 
               <SubmitBtn />
             </form>
-          </div>
-        </motion.div>
+          </motion.div>
+        </ContactCardScrollWrapper>
       </div>
     </section>
   );

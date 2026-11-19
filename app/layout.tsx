@@ -1,6 +1,9 @@
 import "./globals.css";
 import Header from "@/components/header";
 import AmbientGlow from "@/components/ambient-glow";
+import RedRibbon from "@/components/red-ribbon";
+import SmoothScroll from "@/components/smooth-scroll";
+import CommandPalette from "@/components/command-palette";
 import ActiveSectionContextProvider from "@/context/active-section-context";
 import Footer from "@/components/footer";
 import ThemeSwitch from "@/components/theme-switch";
@@ -37,17 +40,21 @@ export default function RootLayout({
       <body
         className="font-sans relative min-h-[100dvh] w-full bg-transparent text-gray-950 dark:text-gray-50 overflow-x-clip"
       >
-        <AmbientGlow />
-
         <ThemeContextProvider>
-          <ActiveSectionContextProvider>
-            <Header />
-            {children}
-            <Footer />
+          <SmoothScroll>
+            <AmbientGlow />
+            <RedRibbon />
 
-            <Toaster position="top-right" />
-            <ThemeSwitch />
-          </ActiveSectionContextProvider>
+            <ActiveSectionContextProvider>
+              <Header />
+              {children}
+              <Footer />
+
+              <Toaster position="top-right" />
+              <ThemeSwitch />
+              <CommandPalette />
+            </ActiveSectionContextProvider>
+          </SmoothScroll>
         </ThemeContextProvider>
       </body>
     </html>

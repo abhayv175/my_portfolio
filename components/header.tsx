@@ -7,6 +7,58 @@ import clsx from "clsx";
 import { useActiveSectionContext } from "@/context/active-section-context";
 import type { SectionName } from "@/lib/types";
 import { BsArrowRight } from "react-icons/bs";
+import Magnetic from "@/components/magnetic";
+
+const NAV_TAB_THEMES: Record<
+  string,
+  {
+    hoverClass: string;
+    activeText: string;
+    activePill: string;
+    glowDot: string;
+  }
+> = {
+  Home: {
+    hoverClass:
+      "hover:text-violet-600 dark:hover:text-violet-300 hover:bg-violet-500/10 hover:shadow-[0_0_18px_rgba(139,92,246,0.25)] border border-transparent hover:border-violet-500/20",
+    activeText: "text-violet-950 dark:text-white font-bold",
+    activePill:
+      "border-violet-500/50 dark:border-violet-400/60 bg-violet-500/15 dark:bg-violet-950/70 shadow-[0_0_22px_rgba(139,92,246,0.4),inset_0_1px_1px_rgba(255,255,255,0.2)]",
+    glowDot: "bg-violet-500 shadow-[0_0_10px_rgba(139,92,246,0.8)]",
+  },
+  About: {
+    hoverClass:
+      "hover:text-cyan-600 dark:hover:text-cyan-300 hover:bg-cyan-500/10 hover:shadow-[0_0_18px_rgba(6,182,212,0.25)] border border-transparent hover:border-cyan-500/20",
+    activeText: "text-cyan-950 dark:text-white font-bold",
+    activePill:
+      "border-cyan-500/50 dark:border-cyan-400/60 bg-cyan-500/15 dark:bg-cyan-950/70 shadow-[0_0_22px_rgba(6,182,212,0.4),inset_0_1px_1px_rgba(255,255,255,0.2)]",
+    glowDot: "bg-cyan-500 shadow-[0_0_10px_rgba(6,182,212,0.8)]",
+  },
+  Experience: {
+    hoverClass:
+      "hover:text-sky-600 dark:hover:text-sky-300 hover:bg-sky-500/10 hover:shadow-[0_0_22px_rgba(56,189,248,0.35)] border border-transparent hover:border-sky-500/30",
+    activeText: "text-sky-950 dark:text-sky-200 font-bold",
+    activePill:
+      "border-sky-500/60 dark:border-sky-400/70 bg-sky-500/15 dark:bg-sky-950/75 shadow-[0_0_25px_rgba(56,189,248,0.45),inset_0_1px_1px_rgba(255,255,255,0.25)]",
+    glowDot: "bg-sky-400 shadow-[0_0_10px_rgba(56,189,248,0.9)]",
+  },
+  Projects: {
+    hoverClass:
+      "hover:text-indigo-600 dark:hover:text-indigo-300 hover:bg-indigo-500/10 hover:shadow-[0_0_22px_rgba(99,102,241,0.35)] border border-transparent hover:border-indigo-500/30",
+    activeText: "text-indigo-950 dark:text-indigo-200 font-bold",
+    activePill:
+      "border-indigo-500/60 dark:border-indigo-400/70 bg-indigo-500/15 dark:bg-indigo-950/75 shadow-[0_0_25px_rgba(99,102,241,0.45),inset_0_1px_1px_rgba(255,255,255,0.25)]",
+    glowDot: "bg-indigo-400 shadow-[0_0_10px_rgba(99,102,241,0.9)]",
+  },
+  Skills: {
+    hoverClass:
+      "hover:text-purple-600 dark:hover:text-purple-300 hover:bg-purple-500/10 hover:shadow-[0_0_22px_rgba(168,85,247,0.35)] border border-transparent hover:border-purple-500/30",
+    activeText: "text-purple-950 dark:text-purple-200 font-bold",
+    activePill:
+      "border-purple-500/60 dark:border-purple-400/70 bg-purple-500/15 dark:bg-purple-950/75 shadow-[0_0_25px_rgba(168,85,247,0.45),inset_0_1px_1px_rgba(255,255,255,0.25)]",
+    glowDot: "bg-purple-400 shadow-[0_0_10px_rgba(168,85,247,0.9)]",
+  },
+};
 
 export default function Header() {
   const { activeSection, setActiveSection, setTimeOfLastClick } =
@@ -38,6 +90,7 @@ export default function Header() {
     hash: string
   ) => {
     e.preventDefault();
+    (e.currentTarget as HTMLElement)?.blur();
     setActiveSection(linkName);
     setTimeOfLastClick(Date.now());
     document.body.style.overflow = "";
@@ -81,6 +134,7 @@ export default function Header() {
           <ul className="flex items-center justify-center gap-0.5 text-[0.8rem] sm:text-[0.88rem] font-medium text-gray-700 dark:text-gray-300">
             {navLinks.map((link) => {
               const isActive = activeSection === link.name;
+              const themeConfig = NAV_TAB_THEMES[link.name];
 
               return (
                 <li
@@ -95,51 +149,55 @@ export default function Header() {
                   }}
                   key={link.hash}
                 >
-                  <motion.a
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.96 }}
-                    transition={{
-                      type: "spring",
-                      stiffness: 400,
-                      damping: 25,
-                    }}
-                    style={{
-                      transform: "translateZ(0)",
-                      backfaceVisibility: "hidden",
-                      outline: "1px solid transparent",
-                    }}
-                    className={clsx(
-                      "flex items-center justify-center px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-full transition-colors duration-200 ease-out whitespace-nowrap cursor-pointer relative transform-gpu will-change-[transform,opacity] [backface-visibility:hidden] [transform-style:preserve-3d] outline outline-1 outline-transparent",
-                      {
-                        "text-zinc-950 dark:text-white font-semibold": isActive,
-                        "text-zinc-600 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5 font-medium": !isActive,
-                      }
-                    )}
-                    href={link.hash}
-                    onClick={(e) => handleNavClick(e, link.name, link.hash)}
-                  >
-                    <span className="relative z-10 transform-gpu [backface-visibility:hidden]">
-                      {link.name}
-                    </span>
+                  <Magnetic strength={0.25}>
+                    <motion.a
+                      whileHover={{ scale: 1.08 }}
+                      whileTap={{ scale: 0.96 }}
+                      transition={{
+                        type: "spring",
+                        stiffness: 420,
+                        damping: 24,
+                      }}
+                      style={{
+                        transform: "translateZ(0)",
+                        backfaceVisibility: "hidden",
+                        outline: "1px solid transparent",
+                      }}
+                      className={clsx(
+                        "flex items-center justify-center px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-full transition-all duration-200 ease-out whitespace-nowrap cursor-pointer relative transform-gpu will-change-[transform,opacity] [backface-visibility:hidden] [transform-style:preserve-3d] outline outline-1 outline-transparent",
+                        isActive
+                          ? themeConfig?.activeText || "text-zinc-950 dark:text-white font-bold"
+                          : clsx("text-zinc-600 dark:text-zinc-400 font-medium", themeConfig?.hoverClass || "hover:text-zinc-950 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5")
+                      )}
+                      href={link.hash}
+                      onClick={(e) => handleNavClick(e, link.name, link.hash)}
+                    >
+                      <span className="relative z-10 transform-gpu [backface-visibility:hidden]">
+                        {link.name}
+                      </span>
 
-                    {isActive && (
-                      <motion.span
-                        className="rounded-full absolute inset-0 -z-0 border border-indigo-500/40 dark:border-indigo-400/50 bg-indigo-500/10 dark:bg-indigo-950/60 shadow-[0_0_20px_rgba(99,102,241,0.3),inset_0_1px_1px_rgba(255,255,255,0.15)] backdrop-blur-xl transform-gpu will-change-[transform,opacity] [backface-visibility:hidden] [transform-style:preserve-3d]"
-                        layoutId="activeSection"
-                        layoutDependency={false}
-                        transition={{
-                          type: "spring",
-                          stiffness: 380,
-                          damping: 30,
-                        }}
-                        style={{
-                          transform: "translateZ(0)",
-                          backfaceVisibility: "hidden",
-                          outline: "1px solid transparent",
-                        }}
-                      />
-                    )}
-                  </motion.a>
+                      {isActive && (
+                        <motion.span
+                          className={clsx(
+                            "rounded-full absolute inset-0 -z-0 border backdrop-blur-xl transform-gpu will-change-[transform,opacity] [backface-visibility:hidden] [transform-style:preserve-3d]",
+                            themeConfig?.activePill || "border-indigo-500/40 dark:border-indigo-400/50 bg-indigo-500/10 dark:bg-indigo-950/60 shadow-[0_0_20px_rgba(99,102,241,0.3),inset_0_1px_1px_rgba(255,255,255,0.15)]"
+                          )}
+                          layoutId="activeSection"
+                          layoutDependency={false}
+                          transition={{
+                            type: "spring",
+                            stiffness: 380,
+                            damping: 30,
+                          }}
+                          style={{
+                            transform: "translateZ(0)",
+                            backfaceVisibility: "hidden",
+                            outline: "1px solid transparent",
+                          }}
+                        />
+                      )}
+                    </motion.a>
+                  </Magnetic>
                 </li>
               );
             })}
@@ -149,26 +207,28 @@ export default function Header() {
           <div className="h-4 w-px bg-black/10 dark:bg-white/15 mx-1" aria-hidden="true" />
 
           {/* Contact Me Here CTA Button at End of Navbar */}
-          <motion.a
-            href="#contact"
-            onClick={(e) => handleNavClick(e, "Contact", "#contact")}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            transition={{
-              type: "spring",
-              stiffness: 400,
-              damping: 25,
-            }}
-            className={clsx(
-              "group flex items-center gap-1.5 px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-full text-[0.8rem] sm:text-[0.88rem] font-semibold transition-all duration-300 whitespace-nowrap cursor-pointer relative transform-gpu will-change-[transform,opacity] [backface-visibility:hidden]",
-              isActiveContact
-                ? "bg-indigo-600 dark:bg-white text-white dark:text-zinc-950 shadow-[0_0_20px_rgba(99,102,241,0.5)] dark:shadow-[0_0_20px_rgba(255,255,255,0.2)] border border-indigo-500 dark:border-white"
-                : "bg-zinc-900 text-white hover:bg-zinc-800 dark:bg-white/10 dark:hover:bg-white/15 dark:text-white border border-black/10 dark:border-white/15 shadow-sm hover:shadow-md dark:hover:border-white/25"
-            )}
-          >
-            <span>Contact me</span>
-            <BsArrowRight className="text-xs transition-transform duration-300 group-hover:translate-x-1" />
-          </motion.a>
+          <Magnetic strength={0.3}>
+            <motion.a
+              href="#contact"
+              onClick={(e) => handleNavClick(e, "Contact", "#contact")}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              transition={{
+                type: "spring",
+                stiffness: 400,
+                damping: 25,
+              }}
+              className={clsx(
+                "group flex items-center gap-1.5 px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-full text-[0.8rem] sm:text-[0.88rem] font-semibold transition-all duration-300 whitespace-nowrap cursor-pointer relative transform-gpu will-change-[transform,opacity] [backface-visibility:hidden]",
+                isActiveContact
+                  ? "bg-indigo-600 dark:bg-white text-white dark:text-zinc-950 shadow-[0_0_20px_rgba(99,102,241,0.5)] dark:shadow-[0_0_20px_rgba(255,255,255,0.2)] border border-indigo-500 dark:border-white"
+                  : "bg-zinc-900 text-white hover:bg-zinc-800 dark:bg-white/10 dark:hover:bg-white/15 dark:text-white border border-black/10 dark:border-white/15 shadow-sm hover:shadow-md dark:hover:border-white/25"
+              )}
+            >
+              <span>Contact me</span>
+              <BsArrowRight className="text-xs transition-transform duration-300 group-hover:translate-x-1" />
+            </motion.a>
+          </Magnetic>
         </nav>
       </header>
 
@@ -188,7 +248,7 @@ export default function Header() {
           backfaceVisibility: "hidden",
           isolation: "isolate",
         }}
-        className="fixed top-4 right-4 sm:top-6 sm:right-6 z-[9999] pointer-events-auto isolate md:hidden w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center bg-white/80 hover:bg-white/95 dark:bg-zinc-950/80 dark:hover:bg-zinc-950/95 border border-black/10 dark:border-white/15 shadow-lg dark:shadow-[0_8px_30px_rgba(0,0,0,0.5)] backdrop-blur-2xl backdrop-saturate-150 transform-gpu cursor-pointer outline-none transition-all duration-300 group overflow-hidden"
+        className="fixed top-[calc(1rem+env(safe-area-inset-top,0px))] right-[calc(1rem+env(safe-area-inset-right,0px))] sm:top-6 sm:right-6 z-[9999] pointer-events-auto isolate md:hidden w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center bg-white/80 hover:bg-white/95 dark:bg-zinc-950/80 dark:hover:bg-zinc-950/95 border border-black/10 dark:border-white/15 shadow-lg dark:shadow-[0_8px_30px_rgba(0,0,0,0.5)] backdrop-blur-2xl backdrop-saturate-150 transform-gpu cursor-pointer outline-none transition-all duration-300 group overflow-hidden"
       >
         {/* Subtle radial sheen on hover */}
         <div
@@ -266,11 +326,12 @@ export default function Header() {
                 backdropFilter: "blur(28px) saturate(150%)",
                 WebkitBackdropFilter: "blur(28px) saturate(150%)",
               }}
-              className="fixed top-[4.5rem] right-4 sm:top-[5.5rem] sm:right-6 z-[9998] w-[82%] max-w-[280px] md:hidden bg-white/90 dark:bg-zinc-950/90 border border-black/10 dark:border-white/15 text-slate-900 backdrop-blur-2xl shadow-2xl dark:text-white dark:shadow-[0_20px_50px_rgba(0,0,0,0.6)] rounded-3xl p-3 flex flex-col gap-2 pointer-events-auto"
+              className="fixed top-[calc(4.5rem+env(safe-area-inset-top,0px))] right-[calc(1rem+env(safe-area-inset-right,0px))] sm:top-[5.5rem] sm:right-6 z-[9998] w-[85%] max-w-[280px] md:hidden bg-white/90 dark:bg-zinc-950/90 border border-black/10 dark:border-white/15 text-slate-900 backdrop-blur-2xl shadow-2xl dark:text-white dark:shadow-[0_20px_50px_rgba(0,0,0,0.6)] rounded-3xl p-3 flex flex-col gap-2 pointer-events-auto"
             >
               <ul className="flex flex-col gap-1 w-full rounded-2xl p-1 bg-white/60 border border-black/5 text-slate-800 dark:bg-white/5 dark:border-white/10 dark:text-white">
                 {navLinks.map((link) => {
                   const isActive = activeSection === link.name;
+                  const themeConfig = NAV_TAB_THEMES[link.name];
 
                   return (
                     <li key={link.hash} className="w-full relative">
@@ -279,10 +340,10 @@ export default function Header() {
                         whileTap={{ scale: 0.97 }}
                         onClick={(e) => handleNavClick(e, link.name, link.hash)}
                         className={clsx(
-                          "flex items-center justify-between py-2.5 px-4 rounded-full text-[0.92rem] transition-colors duration-200 relative whitespace-nowrap cursor-pointer",
+                          "flex items-center justify-between py-3 px-4 rounded-full text-[0.94rem] transition-all duration-200 relative whitespace-nowrap cursor-pointer",
                           isActive
-                            ? "text-zinc-950 dark:text-white font-semibold"
-                            : "text-slate-700 dark:text-zinc-300 hover:text-slate-900 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5 font-medium"
+                            ? themeConfig?.activeText || "text-zinc-950 dark:text-white font-bold"
+                            : "text-slate-700 dark:text-zinc-300 font-medium active:bg-black/5 dark:active:bg-white/5 border border-transparent"
                         )}
                       >
                         <span className="relative z-10">{link.name}</span>
@@ -290,7 +351,10 @@ export default function Header() {
                         {isActive && (
                           <motion.div
                             layoutId="activeMobileSection"
-                            className="absolute inset-0 rounded-full border border-indigo-500/40 dark:border-indigo-400/50 bg-indigo-500/10 dark:bg-indigo-950/60 shadow-[0_0_16px_rgba(99,102,241,0.25)]"
+                            className={clsx(
+                              "absolute inset-0 rounded-full border",
+                              themeConfig?.activePill || "border-indigo-500/40 dark:border-indigo-400/50 bg-indigo-500/10 dark:bg-indigo-950/60 shadow-[0_0_16px_rgba(99,102,241,0.25)]"
+                            )}
                             transition={{
                               type: "spring",
                               stiffness: 380,
@@ -300,7 +364,12 @@ export default function Header() {
                         )}
 
                         {isActive && (
-                          <span className="w-2 h-2 rounded-full bg-indigo-600 dark:bg-indigo-400 shadow-[0_0_8px_rgba(99,102,241,0.8)] relative z-10" />
+                          <span
+                            className={clsx(
+                              "w-2 h-2 rounded-full relative z-10",
+                              themeConfig?.glowDot || "bg-indigo-600 dark:bg-indigo-400 shadow-[0_0_8px_rgba(99,102,241,0.8)]"
+                            )}
+                          />
                         )}
                       </motion.a>
                     </li>
@@ -314,7 +383,7 @@ export default function Header() {
                 whileTap={{ scale: 0.96 }}
                 onClick={(e) => handleNavClick(e, "Contact", "#contact")}
                 className={clsx(
-                  "flex items-center justify-center gap-2 py-3 px-4 rounded-full text-[0.92rem] font-semibold transition-all duration-300 cursor-pointer shadow-lg",
+                  "flex items-center justify-center gap-2 py-3.5 px-4 rounded-full text-[0.94rem] font-semibold transition-all duration-300 cursor-pointer shadow-lg",
                   isActiveContact
                     ? "bg-indigo-600 dark:bg-white text-white dark:text-zinc-950 shadow-[0_0_20px_rgba(99,102,241,0.5)] border border-indigo-500 dark:border-white"
                     : "bg-zinc-900 text-white hover:bg-zinc-800 dark:bg-indigo-600 dark:hover:bg-indigo-500 border border-black/10 dark:border-indigo-400/30"
