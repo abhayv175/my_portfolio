@@ -21,7 +21,7 @@ export default function AmbientGlow() {
           {/* Node 1: Top-Right Dynamic Morphing Violet / Rose / Indigo / Azure */}
           <div className="absolute top-[-8rem] sm:top-[-12rem] right-[-6rem] sm:right-[2rem] pointer-events-none">
             <motion.div
-              className="pointer-events-none h-[30rem] w-[30rem] sm:h-[52rem] sm:w-[56rem] rounded-full blur-[5.5rem] sm:blur-[7.5rem] md:blur-[9rem] transform-gpu will-change-transform"
+              className="pointer-events-none h-[22rem] w-[22rem] sm:h-[52rem] sm:w-[56rem] rounded-full blur-3xl sm:blur-[7.5rem] md:blur-[9rem] transform-gpu will-change-transform"
               style={{ transform: "translateZ(0)" }}
               animate={{
                 backgroundColor: [
@@ -47,7 +47,7 @@ export default function AmbientGlow() {
           {/* Node 2: Top-Left Dynamic Morphing Cyan / Emerald Teal / Sky / Cobalt */}
           <div className="absolute top-[0rem] sm:top-[2rem] left-[-8rem] sm:left-[-6rem] md:left-[-10rem] pointer-events-none">
             <motion.div
-              className="pointer-events-none h-[28rem] w-[28rem] sm:h-[48rem] sm:w-[52rem] rounded-full blur-[5.5rem] sm:blur-[7.5rem] md:blur-[9rem] transform-gpu will-change-transform"
+              className="pointer-events-none h-[20rem] w-[20rem] sm:h-[48rem] sm:w-[52rem] rounded-full blur-3xl sm:blur-[7.5rem] md:blur-[9rem] transform-gpu will-change-transform"
               style={{ transform: "translateZ(0)" }}
               animate={{
                 backgroundColor: [
@@ -73,7 +73,7 @@ export default function AmbientGlow() {
           {/* Node 3: Center-Hero Radiant Core (Eliminates the empty white center hole) */}
           <div className="absolute top-[-2rem] sm:top-[2rem] left-1/2 -translate-x-1/2 pointer-events-none">
             <motion.div
-              className="pointer-events-none h-[24rem] w-[32rem] sm:h-[42rem] sm:w-[54rem] rounded-full blur-[6rem] sm:blur-[8rem] md:blur-[9.5rem] transform-gpu will-change-transform"
+              className="pointer-events-none h-[20rem] w-[24rem] sm:h-[42rem] sm:w-[54rem] rounded-full blur-3xl sm:blur-[8rem] md:blur-[9.5rem] transform-gpu will-change-transform"
               style={{ transform: "translateZ(0)" }}
               animate={{
                 backgroundColor: [
@@ -97,7 +97,7 @@ export default function AmbientGlow() {
           </div>
 
           {/* Node 4: Mid-Page Dynamic Morphing Fuchsia / Coral / Amethyst / Apricot */}
-          <div className="absolute top-[36%] sm:top-[34%] right-[-8rem] sm:right-[-6rem] pointer-events-none">
+          <div className="hidden sm:block absolute top-[36%] sm:top-[34%] right-[-8rem] sm:right-[-6rem] pointer-events-none">
             <motion.div
               className="pointer-events-none h-[26rem] w-[26rem] sm:h-[44rem] sm:w-[48rem] rounded-full blur-[6rem] sm:blur-[8rem] md:blur-[9.5rem] transform-gpu will-change-transform"
               style={{ transform: "translateZ(0)" }}
@@ -123,7 +123,7 @@ export default function AmbientGlow() {
           </div>
 
           {/* Node 5: Lower-Left Dynamic Morphing Ocean Azure / Seafoam Teal / Purple */}
-          <div className="absolute top-[62%] sm:top-[58%] left-[-8rem] sm:left-[-6rem] pointer-events-none">
+          <div className="hidden sm:block absolute top-[62%] sm:top-[58%] left-[-8rem] sm:left-[-6rem] pointer-events-none">
             <motion.div
               className="pointer-events-none h-[28rem] w-[28rem] sm:h-[46rem] sm:w-[50rem] rounded-full blur-[6rem] sm:blur-[8rem] md:blur-[9.5rem] transform-gpu will-change-transform"
               style={{ transform: "translateZ(0)" }}
@@ -174,7 +174,7 @@ export default function AmbientGlow() {
           {/* Node 1: Top-Right Deep Cosmic Indigo/Violet Aura */}
           <div className="absolute top-[-6rem] sm:top-[-10rem] right-[-6rem] sm:right-[3rem] pointer-events-none">
             <motion.div
-              className="pointer-events-none h-[28rem] w-[28rem] sm:h-[50rem] sm:w-[58rem] rounded-full bg-[#6366f1] blur-[7rem] sm:blur-[11rem] md:blur-[13rem] transform-gpu will-change-transform"
+              className="pointer-events-none h-[22rem] w-[22rem] sm:h-[50rem] sm:w-[58rem] rounded-full bg-[#6366f1] blur-3xl sm:blur-[11rem] md:blur-[13rem] transform-gpu will-change-transform"
               style={{ transform: "translateZ(0)" }}
               animate={{
                 scale: [1, 1.08, 0.96, 1.05, 1],
@@ -193,7 +193,7 @@ export default function AmbientGlow() {
           {/* Node 2: Top-Left Crisp Ethereal Cyan/Sky Aura */}
           <div className="absolute top-[2rem] sm:top-[4rem] left-[-8rem] sm:left-[-6rem] md:left-[-12rem] pointer-events-none">
             <motion.div
-              className="pointer-events-none h-[26rem] w-[26rem] sm:h-[45rem] sm:w-[52rem] rounded-full bg-[#0ea5e9] blur-[7rem] sm:blur-[11rem] md:blur-[13rem] transform-gpu will-change-transform"
+              className="pointer-events-none h-[20rem] w-[20rem] sm:h-[45rem] sm:w-[52rem] rounded-full bg-[#0ea5e9] blur-3xl sm:blur-[11rem] md:blur-[13rem] transform-gpu will-change-transform"
               style={{ transform: "translateZ(0)" }}
               animate={{
                 scale: [1, 1.06, 0.95, 1.04, 1],
@@ -210,7 +210,7 @@ export default function AmbientGlow() {
           </div>
 
           {/* Node 3: Mid-Page Electric Violet/Amethyst Nebula */}
-          <div className="absolute top-[38%] sm:top-[35%] right-[-10rem] sm:right-[-8rem] pointer-events-none">
+          <div className="hidden sm:block absolute top-[38%] sm:top-[35%] right-[-10rem] sm:right-[-8rem] pointer-events-none">
             <motion.div
               className="pointer-events-none h-[24rem] w-[24rem] sm:h-[42rem] sm:w-[46rem] rounded-full bg-[#8b5cf6] blur-[8rem] sm:blur-[12rem] md:blur-[14rem] transform-gpu will-change-transform"
               style={{ transform: "translateZ(0)" }}
@@ -229,7 +229,7 @@ export default function AmbientGlow() {
           </div>
 
           {/* Node 4: Lower-Left Deep Ocean Azure Glow */}
-          <div className="absolute top-[65%] sm:top-[60%] left-[-10rem] sm:left-[-8rem] pointer-events-none">
+          <div className="hidden sm:block absolute top-[65%] sm:top-[60%] left-[-10rem] sm:left-[-8rem] pointer-events-none">
             <motion.div
               className="pointer-events-none h-[26rem] w-[26rem] sm:h-[44rem] sm:w-[48rem] rounded-full bg-[#38bdf8] blur-[8rem] sm:blur-[12rem] md:blur-[14rem] transform-gpu will-change-transform"
               style={{ transform: "translateZ(0)" }}

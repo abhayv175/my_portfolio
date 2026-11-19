@@ -33,6 +33,21 @@ export default function ThemeContextProvider({
       }
     };
 
+    const isMobile =
+      typeof window !== "undefined" &&
+      (window.innerWidth < 768 || window.matchMedia("(pointer: coarse)").matches);
+
+    // On mobile devices, use ultra-smooth CSS color crossfading
+    // to prevent mobile Chromium 1-frame view-transition snapshot flashes
+    if (isMobile) {
+      document.documentElement.classList.add("theme-transitioning");
+      updateDOM();
+      setTimeout(() => {
+        document.documentElement.classList.remove("theme-transitioning");
+      }, 350);
+      return;
+    }
+
     if (
       typeof document === "undefined" ||
       !("startViewTransition" in document) ||
@@ -48,6 +63,9 @@ export default function ThemeContextProvider({
       Math.max(x, window.innerWidth - x),
       Math.max(y, window.innerHeight - y)
     );
+
+    document.documentElement.style.setProperty("--theme-x", `${x}px`);
+    document.documentElement.style.setProperty("--theme-y", `${y}px`);
 
     const transition = (document as any).startViewTransition(() => {
       updateDOM();
