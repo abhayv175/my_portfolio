@@ -9,9 +9,6 @@ import {
   motion,
   useInView,
   AnimatePresence,
-  useMotionValue,
-  useSpring,
-  useTransform,
 } from "framer-motion";
 import {
   FiExternalLink,
@@ -68,7 +65,7 @@ function ProjectCardScrollWrapper({
   const cardRef = useRef<HTMLDivElement>(null);
   const isInScroll = useInView(cardRef, {
     once: false,
-    margin: "-80px 0px -80px 0px",
+    margin: "0px 0px -20px 0px",
   });
   const [isMobile, setIsMobile] = useState(false);
   const [isInView, setIsInView] = useState(false);
@@ -85,14 +82,14 @@ function ProjectCardScrollWrapper({
   const isFocused = isMobile ? isInView : false;
 
   return (
-    <div ref={cardRef} className={`[perspective:1000px] ${className}`}>
+    <div ref={cardRef} className={className}>
       <motion.div
         initial="hidden"
         animate={isInScroll ? "visible" : "hidden"}
         variants={cardVariants}
         viewport={
           isMobile
-            ? { margin: "-25% 0px -25% 0px", amount: 0.2, once: false }
+            ? { margin: "0px 0px 0px 0px", amount: 0.05, once: false }
             : undefined
         }
         onViewportEnter={() => {
@@ -101,7 +98,7 @@ function ProjectCardScrollWrapper({
         onViewportLeave={() => {
           if (isMobile) setIsInView(false);
         }}
-        className="w-full h-full transform-gpu will-change-transform [transform-style:preserve-3d]"
+        className="w-full h-full transform-gpu will-change-transform"
       >
         <ProjectCardFocusContext.Provider value={{ isFocused, isMobile }}>
           {children}
@@ -150,7 +147,7 @@ export default function Projects() {
         </div>
         <SectionHeading>Projects</SectionHeading>
 
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-6 [perspective:1200px]">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
           {/* =========================================================================
               CARD 1: PRINTPULSE (FEATURED HERO CARD - 12 COLUMNS)
               Interactive Live Toggle: Customer QR -> FastAPI RAM Relay -> Vendor App
@@ -213,51 +210,6 @@ export default function Projects() {
 }
 
 /* =========================================================================
-   3D TILT HOOK FOR PROJECT CARDS
-   Smooth, physics-based rotation tracking cursor position with spring return
-   ========================================================================= */
-function useCardTilt(maxAngle = 9.5) {
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
-
-  const springConfig = { stiffness: 350, damping: 28 };
-  const mouseXSpring = useSpring(x, springConfig);
-  const mouseYSpring = useSpring(y, springConfig);
-
-  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], [`-${maxAngle}deg`, `${maxAngle}deg`]);
-  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], [`${maxAngle}deg`, `-${maxAngle}deg`]);
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    // Only apply tilt on fine-pointer devices (desktop mice / trackpads), bypass on touch
-    if (typeof window !== "undefined" && !window.matchMedia("(pointer: fine)").matches) {
-      return;
-    }
-    const rect = e.currentTarget.getBoundingClientRect();
-    if (!rect.width || !rect.height) return;
-    const xPct = (e.clientX - rect.left) / rect.width - 0.5;
-    const yPct = (e.clientY - rect.top) / rect.height - 0.5;
-    x.set(xPct);
-    y.set(yPct);
-  };
-
-  const handleMouseLeave = () => {
-    x.set(0);
-    y.set(0);
-  };
-
-  return {
-    tiltStyle: {
-      rotateX,
-      rotateY,
-      transformPerspective: 1100,
-      transformStyle: "preserve-3d" as const,
-    },
-    handleMouseMove,
-    handleMouseLeave,
-  };
-}
-
-/* =========================================================================
    SUB-COMPONENT 1: PrintPulse Featured Card (With Dynamic Point Photo Switcher)
    ========================================================================= */
 function PrintPulseFeaturedCard({
@@ -269,7 +221,6 @@ function PrintPulseFeaturedCard({
 }) {
   const [activeStep, setActiveStep] = useState<number>(1);
   const [isSimulating, setIsSimulating] = useState<boolean>(false);
-  const { tiltStyle, handleMouseMove, handleMouseLeave } = useCardTilt(6.5);
 
   const steps = [
     {
@@ -321,11 +272,8 @@ function PrintPulseFeaturedCard({
   return (
     <motion.div
       whileHover={{ y: -6, scale: 1.015 }}
-      transition={{ type: "spring", stiffness: 450, damping: 28, mass: 0.6 }}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      style={tiltStyle}
-      className={`w-full h-full p-5 sm:p-8 rounded-3xl backdrop-blur-2xl border transition-[border-color,background-color,box-shadow,transform] duration-300 relative overflow-hidden flex flex-col lg:flex-row gap-8 items-center group ${
+      transition={{ duration: 0.15, ease: "easeOut" }}
+      className={`w-full h-full p-5 sm:p-8 rounded-3xl backdrop-blur-2xl border transition-[border-color,background-color,box-shadow,transform] duration-150 ease-out relative overflow-hidden flex flex-col lg:flex-row gap-8 items-center group ${
         isHighlighted
           ? "border-cyan-500 ring-2 ring-cyan-500/50 bg-white/95 dark:bg-zinc-900/95 shadow-[0_20px_50px_rgba(56,189,248,0.3)] -translate-y-1.5"
           : isFocused
@@ -335,7 +283,7 @@ function PrintPulseFeaturedCard({
     >
       {/* Background Top Ambient Accent */}
       <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-bl from-cyan-500/20 via-sky-500/15 to-transparent rounded-full blur-3xl pointer-events-none" />
-      <div className={`absolute inset-0 rounded-3xl bg-gradient-to-br from-cyan-500/20 via-sky-500/10 to-transparent ${isFocused ? "opacity-100" : "opacity-0"} group-hover:opacity-100 transition-opacity duration-300 pointer-events-none`} />
+      <div className={`absolute inset-0 rounded-3xl bg-gradient-to-br from-cyan-500/20 via-sky-500/10 to-transparent ${isFocused ? "opacity-100" : "opacity-0"} group-hover:opacity-100 transition-opacity duration-150 ease-out pointer-events-none`} />
 
       {/* Left Column: Project Overview & Meta */}
       <div className="flex-1 text-left relative z-10 w-full">
@@ -566,20 +514,15 @@ function PassengerTextCard({
 }) {
   const { isFocused } = React.useContext(ProjectCardFocusContext);
   const [isHovered, setIsHovered] = useState(false);
-  const { tiltStyle, handleMouseMove, handleMouseLeave: handleTiltLeave } = useCardTilt(9.5);
+  const isCardActive = isHovered || isFocused;
 
   return (
     <motion.div
       whileHover={{ y: -6, scale: 1.018 }}
-      transition={{ type: "spring", stiffness: 450, damping: 28, mass: 0.6 }}
+      transition={{ duration: 0.15, ease: "easeOut" }}
       onMouseEnter={() => setIsHovered(true)}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={() => {
-        setIsHovered(false);
-        handleTiltLeave();
-      }}
-      style={tiltStyle}
-      className={`w-full h-full p-5 sm:p-7 rounded-3xl backdrop-blur-2xl border transition-[border-color,background-color,box-shadow,transform] duration-300 relative overflow-hidden flex flex-col justify-between text-left group ${
+      onMouseLeave={() => setIsHovered(false)}
+      className={`w-full h-full p-5 sm:p-7 rounded-3xl backdrop-blur-2xl border transition-[border-color,background-color,box-shadow,transform] duration-150 ease-out relative overflow-hidden flex flex-col justify-between text-left group ${
         isHighlighted
           ? "border-blue-500 ring-2 ring-blue-500/50 bg-white/95 dark:bg-zinc-900/95 shadow-[0_20px_50px_rgba(59,130,246,0.3)] -translate-y-1.5"
           : isFocused
@@ -587,7 +530,7 @@ function PassengerTextCard({
           : "border-black/10 dark:border-white/10 bg-white/70 dark:bg-zinc-900/40 shadow-xl hover:shadow-[0_20px_50px_rgba(0,0,0,0.18),0_0_35px_rgba(59,130,246,0.28)] hover:border-blue-400/60 dark:hover:border-blue-400/60 hover:bg-white/90 dark:hover:bg-zinc-900/75"
       }`}
     >
-      <div className={`absolute inset-0 rounded-3xl bg-gradient-to-br from-blue-500/20 via-indigo-500/15 to-transparent ${isFocused ? "opacity-100" : "opacity-0"} group-hover:opacity-100 transition-opacity duration-300 pointer-events-none`} />
+      <div className={`absolute inset-0 rounded-3xl bg-gradient-to-br from-blue-500/20 via-indigo-500/15 to-transparent ${isFocused ? "opacity-100" : "opacity-0"} group-hover:opacity-100 transition-opacity duration-150 ease-out pointer-events-none`} />
 
       <div>
         <div className="flex items-center justify-between mb-3 relative z-10">
@@ -628,7 +571,7 @@ function PassengerTextCard({
           {/* Outgoing Message with Hover-Reactive Delivery */}
           <div className="flex items-end justify-end gap-2 self-end max-w-[85%]">
             <div className="px-3 py-1.5 rounded-2xl rounded-br-sm bg-indigo-600 text-xs text-white shadow-sm flex items-center gap-1.5">
-              {isHovered ? (
+              {isCardActive ? (
                 <motion.span
                   initial={{ opacity: 0, y: 3 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -668,7 +611,7 @@ function PassengerTextCard({
 }
 
 /* =========================================================================
-   SUB-COMPONENT 3: Pika Panic (3D Mouse Parallax on Unity Game Artwork)
+   SUB-COMPONENT 3: Pika Panic (Unity Game Artwork)
    ========================================================================= */
 function PikaPanicCard({
   project,
@@ -678,16 +621,12 @@ function PikaPanicCard({
   isHighlighted: boolean;
 }) {
   const { isFocused } = React.useContext(ProjectCardFocusContext);
-  const { tiltStyle, handleMouseMove, handleMouseLeave } = useCardTilt(10);
 
   return (
     <motion.div
       whileHover={{ y: -6, scale: 1.018 }}
-      transition={{ type: "spring", stiffness: 450, damping: 28, mass: 0.6 }}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      style={tiltStyle}
-      className={`w-full h-full p-5 sm:p-7 rounded-3xl backdrop-blur-2xl border transition-[border-color,background-color,box-shadow,transform] duration-300 relative overflow-hidden flex flex-col justify-between text-left group ${
+      transition={{ duration: 0.15, ease: "easeOut" }}
+      className={`w-full h-full p-5 sm:p-7 rounded-3xl backdrop-blur-2xl border transition-[border-color,background-color,box-shadow,transform] duration-150 ease-out relative overflow-hidden flex flex-col justify-between text-left group ${
         isHighlighted
           ? "border-purple-500 ring-2 ring-purple-500/50 bg-white/95 dark:bg-zinc-900/95 shadow-[0_20px_50px_rgba(168,85,247,0.3)] -translate-y-1.5"
           : isFocused
@@ -695,7 +634,7 @@ function PikaPanicCard({
           : "border-black/10 dark:border-white/10 bg-white/70 dark:bg-zinc-900/40 shadow-xl hover:shadow-[0_20px_50px_rgba(0,0,0,0.18),0_0_35px_rgba(168,85,247,0.28)] hover:border-purple-400/60 dark:hover:border-purple-400/60 hover:bg-white/90 dark:hover:bg-zinc-900/75"
       }`}
     >
-      <div className={`absolute inset-0 rounded-3xl bg-gradient-to-br from-purple-500/20 via-violet-500/15 to-transparent ${isFocused ? "opacity-100" : "opacity-0"} group-hover:opacity-100 transition-opacity duration-300 pointer-events-none`} />
+      <div className={`absolute inset-0 rounded-3xl bg-gradient-to-br from-purple-500/20 via-violet-500/15 to-transparent ${isFocused ? "opacity-100" : "opacity-0"} group-hover:opacity-100 transition-opacity duration-150 ease-out pointer-events-none`} />
 
       <div>
         <div className="flex items-center justify-between mb-3 relative z-10">
@@ -768,25 +707,21 @@ function SpotlightProjectCard({
   const { isFocused } = React.useContext(ProjectCardFocusContext);
   const cardRef = useRef<HTMLDivElement>(null);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
-  const { tiltStyle, handleMouseMove: handleTiltMove, handleMouseLeave: handleTiltLeave } = useCardTilt(9.5);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (cardRef.current) {
       const { left, top } = cardRef.current.getBoundingClientRect();
       setMousePos({ x: e.clientX - left, y: e.clientY - top });
     }
-    handleTiltMove(e);
   };
 
   return (
     <motion.div
       ref={cardRef}
       whileHover={{ y: -6, scale: 1.018 }}
-      transition={{ type: "spring", stiffness: 450, damping: 28, mass: 0.6 }}
+      transition={{ duration: 0.15, ease: "easeOut" }}
       onMouseMove={handleMouseMove}
-      onMouseLeave={handleTiltLeave}
-      style={tiltStyle}
-      className={`w-full h-full p-5 sm:p-7 rounded-3xl backdrop-blur-2xl border transition-[border-color,background-color,box-shadow,transform] duration-300 relative overflow-hidden flex flex-col justify-between text-left group ${
+      className={`w-full h-full p-5 sm:p-7 rounded-3xl backdrop-blur-2xl border transition-[border-color,background-color,box-shadow,transform] duration-150 ease-out relative overflow-hidden flex flex-col justify-between text-left group ${
         isHighlighted
           ? "border-emerald-500 ring-2 ring-emerald-500/50 bg-white/95 dark:bg-zinc-900/95 shadow-[0_20px_50px_rgba(16,185,129,0.3)] -translate-y-1.5"
           : isFocused
@@ -796,12 +731,12 @@ function SpotlightProjectCard({
     >
       {/* Interactive Cursor Spotlight Glow */}
       <div
-        className="pointer-events-none absolute -inset-px opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+        className="pointer-events-none absolute -inset-px opacity-0 group-hover:opacity-100 transition-opacity duration-150 ease-out"
         style={{
           background: `radial-gradient(400px circle at ${mousePos.x}px ${mousePos.y}px, rgba(16, 185, 129, 0.2), transparent 80%)`,
         }}
       />
-      <div className={`absolute inset-0 rounded-3xl bg-gradient-to-br from-emerald-500/20 via-teal-500/15 to-transparent ${isFocused ? "opacity-100" : "opacity-0"} group-hover:opacity-100 transition-opacity duration-300 pointer-events-none`} />
+      <div className={`absolute inset-0 rounded-3xl bg-gradient-to-br from-emerald-500/20 via-teal-500/15 to-transparent ${isFocused ? "opacity-100" : "opacity-0"} group-hover:opacity-100 transition-opacity duration-150 ease-out pointer-events-none`} />
 
       <div>
         <div className="flex items-center justify-between mb-3 relative z-10">
@@ -878,16 +813,12 @@ function BankingSystemCard({
 }) {
   const { isFocused } = React.useContext(ProjectCardFocusContext);
   const [balance, setBalance] = useState(14500);
-  const { tiltStyle, handleMouseMove, handleMouseLeave } = useCardTilt(9.5);
 
   return (
     <motion.div
       whileHover={{ y: -6, scale: 1.018 }}
-      transition={{ type: "spring", stiffness: 450, damping: 28, mass: 0.6 }}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      style={tiltStyle}
-      className={`w-full h-full p-5 sm:p-7 rounded-3xl backdrop-blur-2xl border transition-[border-color,background-color,box-shadow,transform] duration-300 relative overflow-hidden flex flex-col justify-between text-left group ${
+      transition={{ duration: 0.15, ease: "easeOut" }}
+      className={`w-full h-full p-5 sm:p-7 rounded-3xl backdrop-blur-2xl border transition-[border-color,background-color,box-shadow,transform] duration-150 ease-out relative overflow-hidden flex flex-col justify-between text-left group ${
         isHighlighted
           ? "border-amber-500 ring-2 ring-amber-500/50 bg-white/95 dark:bg-zinc-900/95 shadow-[0_20px_50px_rgba(245,158,11,0.3)] -translate-y-1.5"
           : isFocused
@@ -895,7 +826,7 @@ function BankingSystemCard({
           : "border-black/10 dark:border-white/10 bg-white/70 dark:bg-zinc-900/40 shadow-xl hover:shadow-[0_20px_50px_rgba(0,0,0,0.18),0_0_35px_rgba(245,158,11,0.28)] hover:border-amber-400/60 dark:hover:border-amber-400/60 hover:bg-white/90 dark:hover:bg-zinc-900/75"
       }`}
     >
-      <div className={`absolute inset-0 rounded-3xl bg-gradient-to-br from-amber-500/20 via-cyan-500/15 to-transparent ${isFocused ? "opacity-100" : "opacity-0"} group-hover:opacity-100 transition-opacity duration-300 pointer-events-none`} />
+      <div className={`absolute inset-0 rounded-3xl bg-gradient-to-br from-amber-500/20 via-cyan-500/15 to-transparent ${isFocused ? "opacity-100" : "opacity-0"} group-hover:opacity-100 transition-opacity duration-150 ease-out pointer-events-none`} />
 
       <div>
         <div className="flex items-center justify-between mb-3 relative z-10">

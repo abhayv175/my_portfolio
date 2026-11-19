@@ -45,7 +45,7 @@ function ContactCardScrollWrapper({
   const cardRef = useRef<HTMLDivElement>(null);
   const isInScroll = useInView(cardRef, {
     once: false,
-    margin: "-80px 0px -80px 0px",
+    margin: "0px 0px -20px 0px",
   });
 
   return (
@@ -56,7 +56,7 @@ function ContactCardScrollWrapper({
         variants={cardVariants}
         viewport={
           isMobile
-            ? { margin: "-25% 0px -25% 0px", amount: 0.2, once: false }
+            ? { margin: "0px 0px 0px 0px", amount: 0.05, once: false }
             : undefined
         }
         onViewportEnter={() => {
@@ -196,22 +196,22 @@ export default function Contact() {
         >
           <motion.div
             whileHover={{ y: -6, scale: 1.02 }}
-            transition={{ type: "spring", stiffness: 450, damping: 28, mass: 0.6 }}
+            transition={{ duration: 0.15, ease: "easeOut" }}
             onMouseEnter={() => {
               if (!isMobile) setIsHovered(true);
             }}
             onMouseLeave={() => {
               if (!isMobile) setIsHovered(false);
             }}
-            className={`w-full p-6 sm:p-10 rounded-3xl backdrop-blur-xl transition-[border-color,background-color,box-shadow,transform] duration-300 relative overflow-hidden group ${
+            className={`w-full p-6 sm:p-10 rounded-3xl backdrop-blur-xl transition-[border-color,background-color,box-shadow,transform] duration-150 ease-out relative overflow-hidden group ${
               isCardFocused
                 ? "bg-white/95 dark:bg-zinc-900/80 border-violet-400/80 dark:border-violet-400/80 shadow-[0_20px_50px_rgba(0,0,0,0.18),0_0_35px_rgba(168,85,247,0.32)] scale-[1.02] -translate-y-1.5"
                 : "bg-white/70 dark:bg-zinc-900/40 border border-black/10 dark:border-white/10 shadow-xl dark:shadow-[0_20px_50px_rgba(0,0,0,0.6)] hover:shadow-[0_20px_50px_rgba(0,0,0,0.18),0_0_35px_rgba(168,85,247,0.32)] hover:border-violet-400/70 dark:hover:border-violet-400/70 hover:bg-white/90 dark:hover:bg-zinc-900/75"
             }`}
           >
             {/* Ambient Violet Glow Sheen on Hover (not cursor-dependent) */}
-            <div className={`absolute top-0 right-0 w-80 h-80 bg-gradient-to-bl from-violet-500/25 via-purple-500/15 to-transparent rounded-full blur-3xl pointer-events-none transition-opacity duration-300 ${isCardFocused ? "opacity-100" : "opacity-0"} group-hover:opacity-100`} />
-            <div className={`absolute inset-0 rounded-3xl bg-gradient-to-br from-violet-500/20 via-purple-500/15 to-transparent pointer-events-none transition-opacity duration-300 ${isCardFocused ? "opacity-100" : "opacity-0"} group-hover:opacity-100`} />
+            <div className={`absolute top-0 right-0 w-80 h-80 bg-gradient-to-bl from-violet-500/25 via-purple-500/15 to-transparent rounded-full blur-3xl pointer-events-none transition-opacity duration-150 ease-out ${isCardFocused ? "opacity-100" : "opacity-0"} group-hover:opacity-100`} />
+            <div className={`absolute inset-0 rounded-3xl bg-gradient-to-br from-violet-500/20 via-purple-500/15 to-transparent pointer-events-none transition-opacity duration-150 ease-out ${isCardFocused ? "opacity-100" : "opacity-0"} group-hover:opacity-100`} />
 
             <form
               ref={formRef}
