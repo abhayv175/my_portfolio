@@ -45,10 +45,22 @@ export default function ThemeContextProvider({
 
     const x = options?.x ?? window.innerWidth / 2;
     const y = options?.y ?? window.innerHeight / 2;
-    const endRadius = Math.hypot(
-      Math.max(x, window.innerWidth - x),
-      Math.max(y, window.innerHeight - y)
+
+    const viewportWidth = Math.max(
+      window.innerWidth || 0,
+      document.documentElement.clientWidth || 0,
+      typeof window.screen !== "undefined" ? window.screen.width : 0
     );
+    const viewportHeight = Math.max(
+      window.innerHeight || 0,
+      document.documentElement.clientHeight || 0,
+      typeof window.screen !== "undefined" ? window.screen.height : 0
+    );
+
+    const maxDistX = Math.max(x, viewportWidth - x);
+    const maxDistY = Math.max(y, viewportHeight - y);
+    // Multiply by 1.15 to guarantee the circular reveal sweeps 100% past all mobile edges and corners with dynamic toolbars
+    const endRadius = Math.hypot(maxDistX, maxDistY) * 1.15;
 
     document.documentElement.style.setProperty("--theme-x", `${x}px`);
     document.documentElement.style.setProperty("--theme-y", `${y}px`);

@@ -161,24 +161,24 @@ export default function Contact() {
         </div>
         <SectionHeading>Contact me</SectionHeading>
 
-        <p className="text-gray-700 -mt-4 dark:text-white/80 font-normal leading-relaxed text-sm sm:text-base max-w-[34rem] mx-auto flex flex-wrap items-center justify-center gap-1.5 sm:gap-2">
-          <span>Please contact me directly at</span>
+        <div className="text-gray-700 -mt-4 dark:text-white/80 font-normal leading-relaxed text-sm sm:text-base max-w-[34rem] mx-auto flex flex-wrap items-center justify-center gap-1.5 sm:gap-2">
+          <span className="text-gray-700 dark:text-white/80">Please contact me directly at</span>
           <button
             type="button"
             onClick={handleCopyEmail}
             title="Click to copy email address"
-            className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 text-sm hover:bg-black/10 dark:hover:bg-white/10 hover:border-indigo-500/30 dark:hover:border-indigo-400/30 text-gray-900 dark:text-white transition-all duration-200 cursor-pointer group active:scale-95"
+            className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/5 dark:bg-white/10 border border-black/10 dark:border-white/15 text-sm hover:bg-black/10 dark:hover:bg-white/15 hover:border-indigo-500/30 dark:hover:border-indigo-400/30 text-gray-900 dark:text-white transition-all duration-200 cursor-pointer group active:scale-95 shadow-sm"
           >
-            <BsEnvelope className="text-xs opacity-70 group-hover:opacity-100 transition-opacity" />
-            <span className="font-medium">abhayv175@gmail.com</span>
+            <BsEnvelope className="text-xs opacity-80 group-hover:opacity-100 transition-opacity text-gray-800 dark:text-white" />
+            <span className="font-medium text-gray-900 dark:text-white">abhayv175@gmail.com</span>
             {copied ? (
               <BsCheck className="text-sm text-emerald-500 transition-transform duration-200 scale-110" />
             ) : (
-              <BsCopy className="text-xs opacity-60 group-hover:opacity-100 transition-opacity" />
+              <BsCopy className="text-xs opacity-70 group-hover:opacity-100 transition-opacity text-gray-800 dark:text-white" />
             )}
           </button>
-          <span>or through this form.</span>
-        </p>
+          <span className="text-gray-700 dark:text-white/80">or through this form.</span>
+        </div>
 
         <ContactCardScrollWrapper
           className="mt-8"
