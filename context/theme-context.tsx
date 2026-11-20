@@ -70,8 +70,9 @@ export default function ThemeContextProvider({
             ],
           },
           {
-            duration: 520,
-            easing: "cubic-bezier(0.2, 0.9, 0.3, 1)",
+            duration: 1000,
+            easing: "cubic-bezier(0.22, 1, 0.36, 1)",
+            fill: "forwards",
             pseudoElement: "::view-transition-new(root)",
           }
         );
