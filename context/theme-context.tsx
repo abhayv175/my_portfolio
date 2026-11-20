@@ -60,6 +60,15 @@ export default function ThemeContextProvider({
       });
     });
 
+    const isMobile =
+      typeof window !== "undefined" &&
+      (window.innerWidth < 768 || window.matchMedia("(pointer: coarse)").matches);
+
+    const duration = isMobile ? 420 : 1000;
+    const easing = isMobile
+      ? "cubic-bezier(0.16, 1, 0.3, 1)"
+      : "cubic-bezier(0.22, 1, 0.36, 1)";
+
     transition.ready
       .then(() => {
         document.documentElement.animate(
@@ -70,8 +79,8 @@ export default function ThemeContextProvider({
             ],
           },
           {
-            duration: 1000,
-            easing: "cubic-bezier(0.22, 1, 0.36, 1)",
+            duration,
+            easing,
             fill: "forwards",
             pseudoElement: "::view-transition-new(root)",
           }

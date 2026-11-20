@@ -106,6 +106,9 @@ button, a, input, textarea, select {
 ::view-transition-new(root) {
   animation: none;
   mix-blend-mode: normal;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  will-change: clip-path;
 }
 
 ::view-transition-old(root) {
