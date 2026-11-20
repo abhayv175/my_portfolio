@@ -101,16 +101,7 @@ button, a, input, textarea, select {
   transition: background-color 300ms ease-in-out, border-color 300ms ease-in-out, box-shadow 300ms ease-in-out !important;
 }
 
-/* Smooth mobile theme transition without Android Chromium snapshot flash */
-.theme-transitioning,
-.theme-transitioning *,
-.theme-transitioning *::before,
-.theme-transitioning *::after {
-  transition: background-color 300ms ease-out, border-color 300ms ease-out, color 300ms ease-out, box-shadow 300ms ease-out !important;
-  transition-delay: 0s !important;
-}
-
-/* Modern Circular View Transition Theme Ripple (Desktop) */
+/* Modern Circular View Transition Theme Ripple (Mobile & Desktop) */
 ::view-transition-old(root),
 ::view-transition-new(root) {
   animation: none;
@@ -124,6 +115,11 @@ button, a, input, textarea, select {
 ::view-transition-new(root) {
   z-index: 999999;
   clip-path: circle(0px at var(--theme-x, 50%) var(--theme-y, 50%));
+}
+
+.view-transition-active,
+.view-transition-active * {
+  transition: none !important;
 }
 
 

@@ -34,15 +34,12 @@ const cardVariants = {
 function ContactCardScrollWrapper({
   children,
   className = "",
-  isMobile,
-  setIsInView,
+  cardRef,
 }: {
   children: React.ReactNode;
   className?: string;
-  isMobile: boolean;
-  setIsInView: (inView: boolean) => void;
+  cardRef: React.RefObject<HTMLDivElement>;
 }) {
-  const cardRef = useRef<HTMLDivElement>(null);
   const isInScroll = useInView(cardRef, {
     once: false,
     margin: "0px 0px -20px 0px",
@@ -54,17 +51,6 @@ function ContactCardScrollWrapper({
         initial="hidden"
         animate={isInScroll ? "visible" : "hidden"}
         variants={cardVariants}
-        viewport={
-          isMobile
-            ? { margin: "0px 0px 0px 0px", amount: 0.05, once: false }
-            : undefined
-        }
-        onViewportEnter={() => {
-          if (isMobile) setIsInView(true);
-        }}
-        onViewportLeave={() => {
-          if (isMobile) setIsInView(false);
-        }}
         className="w-full transform-gpu will-change-transform"
       >
         {children}
@@ -80,11 +66,16 @@ interface FormErrors {
 
 export default function Contact() {
   const { ref: sectionRef } = useSectionInView("Contact", 0.25);
+  const cardRef = useRef<HTMLDivElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
   const [copied, setCopied] = useState(false);
   const [errors, setErrors] = useState<FormErrors>({});
   const [isMobile, setIsMobile] = useState(false);
-  const [isInView, setIsInView] = useState(false);
+  const isMobileInCenter = useInView(cardRef, {
+    margin: "0px 0px 0px 0px",
+    amount: 0.1,
+    once: false,
+  });
   const [isHovered, setIsHovered] = useState(false);
 
   useEffect(() => {
@@ -96,7 +87,7 @@ export default function Contact() {
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
-  const isCardFocused = isMobile ? isInView : isHovered;
+  const isCardFocused = isMobile ? isMobileInCenter : isHovered;
 
   const handleCopyEmail = async () => {
     try {
@@ -191,8 +182,7 @@ export default function Contact() {
 
         <ContactCardScrollWrapper
           className="mt-8"
-          isMobile={isMobile}
-          setIsInView={setIsInView}
+          cardRef={cardRef}
         >
           <motion.div
             whileHover={{ y: -6, scale: 1.02 }}

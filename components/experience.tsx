@@ -104,10 +104,14 @@ function ExperienceTimelineCard({
     once: false,
     margin: "-80px 0px -80px 0px",
   });
-  const [isInView, setIsInView] = React.useState(false);
+  const isMobileInCenter = useInView(cardRef, {
+    margin: "-25% 0px -25% 0px",
+    amount: 0.2,
+    once: false,
+  });
   const [isHovered, setIsHovered] = React.useState(false);
 
-  const isCardFocused = isMobile ? isInView : isHovered;
+  const isCardFocused = isMobile ? isMobileInCenter : isHovered;
   const itemTheme = EXPERIENCE_THEMES[index % EXPERIENCE_THEMES.length];
 
   React.useEffect(() => {
@@ -143,17 +147,6 @@ function ExperienceTimelineCard({
         initial="hidden"
         animate={isInScroll ? "visible" : "hidden"}
         variants={cardVariants}
-        viewport={
-          isMobile
-            ? { margin: "-25% 0px -25% 0px", amount: 0.2, once: false }
-            : undefined
-        }
-        onViewportEnter={() => {
-          if (isMobile) setIsInView(true);
-        }}
-        onViewportLeave={() => {
-          if (isMobile) setIsInView(false);
-        }}
         style={{
           transform: "translateZ(0)",
           WebkitTapHighlightColor: "transparent",

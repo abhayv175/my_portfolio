@@ -67,8 +67,12 @@ function ProjectCardScrollWrapper({
     once: false,
     margin: "-80px 0px -80px 0px",
   });
+  const isMobileInCenter = useInView(cardRef, {
+    margin: "-25% 0px -25% 0px",
+    amount: 0.2,
+    once: false,
+  });
   const [isMobile, setIsMobile] = useState(false);
-  const [isInView, setIsInView] = useState(false);
 
   useEffect(() => {
     const checkMobile = () => {
@@ -79,7 +83,7 @@ function ProjectCardScrollWrapper({
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
-  const isFocused = isMobile ? isInView : false;
+  const isFocused = isMobile ? isMobileInCenter : false;
 
   return (
     <div ref={cardRef} className={className}>
@@ -87,17 +91,6 @@ function ProjectCardScrollWrapper({
         initial="hidden"
         animate={isInScroll ? "visible" : "hidden"}
         variants={cardVariants}
-        viewport={
-          isMobile
-            ? { margin: "-25% 0px -25% 0px", amount: 0.2, once: false }
-            : undefined
-        }
-        onViewportEnter={() => {
-          if (isMobile) setIsInView(true);
-        }}
-        onViewportLeave={() => {
-          if (isMobile) setIsInView(false);
-        }}
         className="w-full h-full transform-gpu will-change-transform"
       >
         <ProjectCardFocusContext.Provider value={{ isFocused, isMobile }}>

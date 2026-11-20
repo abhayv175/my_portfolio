@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState, createContext, useContext } from "react";
+import { flushSync } from "react-dom";
 
 type Theme = "light" | "dark";
 
@@ -33,21 +34,6 @@ export default function ThemeContextProvider({
       }
     };
 
-    const isMobile =
-      typeof window !== "undefined" &&
-      (window.innerWidth < 768 || window.matchMedia("(pointer: coarse)").matches);
-
-    // On mobile devices, use ultra-smooth CSS color crossfading
-    // to prevent mobile Chromium 1-frame view-transition snapshot flashes
-    if (isMobile) {
-      document.documentElement.classList.add("theme-transitioning");
-      updateDOM();
-      setTimeout(() => {
-        document.documentElement.classList.remove("theme-transitioning");
-      }, 350);
-      return;
-    }
-
     if (
       typeof document === "undefined" ||
       !("startViewTransition" in document) ||
@@ -66,9 +52,12 @@ export default function ThemeContextProvider({
 
     document.documentElement.style.setProperty("--theme-x", `${x}px`);
     document.documentElement.style.setProperty("--theme-y", `${y}px`);
+    document.documentElement.classList.add("view-transition-active");
 
     const transition = (document as any).startViewTransition(() => {
-      updateDOM();
+      flushSync(() => {
+        updateDOM();
+      });
     });
 
     transition.ready
@@ -88,6 +77,10 @@ export default function ThemeContextProvider({
         );
       })
       .catch(() => {});
+
+    transition.finished.finally(() => {
+      document.documentElement.classList.remove("view-transition-active");
+    });
   };
 
   useEffect(() => {
