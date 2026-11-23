@@ -177,7 +177,7 @@ export default function Intro() {
             <Magnetic strength={0.35}>
               <a
                 className="bg-white/80 dark:bg-zinc-900/80 p-3.5 text-zinc-700 hover:text-black dark:text-zinc-300 dark:hover:text-white flex items-center justify-center rounded-full hover:scale-110 active:scale-95 transition-all duration-300 cursor-pointer border border-black/10 hover:border-black/30 dark:border-white/10 dark:hover:border-white/30 shadow-sm hover:shadow-md backdrop-blur-md text-lg"
-                href="https://www.linkedin.com/in/abhay-verma-4b6b0b421/"
+                href="https://www.linkedin.com/in/abhayv175/"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="LinkedIn profile"
