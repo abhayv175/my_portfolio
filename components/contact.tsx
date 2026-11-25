@@ -1,4 +1,4 @@
-"use client";
+i"use client";
 
 import React, { useRef, useState, useEffect } from "react";
 import SectionHeading from "./section-heading";
@@ -41,8 +41,8 @@ function ContactCardScrollWrapper({
   cardRef: React.RefObject<HTMLDivElement>;
 }) {
   const isInScroll = useInView(cardRef, {
-    once: false,
-    margin: "0px 0px -20px 0px",
+    once: true,
+    amount: 0.05,
   });
 
   return (
@@ -193,7 +193,7 @@ export default function Contact() {
             onMouseLeave={() => {
               if (!isMobile) setIsHovered(false);
             }}
-            className={`w-full p-6 sm:p-10 rounded-3xl backdrop-blur-xl transition-[border-color,background-color,box-shadow,transform] duration-150 ease-out relative overflow-hidden group ${
+            className={`w-full p-6 sm:p-10 rounded-3xl backdrop-blur-md md:backdrop-blur-xl transition-[border-color,background-color,box-shadow,transform] duration-150 ease-out relative overflow-hidden group ${
               isCardFocused
                 ? "bg-white/95 dark:bg-zinc-900/80 border-violet-400/80 dark:border-violet-400/80 shadow-[0_20px_50px_rgba(0,0,0,0.18),0_0_35px_rgba(168,85,247,0.32)] scale-[1.02] -translate-y-1.5"
                 : "bg-white/70 dark:bg-zinc-900/40 border border-black/10 dark:border-white/10 shadow-xl dark:shadow-[0_20px_50px_rgba(0,0,0,0.6)] hover:shadow-[0_20px_50px_rgba(0,0,0,0.18),0_0_35px_rgba(168,85,247,0.32)] hover:border-violet-400/70 dark:hover:border-violet-400/70 hover:bg-white/90 dark:hover:bg-zinc-900/75"
@@ -213,8 +213,11 @@ export default function Contact() {
               {/* Email Input Field & Custom Liquid Glass Error Badge */}
               <div className="flex flex-col w-full">
                 <input
+                  id="contact-email"
                   name="senderEmail"
                   type="email"
+                  autoComplete="email"
+                  aria-label="Your email address"
                   maxLength={500}
                   placeholder="Your email"
                   onChange={() => {
@@ -248,7 +251,9 @@ export default function Contact() {
               {/* Message Textarea Field & Custom Liquid Glass Error Badge */}
               <div className="flex flex-col w-full">
                 <textarea
+                  id="contact-message"
                   name="message"
+                  aria-label="Your message"
                   maxLength={5000}
                   placeholder="Your message"
                   onChange={() => {

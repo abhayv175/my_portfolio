@@ -64,8 +64,8 @@ function ProjectCardScrollWrapper({
 }) {
   const cardRef = useRef<HTMLDivElement>(null);
   const isInScroll = useInView(cardRef, {
-    once: false,
-    margin: "-80px 0px -80px 0px",
+    once: true,
+    amount: 0.05,
   });
   const isMobileInCenter = useInView(cardRef, {
     margin: "-25% 0px -25% 0px",
@@ -266,7 +266,7 @@ function PrintPulseFeaturedCard({
     <motion.div
       whileHover={{ y: -6, scale: 1.015 }}
       transition={{ duration: 0.15, ease: "easeOut" }}
-      className={`w-full h-full p-5 sm:p-8 rounded-3xl backdrop-blur-2xl border transition-[border-color,background-color,box-shadow,transform] duration-150 ease-out relative overflow-hidden flex flex-col lg:flex-row gap-8 items-center group ${
+      className={`w-full h-full p-5 sm:p-8 rounded-3xl backdrop-blur-lg md:backdrop-blur-2xl border transition-[border-color,background-color,box-shadow,transform] duration-150 ease-out relative overflow-hidden flex flex-col lg:flex-row gap-8 items-center group ${
         isHighlighted
           ? "border-cyan-500 ring-2 ring-cyan-500/50 bg-white/95 dark:bg-zinc-900/95 shadow-[0_20px_50px_rgba(56,189,248,0.3)] -translate-y-1.5"
           : isFocused
@@ -421,12 +421,12 @@ function PrintPulseFeaturedCard({
                   className="object-cover object-top filter brightness-95 dark:brightness-90 transition-transform duration-300 hover:scale-[1.02]"
                   sizes="(max-width: 1024px) 100vw, 550px"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent flex items-end p-3 justify-between pointer-events-none">
-                  <span className="text-xs font-medium text-white flex items-center gap-1.5 drop-shadow">
-                    <FaQrcode className="text-emerald-400" />
-                    <span>Customer Web Portal: Active Queue & Pricing</span>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent flex items-end p-3 gap-2 justify-between pointer-events-none">
+                  <span className="text-xs font-medium text-white flex items-center gap-1.5 min-w-0 drop-shadow">
+                    <FaQrcode className="text-emerald-400 shrink-0" />
+                    <span className="truncate">Customer Web Portal: Active Queue & Pricing</span>
                   </span>
-                  <span className="text-[0.68rem] font-mono font-bold text-emerald-400 bg-black/70 px-2 py-0.5 rounded-full border border-white/10">
+                  <span className="text-[0.68rem] font-mono font-bold text-emerald-400 bg-black/70 px-2 py-0.5 rounded-full border border-white/10 shrink-0 whitespace-nowrap">
                     Zero Install
                   </span>
                 </div>
@@ -449,12 +449,12 @@ function PrintPulseFeaturedCard({
                   className="object-cover object-top filter brightness-95 dark:brightness-90 transition-transform duration-300 hover:scale-[1.02]"
                   sizes="(max-width: 1024px) 100vw, 550px"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent flex items-end p-3 justify-between pointer-events-none">
-                  <span className="text-xs font-medium text-white flex items-center gap-1.5 drop-shadow">
-                    <FiShield className="text-emerald-400" />
-                    <span>Direct NPCI UPI QR & 12-Digit UTR Settlement</span>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent flex items-end p-3 gap-2 justify-between pointer-events-none">
+                  <span className="text-xs font-medium text-white flex items-center gap-1.5 min-w-0 drop-shadow">
+                    <FiShield className="text-emerald-400 shrink-0" />
+                    <span className="truncate">Direct NPCI UPI QR & 12-Digit UTR Settlement</span>
                   </span>
-                  <span className="text-[0.68rem] font-mono font-bold text-emerald-400 bg-black/70 px-2 py-0.5 rounded-full border border-white/10">
+                  <span className="text-[0.68rem] font-mono font-bold text-emerald-400 bg-black/70 px-2 py-0.5 rounded-full border border-white/10 shrink-0 whitespace-nowrap">
                     0% Gateway Fee
                   </span>
                 </div>
@@ -477,12 +477,12 @@ function PrintPulseFeaturedCard({
                   className="object-cover object-top filter brightness-95 dark:brightness-90 transition-transform duration-300 hover:scale-[1.02]"
                   sizes="(max-width: 1024px) 100vw, 550px"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent flex items-end p-3 justify-between pointer-events-none">
-                  <span className="text-xs font-medium text-white flex items-center gap-1.5 drop-shadow">
-                    <FiTablet className="text-emerald-400" />
-                    <span>Flutter Kiosk Terminal: Printer Spooler & Stats</span>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent flex items-end p-3 gap-2 justify-between pointer-events-none">
+                  <span className="text-xs font-medium text-white flex items-center gap-1.5 min-w-0 drop-shadow">
+                    <FiTablet className="text-emerald-400 shrink-0" />
+                    <span className="truncate">Flutter Kiosk Terminal: Printer Spooler & Stats</span>
                   </span>
-                  <span className="text-[0.68rem] font-mono font-bold text-emerald-400 bg-black/70 px-2 py-0.5 rounded-full border border-white/10">
+                  <span className="text-[0.68rem] font-mono font-bold text-emerald-400 bg-black/70 px-2 py-0.5 rounded-full border border-white/10 shrink-0 whitespace-nowrap">
                     Sub-50ms Spool
                   </span>
                 </div>
@@ -515,7 +515,7 @@ function PassengerTextCard({
       transition={{ duration: 0.15, ease: "easeOut" }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className={`w-full h-full p-5 sm:p-7 rounded-3xl backdrop-blur-2xl border transition-[border-color,background-color,box-shadow,transform] duration-150 ease-out relative overflow-hidden flex flex-col justify-between text-left group ${
+      className={`w-full h-full p-5 sm:p-7 rounded-3xl backdrop-blur-lg md:backdrop-blur-2xl border transition-[border-color,background-color,box-shadow,transform] duration-150 ease-out relative overflow-hidden flex flex-col justify-between text-left group ${
         isHighlighted
           ? "border-blue-500 ring-2 ring-blue-500/50 bg-white/95 dark:bg-zinc-900/95 shadow-[0_20px_50px_rgba(59,130,246,0.3)] -translate-y-1.5"
           : isFocused
@@ -619,7 +619,7 @@ function PikaPanicCard({
     <motion.div
       whileHover={{ y: -6, scale: 1.018 }}
       transition={{ duration: 0.15, ease: "easeOut" }}
-      className={`w-full h-full p-5 sm:p-7 rounded-3xl backdrop-blur-2xl border transition-[border-color,background-color,box-shadow,transform] duration-150 ease-out relative overflow-hidden flex flex-col justify-between text-left group ${
+      className={`w-full h-full p-5 sm:p-7 rounded-3xl backdrop-blur-lg md:backdrop-blur-2xl border transition-[border-color,background-color,box-shadow,transform] duration-150 ease-out relative overflow-hidden flex flex-col justify-between text-left group ${
         isHighlighted
           ? "border-purple-500 ring-2 ring-purple-500/50 bg-white/95 dark:bg-zinc-900/95 shadow-[0_20px_50px_rgba(168,85,247,0.3)] -translate-y-1.5"
           : isFocused
@@ -714,7 +714,7 @@ function SpotlightProjectCard({
       whileHover={{ y: -6, scale: 1.018 }}
       transition={{ duration: 0.15, ease: "easeOut" }}
       onMouseMove={handleMouseMove}
-      className={`w-full h-full p-5 sm:p-7 rounded-3xl backdrop-blur-2xl border transition-[border-color,background-color,box-shadow,transform] duration-150 ease-out relative overflow-hidden flex flex-col justify-between text-left group ${
+      className={`w-full h-full p-5 sm:p-7 rounded-3xl backdrop-blur-lg md:backdrop-blur-2xl border transition-[border-color,background-color,box-shadow,transform] duration-150 ease-out relative overflow-hidden flex flex-col justify-between text-left group ${
         isHighlighted
           ? "border-emerald-500 ring-2 ring-emerald-500/50 bg-white/95 dark:bg-zinc-900/95 shadow-[0_20px_50px_rgba(16,185,129,0.3)] -translate-y-1.5"
           : isFocused
@@ -811,7 +811,7 @@ function BankingSystemCard({
     <motion.div
       whileHover={{ y: -6, scale: 1.018 }}
       transition={{ duration: 0.15, ease: "easeOut" }}
-      className={`w-full h-full p-5 sm:p-7 rounded-3xl backdrop-blur-2xl border transition-[border-color,background-color,box-shadow,transform] duration-150 ease-out relative overflow-hidden flex flex-col justify-between text-left group ${
+      className={`w-full h-full p-5 sm:p-7 rounded-3xl backdrop-blur-lg md:backdrop-blur-2xl border transition-[border-color,background-color,box-shadow,transform] duration-150 ease-out relative overflow-hidden flex flex-col justify-between text-left group ${
         isHighlighted
           ? "border-amber-500 ring-2 ring-amber-500/50 bg-white/95 dark:bg-zinc-900/95 shadow-[0_20px_50px_rgba(245,158,11,0.3)] -translate-y-1.5"
           : isFocused

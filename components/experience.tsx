@@ -101,8 +101,8 @@ function ExperienceTimelineCard({
 }: ExperienceTimelineCardProps) {
   const cardRef = React.useRef<HTMLDivElement>(null);
   const isInScroll = useInView(cardRef, {
-    once: false,
-    margin: "-80px 0px -80px 0px",
+    once: true,
+    amount: 0.05,
   });
   const isMobileInCenter = useInView(cardRef, {
     margin: "-25% 0px -25% 0px",
@@ -166,8 +166,8 @@ function ExperienceTimelineCard({
             : theme === "light"
               ? "rgba(255, 255, 255, 0.7)"
               : "rgba(255, 255, 255, 0.05)",
-          backdropFilter: "blur(20px)",
-          WebkitBackdropFilter: "blur(20px)",
+          backdropFilter: isMobile ? "blur(10px)" : "blur(20px)",
+          WebkitBackdropFilter: isMobile ? "blur(10px)" : "blur(20px)",
           boxShadow: isCardFocused
             ? itemTheme.shadowFocus
             : theme === "light"

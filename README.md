@@ -94,42 +94,42 @@ The portfolio's visual language is built upon Apple VisionOS and macOS liquid gl
 
 ### 1. Dual-Sided 3D Avatar & Theme Flip (Light ↔ Dark)
 Smooth 180° Y-axis card flip synchronized with theme toggle transitions.
-![Avatar Theme Flip](./public/screenshots/avatar-theme-flip.png)
+![Avatar Theme Flip](./docs/screenshots/avatar-theme-flip.png)
 
 ### 2. Interactive Hero Emoji Reactor
 Clicking the hero avatar cycles through dynamic emoji reaction states with spring physics.
-![Hero Emoji Reaction](./public/screenshots/hero-emoji-reaction.png)
+![Hero Emoji Reaction](./docs/screenshots/hero-emoji-reaction.png)
 
 ### 3. Unified Active Focus State (Liquid Glass Highlights)
 Cards elevate with a smooth `scale-[1.02]` spring, `border-sky-400/30` specular border, `text-sky-400` primary title accent, and ambient glow.
 | Highlighted Project Card | Highlighted Work Experience Card |
 | :---: | :---: |
-| ![Project Active Focus](./public/screenshots/project-active-focus.png) | ![Experience Active Focus](./public/screenshots/experience-active-focus.png) |
+| ![Project Active Focus](./docs/screenshots/project-active-focus.png) | ![Experience Active Focus](./docs/screenshots/experience-active-focus.png) |
 
 ### 4. Work Experience 3D Maximized Modal
 Clicking any timeline card smoothly projects it into a centered 3D frosted glass modal dialog with milestone badges and comprehensive role history.
-![Work Experience Maximized Modal](./public/screenshots/experience-modal-maximized.png)
+![Work Experience Maximized Modal](./docs/screenshots/experience-modal-maximized.png)
 
 ### 5. Projects Showcase & Direct Redirection
 Hardware-accelerated project showcase with direct live demo and GitHub repository navigation.
 | Desktop View & Direct Link Hit-Box | Mobile View (Scroll Focus) |
 | :---: | :---: |
-| ![Project Redirect Interaction](./public/screenshots/project-redirect-interaction.png) | ![Projects Mobile](./public/screenshots/projects-mobile.png) |
+| ![Project Redirect Interaction](./docs/screenshots/project-redirect-interaction.png) | ![Projects Mobile](./docs/screenshots/projects-mobile.png) |
 
 ### 6. Full Hero & Navigation
 | Light Mode | Dark Mode |
 | :---: | :---: |
-| ![Hero Light](./public/screenshots/hero-light.png) | ![Hero Dark](./public/screenshots/hero-dark.png) |
+| ![Hero Light](./docs/screenshots/hero-light.png) | ![Hero Dark](./docs/screenshots/hero-dark.png) |
 
 ### 7. Contact Section & Custom Liquid Glass Validation
 | Light Mode Form | Dark Mode Liquid Glass Validation Alerts |
 | :---: | :---: |
-| ![Contact Light](./public/screenshots/contact-light.png) | ![Contact Validation Dark](./public/screenshots/contact-dark.png) |
+| ![Contact Light](./docs/screenshots/contact-light.png) | ![Contact Validation Dark](./docs/screenshots/contact-dark.png) |
 
 ### 8. Compact Pill Mobile Navigation Drawer
 | Open Drawer (Light) | Open Drawer (Dark) |
 | :---: | :---: |
-| ![Mobile Nav Light](./public/screenshots/mobile-nav-light.png) | ![Mobile Nav Dark](./public/screenshots/mobile-nav-dark.png) |
+| ![Mobile Nav Light](./docs/screenshots/mobile-nav-light.png) | ![Mobile Nav Dark](./docs/screenshots/mobile-nav-dark.png) |
 
 ---
 

@@ -1,4 +1,4 @@
-"use client";
+t"use client";
 
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -129,7 +129,7 @@ export default function Header() {
             backfaceVisibility: "hidden",
             outline: "1px solid transparent",
           }}
-          className="flex items-center justify-center rounded-full border border-black/10 dark:border-white/10 bg-white/80 dark:bg-zinc-950/75 p-1 sm:p-1.5 shadow-lg shadow-black/[0.04] dark:shadow-[0_12px_40px_rgba(0,0,0,0.65)] pointer-events-auto transform-gpu origin-center will-change-transform backface-hidden [backface-visibility:hidden] [transform-style:preserve-3d] outline outline-1 outline-transparent hover:border-black/20 dark:hover:border-white/20 transition-all duration-300 ease-out"
+          className="flex items-center justify-center rounded-full border border-black/10 dark:border-white/10 bg-white/80 dark:bg-zinc-950/75 p-1 sm:p-1.5 shadow-lg shadow-black/[0.04] dark:shadow-[0_12px_40px_rgba(0,0,0,0.65)] pointer-events-auto transform-gpu origin-center will-change-transform backface-hidden [backface-visibility:hidden] outline outline-1 outline-transparent hover:border-black/20 dark:hover:border-white/20 transition-all duration-300 ease-out"
         >
           <ul className="flex items-center justify-center gap-0.5 text-[0.8rem] sm:text-[0.88rem] font-medium text-gray-700 dark:text-gray-300">
             {navLinks.map((link) => {
@@ -139,7 +139,7 @@ export default function Header() {
               return (
                 <li
                   className={clsx(
-                    "flex items-center justify-center relative transform-gpu will-change-[transform,opacity] [backface-visibility:hidden] [transform-style:preserve-3d]",
+                    "flex items-center justify-center relative transform-gpu will-change-[transform,opacity] [backface-visibility:hidden]",
                     isActive ? "z-10" : "hover:z-10"
                   )}
                   style={{
@@ -164,7 +164,7 @@ export default function Header() {
                         outline: "1px solid transparent",
                       }}
                       className={clsx(
-                        "flex items-center justify-center px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-full transition-all duration-200 ease-out whitespace-nowrap cursor-pointer relative transform-gpu will-change-[transform,opacity] [backface-visibility:hidden] [transform-style:preserve-3d] outline outline-1 outline-transparent",
+                        "flex items-center justify-center px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-full transition-all duration-200 ease-out whitespace-nowrap cursor-pointer relative transform-gpu will-change-[transform,opacity] [backface-visibility:hidden] outline outline-1 outline-transparent",
                         isActive
                           ? themeConfig?.activeText || "text-zinc-950 dark:text-white font-bold"
                           : clsx("text-zinc-600 dark:text-zinc-400 font-medium", themeConfig?.hoverClass || "hover:text-zinc-950 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5")
@@ -179,7 +179,7 @@ export default function Header() {
                       {isActive && (
                         <motion.span
                           className={clsx(
-                            "rounded-full absolute inset-0 -z-0 border backdrop-blur-xl transform-gpu will-change-[transform,opacity] [backface-visibility:hidden] [transform-style:preserve-3d]",
+                            "rounded-full absolute inset-0 -z-0 border backdrop-blur-xl transform-gpu will-change-[transform,opacity] [backface-visibility:hidden]",
                             themeConfig?.activePill || "border-indigo-500/40 dark:border-indigo-400/50 bg-indigo-500/10 dark:bg-indigo-950/60 shadow-[0_0_20px_rgba(99,102,241,0.3),inset_0_1px_1px_rgba(255,255,255,0.15)]"
                           )}
                           layoutId="activeSection"
@@ -270,6 +270,7 @@ export default function Header() {
               y1="6"
               x2="20"
               y2="6"
+              initial={{ x1: 4, y1: 6, x2: 20, y2: 6 }}
               animate={
                 isOpen
                   ? { x1: 6, y1: 6, x2: 18, y2: 18 }
@@ -282,6 +283,7 @@ export default function Header() {
               y1="12"
               x2="20"
               y2="12"
+              initial={{ opacity: 1 }}
               animate={isOpen ? { opacity: 0 } : { opacity: 1 }}
               transition={{ duration: 0.2, ease: "easeInOut" }}
             />
@@ -290,6 +292,7 @@ export default function Header() {
               y1="18"
               x2="20"
               y2="18"
+              initial={{ x1: 4, y1: 18, x2: 20, y2: 18 }}
               animate={
                 isOpen
                   ? { x1: 6, y1: 18, x2: 18, y2: 6 }

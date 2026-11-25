@@ -114,8 +114,8 @@ function SkillCardScrollWrapper({
 }) {
   const cardRef = useRef<HTMLDivElement>(null);
   const isInScroll = useInView(cardRef, {
-    once: false,
-    margin: "-80px 0px -80px 0px",
+    once: true,
+    amount: 0.05,
   });
   const isMobileInCenter = useInView(cardRef, {
     margin: "-25% 0px -25% 0px",
@@ -177,7 +177,7 @@ function SkillDomainCard({
         setActiveCategory(null);
         handleCategoryHover(null);
       }}
-      className={`group relative p-5 sm:p-6 rounded-3xl backdrop-blur-xl border transition-all duration-300 cursor-default flex flex-col justify-between w-full h-full ${
+      className={`group relative p-5 sm:p-6 rounded-3xl backdrop-blur-md md:backdrop-blur-xl border transition-all duration-300 cursor-default flex flex-col justify-between w-full h-full ${
         isCardActive
           ? domain.id === "frontend-mobile"
             ? "border-blue-500/60 dark:border-blue-400/60 bg-white/90 dark:bg-zinc-900/80 shadow-[0_16px_40px_rgba(0,0,0,0.12),0_0_30px_rgba(59,130,246,0.3)] -translate-y-1.5 scale-[1.03]"

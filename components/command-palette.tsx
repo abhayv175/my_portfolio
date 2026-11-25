@@ -1,4 +1,4 @@
-"use client";
+s"use client";
 
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -373,6 +373,9 @@ export default function CommandPalette() {
                 <FiSearch className="text-lg text-zinc-400 shrink-0" />
                 <input
                   ref={inputRef}
+                  id="command-palette-search"
+                  name="commandSearch"
+                  aria-label="Search commands"
                   type="text"
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}

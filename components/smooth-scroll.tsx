@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { MotionConfig } from "framer-motion";
 import { ReactLenis } from "lenis/react";
 import "lenis/dist/lenis.css";
 
@@ -9,28 +10,37 @@ export default function SmoothScroll({
 }: {
   children: React.ReactNode;
 }) {
-  const [isTouchDevice, setIsTouchDevice] = useState(false);
+  const [disableLenis, setDisableLenis] = useState(false);
 
   useEffect(() => {
-    setIsTouchDevice(
-      window.matchMedia("(pointer: coarse)").matches || window.innerWidth < 768
-    );
+    const check = () => {
+      setDisableLenis(
+        window.matchMedia("(pointer: coarse)").matches ||
+          window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
+          window.innerWidth < 768
+      );
+    };
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
   }, []);
 
-  if (isTouchDevice) {
-    return <>{children}</>;
-  }
-
   return (
-    <ReactLenis
-      root
-      options={{
-        lerp: 0.08,
-        duration: 1.2,
-        smoothWheel: true,
-      }}
-    >
-      {children}
-    </ReactLenis>
+    <MotionConfig reducedMotion="user">
+      {disableLenis ? (
+        children
+      ) : (
+        <ReactLenis
+          root
+          options={{
+            lerp: 0.08,
+            duration: 1.2,
+            smoothWheel: true,
+          }}
+        >
+          {children}
+        </ReactLenis>
+      )}
+    </MotionConfig>
   );
 }

@@ -1,4 +1,4 @@
-"use client";
+e"use client";
 
 import Image from "next/image";
 import React, { useState, useEffect } from "react";
@@ -35,9 +35,9 @@ export default function Intro() {
     >
       {/* Central Hero Avatar */}
       <motion.div
-        initial={{ opacity: 0, y: -15, filter: "blur(8px)" }}
-        animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-        transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+        initial={{ opacity: 0, y: -15 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
         className="flex justify-center mb-6 sm:mb-8 mt-4 sm:mt-6 z-20"
       >
         <div
@@ -72,7 +72,7 @@ export default function Intro() {
                 }}
                 className="absolute inset-0 w-full h-full rounded-full p-[2.5px] bg-gradient-to-tr from-indigo-500/30 via-slate-500/20 to-sky-500/30 shadow-xl transition-all duration-500 group-hover:shadow-[0_0_30px_rgba(99,102,241,0.25)]"
               >
-                <div className="relative w-full h-full rounded-full overflow-hidden bg-white/95 border-2 border-black/10 shadow-xl backdrop-blur-md">
+                <div className="relative w-full h-full rounded-full overflow-hidden bg-white/95 border-2 border-black/10 shadow-xl">
                   <Image
                     src="/hero_light.png"
                     alt="Abhay Verma portrait"
@@ -93,7 +93,7 @@ export default function Intro() {
                 }}
                 className="absolute inset-0 w-full h-full rounded-full p-[2.5px] bg-gradient-to-tr from-indigo-500/30 via-slate-500/20 to-sky-500/30 shadow-xl transition-all duration-500 group-hover:shadow-[0_0_30px_rgba(99,102,241,0.25)]"
               >
-                <div className="relative w-full h-full rounded-full overflow-hidden bg-zinc-950 border-2 border-white/20 shadow-xl backdrop-blur-md">
+                <div className="relative w-full h-full rounded-full overflow-hidden bg-zinc-950 border-2 border-white/20 shadow-xl">
                   <Image
                     src="/hero_dark.png"
                     alt="Abhay Verma portrait"
@@ -145,9 +145,9 @@ export default function Intro() {
         </div>
 
         <motion.p
-          initial={{ opacity: 0, y: 30, filter: "blur(8px)" }}
-          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-          transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1], delay: 0.35 }}
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1], delay: 0.3 }}
           className="mb-0 px-4 text-base sm:text-lg md:text-xl lg:text-2xl font-normal leading-relaxed text-gray-700 dark:text-white/80 max-w-4xl mx-auto text-pretty"
         >
           Developer, Software Engineer, and Lifelong Learner with over 2 years of professional experience building and optimizing digital products that people love to use.
@@ -155,9 +155,9 @@ export default function Intro() {
 
         {/* Realigned Hero Action Buttons & Social Profile Links with Magnetic Pull */}
         <motion.div
-          initial={{ opacity: 0, y: 30, filter: "blur(8px)" }}
-          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-          transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1], delay: 0.55 }}
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1], delay: 0.45 }}
           className="mt-8 sm:mt-12 md:mt-14 flex flex-wrap items-center justify-center gap-3.5 sm:gap-4 px-4 text-base md:text-lg font-medium w-full sm:w-auto"
         >
           {/* Primary Action Button: Download CV with Magnetic Pull */}

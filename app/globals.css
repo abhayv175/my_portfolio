@@ -96,9 +96,16 @@ button, a, input, textarea, select {
 /* Frosted glass base for timeline elements */
 .vertical-timeline-element-content {
   border-radius: 1rem !important;
-  backdrop-filter: blur(16px) !important;
-  -webkit-backdrop-filter: blur(16px) !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
   transition: background-color 300ms ease-in-out, border-color 300ms ease-in-out, box-shadow 300ms ease-in-out !important;
+}
+
+@media (min-width: 768px) {
+  .vertical-timeline-element-content {
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
+  }
 }
 
 /* Modern Circular View Transition Theme Ripple (Mobile & Desktop) */
@@ -125,6 +132,24 @@ button, a, input, textarea, select {
 .view-transition-active,
 .view-transition-active * {
   transition: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto !important;
+  }
+
+  .animate-entrance,
+  .animate-glow-in,
+  .animate-header-in {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .animate-pulse {
+    animation: none !important;
+  }
 }
 
 

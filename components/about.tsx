@@ -1,4 +1,4 @@
-
+ we
 "use client";
 
 import React, { useRef } from "react";
@@ -31,8 +31,8 @@ export default function About() {
   const { ref: sectionRef } = useSectionInView("About", 0.4);
   const motionRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(motionRef, {
-    once: false,
-    margin: "-80px 0px -80px 0px",
+    once: true,
+    amount: 0.05,
   });
 
   return (
