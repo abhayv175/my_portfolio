@@ -81,7 +81,7 @@ button, a, input, textarea, select {
 @keyframes headerSlideDown {
   0% {
     opacity: 0;
-    transform: translate(-50%, -65%);
+    transform: translate(-50%, -26px);
   }
   100% {
     opacity: 1;
@@ -90,7 +90,7 @@ button, a, input, textarea, select {
 }
 
 .animate-header-in {
-  animation: headerSlideDown 0.75s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation: headerSlideDown 1.05s cubic-bezier(0.22, 0.61, 0.36, 1) 0.18s both;
 }
 
 /* Frosted glass base for timeline elements */

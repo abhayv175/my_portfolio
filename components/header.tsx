@@ -238,6 +238,13 @@ export default function Header() {
         onClick={() => setIsOpen((prev) => !prev)}
         aria-label={isOpen ? "Close navigation menu" : "Open navigation menu"}
         aria-expanded={isOpen}
+        initial={{ opacity: 0, scale: 0.86, y: -10 }}
+        animate={{
+          opacity: 1,
+          scale: 1,
+          y: 0,
+          transition: { duration: 0.95, delay: 0.22, ease: [0.22, 0.61, 0.36, 1] },
+        }}
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.92 }}
         transition={{ type: "spring", stiffness: 400, damping: 20 }}

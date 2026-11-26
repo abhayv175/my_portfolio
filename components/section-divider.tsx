@@ -11,10 +11,10 @@ export default function SectionDivider() {
   return (
     <motion.div
       ref={dividerRef}
-      initial={{ opacity: 0, y: 18 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1], delay: 0.35 }}
-      className="mt-8 sm:mt-10 mb-10 sm:mb-12 h-[260px] sm:h-[606px] w-1 sm:w-1.5 flex justify-center items-center pointer-events-none select-none relative z-10"
+      initial={{ opacity: 0, y: 18, scaleY: 0.75 }}
+      animate={{ opacity: 1, y: 0, scaleY: 1 }}
+      transition={{ duration: 1.05, ease: [0.22, 0.61, 0.36, 1], delay: 0.7 }}
+      className="mt-8 sm:mt-10 mb-10 sm:mb-12 h-[260px] sm:h-[606px] w-1 sm:w-1.5 flex justify-center items-center pointer-events-none select-none relative z-10 origin-top"
       aria-hidden="true"
     >
       <motion.div

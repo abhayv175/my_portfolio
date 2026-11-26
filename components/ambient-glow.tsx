@@ -27,7 +27,7 @@ export default function AmbientGlow() {
   return (
     <div
       aria-hidden="true"
-      className="fixed inset-0 h-[100lvh] -z-10 w-full pointer-events-none transform-gpu overflow-hidden select-none"
+      className="fixed inset-0 -z-10 w-full pointer-events-none transform-gpu overflow-hidden select-none"
     >
       {/* Solid adaptive base underneath canvas & fallback */}
       <div className="absolute inset-0 w-full h-full bg-white dark:bg-[#040408] transition-colors duration-700 ease-out" />

@@ -24,6 +24,13 @@ export default function ThemeSwitch() {
   return (
     <motion.button
       type="button"
+      initial={{ opacity: 0, scale: 0.86, y: -10 }}
+      animate={{
+        opacity: 1,
+        scale: 1,
+        y: 0,
+        transition: { duration: 0.95, delay: 0.18, ease: [0.22, 0.61, 0.36, 1] },
+      }}
       whileHover={{ scale: 1.08 }}
       whileTap={{ scale: 0.92 }}
       transition={{ type: "spring", stiffness: 450, damping: 24 }}

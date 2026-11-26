@@ -349,8 +349,16 @@ export default function CommandPalette() {
       <motion.button
         type="button"
         onClick={() => setIsOpen(true)}
+        initial={{ opacity: 0, scale: 0.9, y: 12 }}
+        animate={{
+          opacity: 1,
+          scale: 1,
+          y: 0,
+          transition: { duration: 0.95, delay: 0.45, ease: [0.22, 0.61, 0.36, 1] },
+        }}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
+        transition={{ type: "spring", stiffness: 420, damping: 24 }}
         aria-label="Open command palette"
         className="fixed bottom-[calc(1.25rem+env(safe-area-inset-bottom,0px))] right-[calc(1.25rem+env(safe-area-inset-right,0px))] sm:bottom-6 sm:right-6 z-[9990] hidden sm:flex items-center gap-2 px-4 py-2.5 sm:px-3.5 sm:py-2 rounded-full bg-white/50 dark:bg-zinc-950/80 backdrop-blur-xl border border-black/10 dark:border-white/15 text-xs font-semibold text-zinc-700 dark:text-zinc-300 shadow-lg hover:shadow-xl dark:shadow-[0_8px_30px_rgba(0,0,0,0.5)] hover:border-indigo-500/40 dark:hover:border-indigo-400/40 transition-all duration-200 cursor-pointer group"
       >

@@ -96,8 +96,10 @@ export default function BlackHoleBackground({
   return (
     <div
       aria-hidden="true"
-      className={`pointer-events-none absolute inset-0 h-full w-full overflow-hidden transform-gpu transition-opacity duration-1000 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-        status === "ready" ? "opacity-100" : "opacity-0"
+      className={`pointer-events-none absolute inset-0 h-full w-full overflow-hidden transform-gpu transition-[opacity,transform] duration-[1400ms] ease-[cubic-bezier(0.22,0.61,0.36,1)] ${
+        status === "ready"
+          ? "opacity-100 scale-100"
+          : "opacity-0 scale-[1.035]"
       }`}
     >
       <canvas

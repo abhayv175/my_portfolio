@@ -50,7 +50,7 @@ export default function Intro() {
 
       if (current < FULL_GREETING.length) {
         const justTyped = FULL_GREETING[current - 1];
-        const delay = justTyped === "," ? 180 : 42;
+        const delay = justTyped === "," ? 190 : 46;
         timeoutId = window.setTimeout(step, delay);
       } else {
         timeoutId = window.setTimeout(() => {
@@ -59,7 +59,7 @@ export default function Intro() {
       }
     };
 
-    timeoutId = window.setTimeout(step, 220);
+    timeoutId = window.setTimeout(step, 380);
     return () => window.clearTimeout(timeoutId);
   }, [shouldReduceMotion]);
 
@@ -99,9 +99,9 @@ export default function Intro() {
     >
       {/* Central Hero Avatar with Orbital Photon-Ring Halo */}
       <motion.div
-        initial={{ opacity: 0, scale: 0.94, y: 10 }}
+        initial={{ opacity: 0, scale: 0.9, y: 16 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
-        transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
+        transition={{ duration: 1.0, ease: [0.22, 0.61, 0.36, 1], delay: 0.12 }}
         className="flex justify-center mb-6 sm:mb-8 mt-4 sm:mt-6 z-20"
       >
         <div
@@ -155,7 +155,7 @@ export default function Intro() {
                   alt="Abhay Verma portrait"
                   fill
                   sizes="(max-width: 640px) 112px, (max-width: 768px) 128px, 144px"
-                  priority={true}
+                  loading="eager"
                   className="object-cover object-center scale-[1.03]"
                 />
               </div>
@@ -174,7 +174,7 @@ export default function Intro() {
                   alt="Abhay Verma childhood portrait"
                   fill
                   sizes="(max-width: 640px) 112px, (max-width: 768px) 128px, 144px"
-                  priority={true}
+                  loading="eager"
                   className="object-cover object-top"
                 />
               </div>
@@ -201,9 +201,9 @@ export default function Intro() {
         {/* Zero-reflow Typed Headline Typography: characters reveal in-place at final centered coordinates */}
         <div className="py-1 mb-4 sm:mb-6 w-full max-w-4xl mx-auto px-4">
           <motion.h1
-            initial={{ opacity: 0, y: 10 }}
+            initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1], delay: 0.08 }}
+            transition={{ duration: 0.95, ease: [0.22, 0.61, 0.36, 1], delay: 0.26 }}
             className="relative w-full text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-gray-950 dark:text-white leading-[1.15]"
           >
             <span className="sr-only">{FULL_GREETING}</span>
@@ -225,9 +225,9 @@ export default function Intro() {
         </div>
 
         <motion.p
-          initial={{ opacity: 0, y: 12 }}
+          initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1], delay: 0.18 }}
+          transition={{ duration: 0.95, ease: [0.22, 0.61, 0.36, 1], delay: 0.42 }}
           className="mb-0 px-4 text-base sm:text-lg md:text-xl lg:text-2xl font-normal leading-relaxed text-gray-900 dark:text-white/85 max-w-4xl mx-auto text-pretty drop-shadow-[0_1px_12px_rgba(250,250,250,0.95)] dark:drop-shadow-none"
         >
           Developer, Software Engineer, and Lifelong Learner with over 2 years of professional experience building and optimizing digital products that people love to use.
@@ -235,9 +235,9 @@ export default function Intro() {
 
         {/* Realigned Hero Action Buttons & Social Profile Links with Magnetic Pull */}
         <motion.div
-          initial={{ opacity: 0, y: 14 }}
+          initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1], delay: 0.28 }}
+          transition={{ duration: 0.95, ease: [0.22, 0.61, 0.36, 1], delay: 0.56 }}
           className="mt-8 sm:mt-12 md:mt-14 flex flex-wrap items-center justify-center gap-3.5 sm:gap-4 px-4 text-base md:text-lg font-medium w-full sm:w-auto"
         >
           {/* Primary Action Button: Download CV with Magnetic Pull */}
