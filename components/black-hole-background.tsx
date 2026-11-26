@@ -5,6 +5,8 @@ import { createRenderer, type HoleVariant } from "@/optimized-black-hole/rendere
 import { spaceAudio } from "@/lib/space-audio";
 
 export type BlackHoleStatus = "pending" | "ready" | "fallback";
+type RendererBackend = "webgpu" | "webgl2";
+type HoleRenderer = ReturnType<typeof createRenderer>;
 
 interface BlackHoleBackgroundProps {
   active?: boolean;
@@ -13,8 +15,8 @@ interface BlackHoleBackgroundProps {
 }
 
 /**
- * Full-viewport unified WebGPU black/white-hole backdrop supporting real-time
- * 60 FPS swirling right <-> left flight transitions across Dark and Light modes.
+ * Full-viewport black/white-hole backdrop supporting real-time 60 FPS swirling
+ * transitions via WebGPU on desktop and automatic WebGL 2 fallback on mobile.
  */
 export default function BlackHoleBackground({
   active = true,
@@ -22,17 +24,30 @@ export default function BlackHoleBackground({
   onStatusChange,
 }: BlackHoleBackgroundProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const rendererRef = useRef<ReturnType<typeof createRenderer> | null>(null);
+  const rendererRef = useRef<HoleRenderer | null>(null);
   const activeRef = useRef(active);
-  const initialVariantRef = useRef(variant);
+  const latestVariantRef = useRef(variant);
   const hasMountedVariantRef = useRef(false);
   activeRef.current = active;
+  latestVariantRef.current = variant;
 
+  const [backend, setBackend] = useState<RendererBackend>("webgpu");
   const [status, setStatus] = useState<BlackHoleStatus>("pending");
 
   useEffect(() => {
     onStatusChange?.(status);
+    if (typeof document !== "undefined") {
+      document.documentElement.dataset.holeBackdrop = status;
+    }
   }, [status, onStatusChange]);
+
+  useEffect(() => {
+    return () => {
+      if (typeof document !== "undefined") {
+        delete document.documentElement.dataset.holeBackdrop;
+      }
+    };
+  }, []);
 
   useEffect(() => {
     rendererRef.current?.setActive(active);
@@ -50,8 +65,13 @@ export default function BlackHoleBackground({
     let cancelled = false;
     const canvas = canvasRef.current;
 
-    if (!canvas || typeof navigator === "undefined" || !("gpu" in navigator)) {
+    if (!canvas || typeof navigator === "undefined") {
       setStatus("fallback");
+      return;
+    }
+
+    if (backend === "webgpu" && !("gpu" in navigator)) {
+      setBackend("webgl2");
       return;
     }
 
@@ -59,29 +79,50 @@ export default function BlackHoleBackground({
       typeof document !== "undefined" &&
       !document.documentElement.classList.contains("dark")
         ? "light"
-        : initialVariantRef.current;
+        : latestVariantRef.current;
 
-    const renderer = createRenderer({
-      canvas,
-      active: activeRef.current,
-      variant: domVariant,
-      onMotionChange: (intensity, pan) =>
-        spaceAudio.setHoleMotion(intensity, pan),
+    const onMotionChange = (intensity: number, pan: number) =>
+      spaceAudio.setHoleMotion(intensity, pan);
+
+    let renderer: HoleRenderer | null = null;
+
+    const start = async () => {
+      if (backend === "webgpu") {
+        renderer = createRenderer({
+          canvas,
+          active: activeRef.current,
+          variant: domVariant,
+          onMotionChange,
+        });
+      } else {
+        const { createWebGl2Renderer } = await import(
+          "@/optimized-black-hole/webgl2-renderer"
+        );
+        if (cancelled) return;
+        renderer = createWebGl2Renderer({
+          canvas,
+          active: activeRef.current,
+          variant: domVariant,
+          onMotionChange,
+        });
+      }
+
+      rendererRef.current = renderer;
+      await renderer.ready;
+      if (!cancelled) {
+        setStatus("ready");
+      }
+    };
+
+    void start().catch((error) => {
+      console.warn(`[BlackHoleBackground] ${backend} failed:`, error);
+      if (cancelled) return;
+      if (backend === "webgpu") {
+        setBackend("webgl2");
+      } else {
+        setStatus("fallback");
+      }
     });
-    rendererRef.current = renderer;
-
-    void renderer.ready
-      .then(() => {
-        if (!cancelled) {
-          setStatus("ready");
-        }
-      })
-      .catch((error) => {
-        console.warn("[BlackHoleBackground] WebGPU fallback:", error);
-        if (!cancelled) {
-          setStatus("fallback");
-        }
-      });
 
     return () => {
       cancelled = true;
@@ -89,9 +130,9 @@ export default function BlackHoleBackground({
       if (rendererRef.current === renderer) {
         rendererRef.current = null;
       }
-      renderer.dispose();
+      renderer?.dispose();
     };
-  }, []);
+  }, [backend]);
 
   if (status === "fallback") {
     return null;
@@ -107,6 +148,7 @@ export default function BlackHoleBackground({
       }`}
     >
       <canvas
+        key={backend}
         ref={canvasRef}
         className="pointer-events-none block h-full w-full select-none"
       />

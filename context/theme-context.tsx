@@ -103,15 +103,22 @@ export default function ThemeContextProvider({
       return;
     }
 
-    const hasWebGpu =
-      typeof navigator !== "undefined" && "gpu" in navigator;
+    const holeState =
+      typeof document !== "undefined"
+        ? document.documentElement.dataset.holeBackdrop
+        : undefined;
+    const hasHoleBackdrop =
+      holeState === "ready" ||
+      (holeState !== "fallback" &&
+        typeof navigator !== "undefined" &&
+        "gpu" in navigator);
 
     setIsTransitioning(true);
     document.documentElement.classList.add("theme-transitioning");
 
-    // On WebGPU devices, launch the right <-> left swirling hole immediately at t = 0
+    // Launch the right <-> left swirling hole immediately at t = 0
     // and flip DOM colors cleanly right as the wavefront crosses into the center column.
-    const midpointDelay = hasWebGpu ? WEBGPU_MIDPOINT_DELAY_MS : 0;
+    const midpointDelay = hasHoleBackdrop ? WEBGPU_MIDPOINT_DELAY_MS : 0;
 
     if (midpointDelay === 0) {
       applyDomTheme(nextTheme);
