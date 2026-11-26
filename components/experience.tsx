@@ -11,8 +11,9 @@ import "react-vertical-timeline-component/style.min.css";
 import { experiencesData } from "@/lib/data";
 import { useSectionInView } from "@/lib/hooks";
 import { useTheme } from "@/context/theme-context";
-import { motion, AnimatePresence, useInView } from "framer-motion";
-import { FiX, FiMapPin, FiCalendar } from "react-icons/fi";
+import { motion, AnimatePresence, useInView, useReducedMotion } from "framer-motion";
+import { useLenis } from "lenis/react";
+import { FiX, FiMapPin, FiCalendar, FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import { SURFACE, SURFACE_RGBA } from "./surface-styles";
 
 const cardVariants = {
@@ -45,8 +46,7 @@ const EXPERIENCE_THEMES = [
     textFocus: "text-sky-600 dark:text-sky-400",
     badge: "bg-sky-500/10 text-sky-700 dark:text-sky-300 border-sky-500/25",
     iconBorder: "rgba(56, 189, 248, 0.5)",
-    modalBorder: "border-sky-500/40 dark:border-sky-400/50",
-    modalShadow: "shadow-[0_25px_60px_rgba(0,0,0,0.12),0_0_40px_rgba(56,189,248,0.22)] dark:shadow-[0_25px_60px_rgba(0,0,0,0.7),0_0_45px_rgba(56,189,248,0.25)]",
+    dotClass: "bg-sky-500 dark:bg-sky-400",
   },
   {
     // Unity - Engine, Physics & Regression
@@ -56,8 +56,7 @@ const EXPERIENCE_THEMES = [
     textFocus: "text-purple-600 dark:text-purple-400",
     badge: "bg-purple-500/10 text-purple-700 dark:text-purple-300 border-purple-500/25",
     iconBorder: "rgba(168, 85, 247, 0.5)",
-    modalBorder: "border-purple-500/40 dark:border-purple-400/50",
-    modalShadow: "shadow-[0_25px_60px_rgba(0,0,0,0.12),0_0_40px_rgba(168,85,247,0.22)] dark:shadow-[0_25px_60px_rgba(0,0,0,0.7),0_0_45px_rgba(168,85,247,0.25)]",
+    dotClass: "bg-purple-500 dark:bg-purple-400",
   },
   {
     // UAB First Riddle - Full Stack Web & Data
@@ -67,8 +66,7 @@ const EXPERIENCE_THEMES = [
     textFocus: "text-emerald-600 dark:text-emerald-400",
     badge: "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border-emerald-500/25",
     iconBorder: "rgba(16, 185, 129, 0.5)",
-    modalBorder: "border-emerald-500/40 dark:border-emerald-400/50",
-    modalShadow: "shadow-[0_25px_60px_rgba(0,0,0,0.12),0_0_40px_rgba(16,185,129,0.22)] dark:shadow-[0_25px_60px_rgba(0,0,0,0.7),0_0_45px_rgba(16,185,129,0.25)]",
+    dotClass: "bg-emerald-500 dark:bg-emerald-400",
   },
   {
     // Infowiz - Software Development Intern
@@ -78,10 +76,33 @@ const EXPERIENCE_THEMES = [
     textFocus: "text-amber-600 dark:text-amber-400",
     badge: "bg-amber-500/10 text-amber-700 dark:text-amber-300 border-amber-500/25",
     iconBorder: "rgba(245, 158, 11, 0.5)",
-    modalBorder: "border-amber-500/40 dark:border-amber-400/50",
-    modalShadow: "shadow-[0_25px_60px_rgba(0,0,0,0.12),0_0_40px_rgba(245,158,11,0.22)] dark:shadow-[0_25px_60px_rgba(0,0,0,0.7),0_0_45px_rgba(245,158,11,0.25)]",
+    dotClass: "bg-amber-500 dark:bg-amber-400",
   },
 ];
+
+type OriginOffset = {
+  x: number;
+  y: number;
+};
+
+function measureOriginOffset(sourceEl?: HTMLElement | null): OriginOffset {
+  if (!sourceEl || typeof window === "undefined") {
+    return { x: 0, y: 20 };
+  }
+  const rect = sourceEl.getBoundingClientRect();
+  const dx = rect.left + rect.width / 2 - window.innerWidth / 2;
+  const dy = rect.top + rect.height / 2 - window.innerHeight / 2;
+  return {
+    x: Math.max(-220, Math.min(220, dx * 0.35)),
+    y: Math.max(-180, Math.min(180, dy * 0.35)),
+  };
+}
+
+function splitSentences(text: string): string[] {
+  const parts = text.match(/[^.!?]+[.!?]+/g);
+  if (!parts || parts.length <= 1) return [text];
+  return parts.map((sentence) => sentence.trim()).filter(Boolean);
+}
 
 interface ExperienceTimelineCardProps {
   item: (typeof experiencesData)[number];
@@ -89,7 +110,7 @@ interface ExperienceTimelineCardProps {
   theme: string;
   isMobile: boolean;
   activeIndex: number | null;
-  setActiveIndex: (index: number) => void;
+  onSelect: (index: number, sourceEl?: HTMLElement | null) => void;
 }
 
 function ExperienceTimelineCard({
@@ -98,7 +119,7 @@ function ExperienceTimelineCard({
   theme,
   isMobile,
   activeIndex,
-  setActiveIndex,
+  onSelect,
 }: ExperienceTimelineCardProps) {
   const cardRef = React.useRef<HTMLDivElement>(null);
   const isInScroll = useInView(cardRef, {
@@ -131,10 +152,17 @@ function ExperienceTimelineCard({
     };
   }, []);
 
+  const getCardContentEl = () =>
+    cardRef.current?.querySelector<HTMLElement>(
+      ".vertical-timeline-element-content"
+    );
+
+  const handleOpen = () => onSelect(index, getCardContentEl());
+
   return (
     <div
       ref={cardRef}
-      className={`experience-card-wrapper w-full pointer-events-none transition-all duration-300 ${
+      className={`experience-card-wrapper w-full pointer-events-none transition-opacity duration-300 ${
         index === 0
           ? "mb-14 sm:mb-16 min-[1170px]:mb-0"
           : index === 1
@@ -156,8 +184,8 @@ function ExperienceTimelineCard({
       >
       <VerticalTimelineElement
         position={index % 2 === 0 ? "left" : "right"}
-        onTimelineElementClick={() => setActiveIndex(index)}
-        textClassName="cursor-pointer group/card transition-all duration-300 ease-out transform-gpu will-change-transform select-none [-webkit-tap-highlight-color:transparent] relative overflow-hidden pointer-events-auto"
+        onTimelineElementClick={handleOpen}
+        textClassName="cursor-pointer group/card transform-gpu will-change-transform select-none [-webkit-tap-highlight-color:transparent] relative overflow-hidden pointer-events-auto"
         contentStyle={{
           zIndex: isCardFocused ? 30 : 2,
           background: isMobile
@@ -184,8 +212,6 @@ function ExperienceTimelineCard({
           borderRadius: "1.25rem",
           opacity: activeIndex === index ? 0.35 : 1,
           cursor: "pointer",
-          transition:
-            "transform 250ms ease-out, background-color 250ms ease-out, border-color 250ms ease-out, box-shadow 250ms ease-out, opacity 250ms ease-out",
         }}
         contentArrowStyle={{
           borderRight: isCardFocused
@@ -196,7 +222,7 @@ function ExperienceTimelineCard({
         }}
         date={item.date}
         icon={item.icon}
-        iconOnClick={() => setActiveIndex(index)}
+        iconOnClick={handleOpen}
         iconClassName="cursor-pointer md:hover:scale-110 transition-transform duration-300 [-webkit-tap-highlight-color:transparent]"
         iconStyle={{
           background:
@@ -230,11 +256,14 @@ function ExperienceTimelineCard({
           className="relative z-10 cursor-pointer select-none [-webkit-tap-highlight-color:transparent] pointer-events-auto focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 rounded-xl"
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
-          onClick={() => setActiveIndex(index)}
+          onClick={(e) => {
+            e.stopPropagation();
+            handleOpen();
+          }}
           onKeyDown={(e) => {
             if (e.key === "Enter" || e.key === " ") {
               e.preventDefault();
-              setActiveIndex(index);
+              handleOpen();
             }
           }}
         >
@@ -292,9 +321,30 @@ function ExperienceTimelineCard({
 export default function Experience() {
   const { ref } = useSectionInView("Experience", 0.2);
   const { theme } = useTheme();
+  const lenis = useLenis();
+  const reducedMotion = useReducedMotion();
   const [mounted, setMounted] = React.useState(false);
   const [isMobile, setIsMobile] = React.useState(false);
   const [activeIndex, setActiveIndex] = React.useState<number | null>(null);
+  const [originOffset, setOriginOffset] = React.useState<OriginOffset>({
+    x: 0,
+    y: 20,
+  });
+
+  const handleOpenExperience = React.useCallback(
+    (index: number, sourceEl?: HTMLElement | null) => {
+      setOriginOffset(measureOriginOffset(sourceEl));
+      setActiveIndex(index);
+    },
+    []
+  );
+
+  const handleStepExperience = React.useCallback((delta: number) => {
+    setActiveIndex((prev) => {
+      if (prev === null) return prev;
+      return (prev + delta + experiencesData.length) % experiencesData.length;
+    });
+  }, []);
 
   React.useEffect(() => {
     setMounted(true);
@@ -307,22 +357,41 @@ export default function Experience() {
   }, []);
 
   React.useEffect(() => {
-    if (activeIndex !== null) {
-      document.body.style.overflow = "hidden";
-      const handleKeyDown = (e: KeyboardEvent) => {
-        if (e.key === "Escape") {
-          setActiveIndex(null);
-        }
-      };
-      window.addEventListener("keydown", handleKeyDown);
-      return () => {
-        document.body.style.overflow = "";
-        window.removeEventListener("keydown", handleKeyDown);
-      };
-    } else {
-      document.body.style.overflow = "";
+    if (activeIndex === null) return;
+
+    const scrollbarWidth =
+      window.innerWidth - document.documentElement.clientWidth;
+    lenis?.stop();
+    document.body.style.overflow = "hidden";
+    if (scrollbarWidth > 0) {
+      document.body.style.paddingRight = `${scrollbarWidth}px`;
     }
-  }, [activeIndex]);
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setActiveIndex(null);
+      } else if (e.key === "ArrowRight") {
+        handleStepExperience(1);
+      } else if (e.key === "ArrowLeft") {
+        handleStepExperience(-1);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      lenis?.start();
+      document.body.style.overflow = "";
+      document.body.style.paddingRight = "";
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [activeIndex, lenis, handleStepExperience]);
+
+  const activeItem =
+    activeIndex !== null ? experiencesData[activeIndex] : undefined;
+  const activeTheme =
+    activeIndex !== null
+      ? EXPERIENCE_THEMES[activeIndex % EXPERIENCE_THEMES.length]
+      : EXPERIENCE_THEMES[0];
+  const activeSentences = activeItem ? splitSentences(activeItem.description) : [];
 
   return (
     <section
@@ -332,7 +401,7 @@ export default function Experience() {
     >
       <style>{`
         #experience .vertical-timeline-element-content {
-          transition: transform 450ms cubic-bezier(0.16, 1, 0.3, 1), background-color 520ms cubic-bezier(0.22, 1, 0.36, 1), border-color 520ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 520ms cubic-bezier(0.22, 1, 0.36, 1), color 520ms cubic-bezier(0.22, 1, 0.36, 1), opacity 300ms ease-in-out !important;
+          transition: transform 450ms cubic-bezier(0.16, 1, 0.3, 1), background-color 520ms cubic-bezier(0.22, 1, 0.36, 1), border-color 520ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 520ms cubic-bezier(0.22, 1, 0.36, 1), color 520ms cubic-bezier(0.22, 1, 0.36, 1), opacity 240ms ease-out !important;
         }
         #experience .vertical-timeline-element {
           pointer-events: none;
@@ -395,119 +464,215 @@ export default function Experience() {
               theme={theme}
               isMobile={isMobile}
               activeIndex={activeIndex}
-              setActiveIndex={setActiveIndex}
+              onSelect={handleOpenExperience}
             />
           ))}
         </VerticalTimeline>
       ) : null}
 
-      {/* Interactive Click-to-Expand Modal (Portaled to document.body for true viewport centering) */}
+      {/* Focused Fullscreen Work Experience Overlay (Frosted Glass Design Language) */}
       {mounted &&
         createPortal(
           <AnimatePresence>
-            {activeIndex !== null && experiencesData[activeIndex] && (
-              <motion.div
-                key="experience-backdrop"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.2 }}
-                onClick={() => setActiveIndex(null)}
-                className={`fixed inset-0 z-[10000] ${SURFACE.backdrop} cursor-pointer touch-none overscroll-none`}
-                aria-label="Close modal overlay"
-              />
-            )}
-
-            {activeIndex !== null && experiencesData[activeIndex] && (
-              <div className="fixed inset-0 z-[10001] flex items-center justify-center p-3 sm:p-6 pointer-events-none">
+            {activeIndex !== null && activeItem && (
+              <div
+                key="experience-overlay-root"
+                className="fixed inset-0 z-[10000] flex items-center justify-center p-3 sm:p-6 md:p-10"
+              >
+                {/* Frosted Scrim */}
                 <motion.div
-                  key={`experience-card-${activeIndex}`}
-                  initial={{ opacity: 0, scale: 0.94, y: 16 }}
-                  animate={{ opacity: 1, scale: 1, y: 0 }}
-                  exit={{ opacity: 0, scale: 0.94, y: 12 }}
-                  transition={{ type: "spring", stiffness: 380, damping: 28 }}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
+                  onClick={() => setActiveIndex(null)}
+                  className="fixed inset-0 bg-white/60 dark:bg-[#040408]/75 backdrop-blur-md cursor-pointer touch-none overscroll-none"
+                  aria-label="Close modal overlay"
+                />
+
+                {/* Fullscreen / Expanded Glass Showcase Container */}
+                <motion.div
+                  initial={
+                    reducedMotion
+                      ? { opacity: 0 }
+                      : {
+                          opacity: 0,
+                          x: originOffset.x,
+                          y: originOffset.y,
+                          scale: 0.92,
+                        }
+                  }
+                  animate={{ opacity: 1, x: 0, y: 0, scale: 1 }}
+                  exit={
+                    reducedMotion
+                      ? { opacity: 0 }
+                      : {
+                          opacity: 0,
+                          x: originOffset.x * 0.55,
+                          y: originOffset.y * 0.55,
+                          scale: 0.94,
+                        }
+                  }
+                  transition={{
+                    duration: reducedMotion ? 0.16 : 0.34,
+                    ease: [0.16, 1, 0.3, 1],
+                  }}
                   onClick={(e) => e.stopPropagation()}
                   role="dialog"
                   aria-modal="true"
                   aria-labelledby="experience-modal-title"
-                  className={`pointer-events-auto w-[94vw] sm:w-[92vw] max-w-lg md:max-w-2xl max-h-[88vh] sm:max-h-[85vh] overflow-y-auto p-5 sm:p-8 md:p-10 flex flex-col justify-start relative ${SURFACE.modal} ${
-                    EXPERIENCE_THEMES[activeIndex % EXPERIENCE_THEMES.length].modalBorder
-                  } ${
-                    EXPERIENCE_THEMES[activeIndex % EXPERIENCE_THEMES.length].modalShadow
-                  } rounded-3xl overflow-hidden text-left select-none`}
+                  style={{
+                    transform: "translateZ(0)",
+                    backfaceVisibility: "hidden",
+                  }}
+                  className="relative z-10 w-full max-w-3xl max-h-[calc(100dvh-1.5rem)] sm:max-h-[min(86dvh,44rem)] flex flex-col rounded-[1.75rem] sm:rounded-[2rem] bg-white/88 dark:bg-[#090910]/86 backdrop-blur-xl border border-black/10 dark:border-white/15 shadow-[0_24px_80px_rgba(0,0,0,0.12),inset_0_1px_0_rgba(255,255,255,0.6)] dark:shadow-[0_32px_96px_rgba(0,0,0,0.75),inset_0_1px_0_rgba(255,255,255,0.12)] overflow-hidden text-left transform-gpu will-change-[transform,opacity]"
                 >
-                  {/* Dynamic Themed Ambient Corner Glow */}
+                  {/* Top Specular Edge Hairline (Matches Header Pill Aesthetic) */}
                   <div
-                    className={`absolute top-0 right-0 w-80 h-80 bg-gradient-to-bl ${
-                      EXPERIENCE_THEMES[activeIndex % EXPERIENCE_THEMES.length].accentGradient
-                    } rounded-full blur-3xl pointer-events-none opacity-90 dark:opacity-80`}
-                  />
-                  <div
-                    className={`absolute inset-0 rounded-3xl bg-gradient-to-br ${
-                      EXPERIENCE_THEMES[activeIndex % EXPERIENCE_THEMES.length].accentGradient
-                    } pointer-events-none opacity-40 dark:opacity-25`}
+                    aria-hidden="true"
+                    className="pointer-events-none absolute top-0 inset-x-8 h-px bg-gradient-to-r from-transparent via-black/15 dark:via-white/25 to-transparent"
                   />
 
-                  {/* Close Button */}
-                  <button
-                    type="button"
-                    onClick={() => setActiveIndex(null)}
-                    className={`absolute top-4 right-4 sm:top-6 sm:right-6 w-9 h-9 sm:w-9 sm:h-9 rounded-full ${SURFACE.insetInteractive} transition-all flex items-center justify-center text-gray-700 dark:text-zinc-300 hover:text-gray-950 dark:hover:text-white hover:scale-110 active:scale-95 z-20 cursor-pointer`}
-                    aria-label="Close experience details"
-                  >
-                    <FiX className="text-base" />
-                  </button>
+                  {/* Subtle Radial Depth Wash */}
+                  <div
+                    aria-hidden="true"
+                    className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(0,0,0,0.03),transparent_60%)] dark:bg-[radial-gradient(ellipse_at_top_right,rgba(255,255,255,0.045),transparent_60%)]"
+                  />
 
-                  {/* Header with Icon, Company Pill, and Title */}
-                  <div className="flex items-start gap-3.5 sm:gap-5 mb-5 pr-8 relative z-10">
-                    <div className={`w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-2xl flex-shrink-0 flex items-center justify-center text-xl sm:text-2xl md:text-3xl ${SURFACE.inset} shadow-sm text-gray-950 dark:text-white`}>
-                      {experiencesData[activeIndex].icon}
-                    </div>
-                    <div className="min-w-0">
-                      <div className="flex items-center gap-2 mb-1.5 flex-wrap">
-                        <span
-                          className={`text-xs font-semibold px-2.5 py-0.5 rounded-full border ${
-                            EXPERIENCE_THEMES[activeIndex % EXPERIENCE_THEMES.length].badge
-                          }`}
-                        >
-                          {experiencesData[activeIndex].company}
-                        </span>
-                      </div>
-                      <h3
-                        id="experience-modal-title"
-                        className="text-lg sm:text-2xl md:text-3xl font-extrabold tracking-tight text-gray-950 dark:text-white"
+                  {/* Modal Header */}
+                  <div className="relative z-10 flex items-start justify-between gap-4 px-5 sm:px-8 pt-5 sm:pt-7 pb-4 sm:pb-5 border-b border-black/[0.08] dark:border-white/[0.09]">
+                    <div className="flex items-start gap-3.5 sm:gap-5 min-w-0">
+                      <div
+                        className={`w-11 h-11 sm:w-14 sm:h-14 rounded-2xl shrink-0 flex items-center justify-center text-xl sm:text-2xl ${SURFACE.inset} text-zinc-900 dark:text-white shadow-sm`}
                       >
-                        {experiencesData[activeIndex].title}
-                      </h3>
+                        {activeItem.icon}
+                      </div>
+
+                      <div className="min-w-0">
+                        <div className="flex flex-wrap items-center gap-2 mb-1.5">
+                          <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-zinc-500 dark:text-zinc-400">
+                            Work Experience ·{" "}
+                            {String(activeIndex + 1).padStart(2, "0")} /{" "}
+                            {String(experiencesData.length).padStart(2, "0")}
+                          </span>
+                        </div>
+
+                        <h3
+                          id="experience-modal-title"
+                          className="text-xl sm:text-3xl font-bold tracking-tight text-zinc-950 dark:text-white leading-tight"
+                        >
+                          {activeItem.title}
+                        </h3>
+
+                        <div className="mt-2.5 flex flex-wrap items-center gap-2">
+                          <span
+                            className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold ${SURFACE.inset} text-zinc-900 dark:text-zinc-100`}
+                          >
+                            <span
+                              className={`w-1.5 h-1.5 rounded-full ${activeTheme.dotClass}`}
+                            />
+                            <span>{activeItem.company}</span>
+                          </span>
+                          <span
+                            className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium ${SURFACE.inset} text-zinc-700 dark:text-zinc-300`}
+                          >
+                            <FiMapPin className="text-xs opacity-70 shrink-0" />
+                            <span>{activeItem.location}</span>
+                          </span>
+                          <span
+                            className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium ${SURFACE.inset} text-zinc-700 dark:text-zinc-300`}
+                          >
+                            <FiCalendar className="text-xs opacity-70 shrink-0" />
+                            <span>{activeItem.date}</span>
+                          </span>
+                        </div>
+                      </div>
                     </div>
+
+                    <button
+                      type="button"
+                      onClick={() => setActiveIndex(null)}
+                      className={`w-9 h-9 rounded-full shrink-0 ${SURFACE.insetInteractive} transition-transform duration-200 flex items-center justify-center text-zinc-700 dark:text-zinc-300 hover:text-zinc-950 dark:hover:text-white hover:scale-105 active:scale-95 cursor-pointer`}
+                      aria-label="Close experience details"
+                    >
+                      <FiX className="text-base" />
+                    </button>
                   </div>
 
-                  {/* Location & Date Pills */}
-                  <div className="flex flex-wrap items-center gap-2 mb-5 sm:mb-6 relative z-10">
-                    <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium ${SURFACE.inset} text-gray-800 dark:text-zinc-200`}>
-                      <FiMapPin className="text-xs opacity-70 shrink-0" />
-                      <span>{experiencesData[activeIndex].location}</span>
-                    </span>
-                    <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium ${SURFACE.inset} text-gray-800 dark:text-zinc-200`}>
-                      <FiCalendar className="text-xs opacity-70 shrink-0" />
-                      <span>{experiencesData[activeIndex].date}</span>
-                    </span>
+                  {/* Scrollable Editorial Body */}
+                  <div className="relative z-10 flex-1 min-h-0 overflow-y-auto overscroll-contain px-5 sm:px-8 py-5 sm:py-7">
+                    <AnimatePresence mode="wait" initial={false}>
+                      <motion.div
+                        key={activeIndex}
+                        initial={reducedMotion ? false : { opacity: 0, y: 6 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={reducedMotion ? undefined : { opacity: 0, y: -6 }}
+                        transition={{
+                          duration: 0.18,
+                          ease: [0.22, 1, 0.36, 1],
+                        }}
+                        className="space-y-4"
+                      >
+                        {activeSentences.map((sentence, sentenceIdx) => (
+                          <p
+                            key={sentenceIdx}
+                            className="text-[0.95rem] sm:text-[1.05rem] leading-[1.75] text-zinc-700 dark:text-zinc-300 font-normal"
+                          >
+                            {sentence}
+                          </p>
+                        ))}
+                      </motion.div>
+                    </AnimatePresence>
                   </div>
 
-                  {/* Description */}
-                  <p className="text-sm sm:text-base leading-relaxed text-gray-700 dark:text-zinc-300 font-normal mb-6 relative z-10">
-                    {experiencesData[activeIndex].description}
-                  </p>
+                  {/* Footer Controls (Matches Command Palette Bar & Website Pill Buttons) */}
+                  <div className="relative z-10 flex items-center justify-between gap-3 px-5 sm:px-8 py-3.5 sm:py-4 border-t border-black/[0.08] dark:border-white/[0.09] bg-black/[0.02] dark:bg-white/[0.02]">
+                    <div className="flex items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() => handleStepExperience(-1)}
+                        className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium ${SURFACE.insetInteractive} text-zinc-800 dark:text-zinc-200 transition-colors cursor-pointer`}
+                        aria-label="Previous experience"
+                      >
+                        <FiChevronLeft className="text-sm" />
+                        <span>Prev</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleStepExperience(1)}
+                        className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium ${SURFACE.insetInteractive} text-zinc-800 dark:text-zinc-200 transition-colors cursor-pointer`}
+                        aria-label="Next experience"
+                      >
+                        <span>Next</span>
+                        <FiChevronRight className="text-sm" />
+                      </button>
+                    </div>
 
-                  {/* Footer dismiss hint */}
-                  <div className="pt-4 border-t border-black/10 dark:border-white/10 flex items-center justify-between text-xs text-gray-600 dark:text-zinc-400 relative z-10">
-                    <span className="flex items-center gap-1.5">
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500/80 animate-pulse" />
-                      <span>Click card or outside to close</span>
-                    </span>
-                    <kbd className={`hidden sm:inline-block px-2 py-0.5 text-[0.68rem] font-mono font-medium rounded-md ${SURFACE.inset} text-gray-700 dark:text-zinc-300`}>
-                      ESC to close
-                    </kbd>
+                    <div className="flex items-center gap-3 text-xs text-zinc-500 dark:text-zinc-400">
+                      <span className="hidden sm:inline">
+                        <kbd
+                          className={`px-1.5 py-0.5 mr-1 rounded font-mono text-[0.68rem] ${SURFACE.inset} text-zinc-700 dark:text-zinc-300`}
+                        >
+                          ← →
+                        </kbd>
+                        Switch
+                      </span>
+                      <span className="hidden sm:inline">
+                        <kbd
+                          className={`px-1.5 py-0.5 mr-1 rounded font-mono text-[0.68rem] ${SURFACE.inset} text-zinc-700 dark:text-zinc-300`}
+                        >
+                          ESC
+                        </kbd>
+                        Close
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => setActiveIndex(null)}
+                        className="sm:hidden inline-flex items-center px-3.5 py-1.5 rounded-full text-xs font-semibold bg-zinc-900 text-white dark:bg-white dark:text-zinc-950 cursor-pointer"
+                      >
+                        Close
+                      </button>
+                    </div>
                   </div>
                 </motion.div>
               </div>
