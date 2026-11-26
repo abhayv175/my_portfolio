@@ -2,11 +2,20 @@ export const validateString = (
   value: unknown,
   maxLength: number
 ): value is string => {
-  if (!value || typeof value !== "string" || value.length > maxLength) {
+  if (
+    !value ||
+    typeof value !== "string" ||
+    value.trim().length === 0 ||
+    value.length > maxLength
+  ) {
     return false;
   }
 
   return true;
+};
+
+export const isValidEmail = (value: string): boolean => {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
 };
 
 export const getErrorMessage = (error: unknown): string => {

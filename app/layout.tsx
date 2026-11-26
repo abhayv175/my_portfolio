@@ -1,4 +1,6 @@
 import "./globals.css";
+import type { Metadata } from "next";
+import { Plus_Jakarta_Sans } from "next/font/google";
 import Header from "@/components/header";
 import AmbientGlow from "@/components/ambient-glow";
 import RedRibbon from "@/components/red-ribbon";
@@ -10,19 +12,39 @@ import ThemeSwitch from "@/components/theme-switch";
 import ThemeContextProvider from "@/context/theme-context";
 import { Toaster } from "react-hot-toast";
 
-export const metadata = {
+const plusJakartaSans = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  variable: "--font-sans",
+  display: "swap",
+});
+
+export const metadata: Metadata = {
+  metadataBase: new URL("https://abhayv175.netlify.app"),
   title: "Abhay Verma | Personal Portfolio",
-  description: "Abhay Verma is a Software Developer and QA engineer with 2 years of experience.",
+  description:
+    "Abhay Verma is a Software Developer and QA engineer with 2 years of experience.",
   openGraph: {
     title: "Abhay Verma | Personal Portfolio",
-    description: "Abhay Verma is a Software Developer and QA engineer with 2 years of experience.",
+    description:
+      "Abhay Verma is a Software Developer and QA engineer with 2 years of experience.",
+    url: "/",
     type: "website",
     siteName: "Abhay Verma Portfolio",
+    images: [
+      {
+        url: "/hero_dark.png",
+        width: 1024,
+        height: 1024,
+        alt: "Abhay Verma | Personal Portfolio",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Abhay Verma | Personal Portfolio",
-    description: "Abhay Verma is a Software Developer and QA engineer with 2 years of experience.",
+    description:
+      "Abhay Verma is a Software Developer and QA engineer with 2 years of experience.",
+    images: ["/hero_dark.png"],
   },
 };
 
@@ -32,7 +54,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="dark !scroll-smooth min-h-[100dvh] w-full" suppressHydrationWarning>
+    <html
+      lang="en"
+      className={`dark min-h-[100dvh] w-full ${plusJakartaSans.variable}`}
+      suppressHydrationWarning
+    >
       <head>
         <script
           dangerouslySetInnerHTML={{

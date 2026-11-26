@@ -180,11 +180,11 @@ function SkillDomainCard({
       className={`group relative p-5 sm:p-6 rounded-3xl backdrop-blur-md md:backdrop-blur-xl border transition-all duration-300 cursor-default flex flex-col justify-between w-full h-full ${
         isCardActive
           ? domain.id === "frontend-mobile"
-            ? "border-blue-500/60 dark:border-blue-400/60 bg-white/90 dark:bg-zinc-900/80 shadow-[0_16px_40px_rgba(0,0,0,0.12),0_0_30px_rgba(59,130,246,0.3)] -translate-y-1.5 scale-[1.03]"
+            ? "border-blue-500/60 dark:border-blue-400/60 bg-white/72 dark:bg-zinc-900/80 shadow-[0_16px_40px_rgba(0,0,0,0.12),0_0_30px_rgba(59,130,246,0.3)] -translate-y-1.5 scale-[1.03]"
             : domain.id === "backend-cloud"
-            ? "border-emerald-500/60 dark:border-emerald-400/60 bg-white/90 dark:bg-zinc-900/80 shadow-[0_16px_40px_rgba(0,0,0,0.12),0_0_30px_rgba(16,185,129,0.3)] -translate-y-1.5 scale-[1.03]"
-            : "border-purple-500/60 dark:border-purple-400/60 bg-white/90 dark:bg-zinc-900/80 shadow-[0_16px_40px_rgba(0,0,0,0.12),0_0_30px_rgba(168,85,247,0.3)] -translate-y-1.5 scale-[1.03]"
-          : `border-black/10 dark:border-white/10 bg-white/70 dark:bg-zinc-900/40 shadow-lg hover:shadow-xl`
+            ? "border-emerald-500/60 dark:border-emerald-400/60 bg-white/72 dark:bg-zinc-900/80 shadow-[0_16px_40px_rgba(0,0,0,0.12),0_0_30px_rgba(16,185,129,0.3)] -translate-y-1.5 scale-[1.03]"
+            : "border-purple-500/60 dark:border-purple-400/60 bg-white/72 dark:bg-zinc-900/80 shadow-[0_16px_40px_rgba(0,0,0,0.12),0_0_30px_rgba(168,85,247,0.3)] -translate-y-1.5 scale-[1.03]"
+          : `border-black/10 dark:border-white/10 bg-white/35 dark:bg-zinc-900/40 shadow-lg hover:bg-white/65 hover:shadow-xl`
       }`}
     >
       {/* Subtle Top Ambient Gradient Sheen */}
@@ -204,7 +204,7 @@ function SkillDomainCard({
           >
             <Icon />
           </div>
-          <span className="text-[0.7rem] px-2.5 py-1 rounded-full font-semibold uppercase tracking-wider bg-black/5 dark:bg-white/10 text-gray-600 dark:text-gray-300 border border-black/5 dark:border-white/10 flex items-center gap-1">
+          <span className="text-[0.7rem] px-2.5 py-1 rounded-full font-semibold uppercase tracking-wider bg-black/5 dark:bg-white/10 text-gray-700 dark:text-gray-300 border border-black/5 dark:border-white/10 flex items-center gap-1">
             <FiZap className="text-amber-500 text-xs" />
             <span>Highlights {domain.matchedProjects.length} Apps</span>
           </span>
@@ -213,7 +213,7 @@ function SkillDomainCard({
         <h3 className="text-lg font-bold text-gray-950 dark:text-white mb-1 tracking-tight">
           {domain.title}
         </h3>
-        <p className="text-xs text-gray-500 dark:text-gray-400 mb-5 leading-relaxed">
+        <p className="text-xs text-gray-700 dark:text-gray-400 mb-5 leading-relaxed">
           {domain.subtitle}
         </p>
 
@@ -231,7 +231,7 @@ function SkillDomainCard({
       </div>
 
       {/* Bottom Indicator */}
-      <div className="mt-5 pt-3 border-t border-black/5 dark:border-white/10 flex items-center justify-between text-[0.72rem] text-gray-500 dark:text-gray-400 relative z-10">
+      <div className="mt-5 pt-3 border-t border-black/5 dark:border-white/10 flex items-center justify-between text-[0.72rem] text-gray-700 dark:text-gray-400 relative z-10">
         <span className="flex items-center gap-1.5 font-medium text-indigo-600 dark:text-indigo-400">
           <FiLayers className="text-xs" />
           <span>{domain.matchedProjects.join(" • ")}</span>

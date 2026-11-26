@@ -1,7 +1,12 @@
 "use client";
 
-import React, { useEffect, useState, createContext, useContext } from "react";
-import { flushSync } from "react-dom";
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 
 type Theme = "light" | "dark";
 
@@ -11,117 +16,105 @@ type ThemeContextProviderProps = {
 
 type ThemeContextType = {
   theme: Theme;
-  toggleTheme: (options?: { x?: number; y?: number }) => void;
+  targetTheme: Theme;
+  isTransitioning: boolean;
+  toggleTheme: () => void;
 };
 
 const ThemeContext = createContext<ThemeContextType | null>(null);
+
+const WEBGPU_MIDPOINT_DELAY_MS = 320;
+const TRANSITION_TOTAL_MS = 1040;
 
 export default function ThemeContextProvider({
   children,
 }: ThemeContextProviderProps) {
   const [theme, setTheme] = useState<Theme>("dark");
+  const [targetTheme, setTargetTheme] = useState<Theme>("dark");
+  const [isTransitioning, setIsTransitioning] = useState(false);
 
-  const toggleTheme = (options?: { x?: number; y?: number }) => {
-    const nextTheme: Theme = theme === "light" ? "dark" : "light";
+  const midpointTimerRef = useRef<number | null>(null);
+  const finishTimerRef = useRef<number | null>(null);
 
-    const updateDOM = () => {
-      setTheme(nextTheme);
-      window.localStorage.setItem("theme", nextTheme);
-      if (nextTheme === "dark") {
-        document.documentElement.classList.add("dark");
-      } else {
-        document.documentElement.classList.remove("dark");
-      }
-    };
+  const clearTimers = () => {
+    if (midpointTimerRef.current !== null) {
+      window.clearTimeout(midpointTimerRef.current);
+      midpointTimerRef.current = null;
+    }
+    if (finishTimerRef.current !== null) {
+      window.clearTimeout(finishTimerRef.current);
+      finishTimerRef.current = null;
+    }
+  };
 
-    if (
-      typeof document === "undefined" ||
-      !("startViewTransition" in document) ||
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches
-    ) {
-      updateDOM();
+  useEffect(() => {
+    return clearTimers;
+  }, []);
+
+  const applyDomTheme = (nextTheme: Theme) => {
+    setTheme(nextTheme);
+    window.localStorage.setItem("theme", nextTheme);
+    if (nextTheme === "dark") {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  };
+
+  const toggleTheme = () => {
+    const nextTheme: Theme = targetTheme === "light" ? "dark" : "light";
+    clearTimers();
+    setTargetTheme(nextTheme);
+    window.localStorage.setItem("theme", nextTheme);
+
+    const reducedMotion =
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    if (typeof document === "undefined" || reducedMotion) {
+      document.documentElement.classList.remove("theme-transitioning");
+      setIsTransitioning(false);
+      applyDomTheme(nextTheme);
       return;
     }
 
-    const x = options?.x ?? window.innerWidth / 2;
-    const y = options?.y ?? window.innerHeight / 2;
+    const hasWebGpu =
+      typeof navigator !== "undefined" && "gpu" in navigator;
 
-    const viewportWidth = Math.max(
-      window.innerWidth || 0,
-      document.documentElement.clientWidth || 0,
-      typeof window.screen !== "undefined" ? window.screen.width : 0
-    );
-    const viewportHeight = Math.max(
-      window.innerHeight || 0,
-      document.documentElement.clientHeight || 0,
-      typeof window.screen !== "undefined" ? window.screen.height : 0
-    );
+    setIsTransitioning(true);
+    document.documentElement.classList.add("theme-transitioning");
 
-    const maxDistX = Math.max(x, viewportWidth - x);
-    const maxDistY = Math.max(y, viewportHeight - y);
-    // Multiply by 1.15 to guarantee the circular reveal sweeps 100% past all mobile edges and corners with dynamic toolbars
-    const endRadius = Math.hypot(maxDistX, maxDistY) * 1.15;
+    // On WebGPU devices, launch the right <-> left swirling hole immediately at t = 0
+    // and flip DOM colors cleanly right as the wavefront crosses into the center column.
+    const midpointDelay = hasWebGpu ? WEBGPU_MIDPOINT_DELAY_MS : 0;
 
-    document.documentElement.style.setProperty("--theme-x", `${x}px`);
-    document.documentElement.style.setProperty("--theme-y", `${y}px`);
-    document.documentElement.classList.add("view-transition-active");
+    if (midpointDelay === 0) {
+      applyDomTheme(nextTheme);
+    } else {
+      midpointTimerRef.current = window.setTimeout(() => {
+        midpointTimerRef.current = null;
+        applyDomTheme(nextTheme);
+      }, midpointDelay);
+    }
 
-    const transition = (document as any).startViewTransition(() => {
-      flushSync(() => {
-        updateDOM();
-      });
-    });
-
-    const isMobile =
-      typeof window !== "undefined" &&
-      (window.innerWidth < 768 || window.matchMedia("(pointer: coarse)").matches);
-
-    const duration = isMobile ? 420 : 1000;
-    const easing = isMobile
-      ? "cubic-bezier(0.16, 1, 0.3, 1)"
-      : "cubic-bezier(0.22, 1, 0.36, 1)";
-
-    transition.ready
-      .then(() => {
-        document.documentElement.animate(
-          {
-            clipPath: [
-              `circle(0px at ${x}px ${y}px)`,
-              `circle(${endRadius}px at ${x}px ${y}px)`,
-            ],
-          },
-          {
-            duration,
-            easing,
-            fill: "forwards",
-            pseudoElement: "::view-transition-new(root)",
-          }
-        );
-      })
-      .catch(() => {});
-
-    transition.finished.finally(() => {
-      document.documentElement.classList.remove("view-transition-active");
-    });
+    finishTimerRef.current = window.setTimeout(() => {
+      finishTimerRef.current = null;
+      document.documentElement.classList.remove("theme-transitioning");
+      setIsTransitioning(false);
+    }, TRANSITION_TOTAL_MS);
   };
 
   useEffect(() => {
     const localTheme = window.localStorage.getItem("theme") as Theme | null;
+    const resolvedTheme: Theme = localTheme === "light" ? "light" : "dark";
 
-    if (localTheme) {
-      setTheme(localTheme);
+    setTheme(resolvedTheme);
+    setTargetTheme(resolvedTheme);
 
-      if (localTheme === "dark") {
-        document.documentElement.classList.add("dark");
-      } else {
-        document.documentElement.classList.remove("dark");
-      }
-    } else if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-      setTheme("dark");
+    if (resolvedTheme === "dark") {
       document.documentElement.classList.add("dark");
     } else {
-      setTheme("dark");
-      document.documentElement.classList.add("dark");
+      document.documentElement.classList.remove("dark");
     }
   }, []);
 
@@ -129,6 +122,8 @@ export default function ThemeContextProvider({
     <ThemeContext.Provider
       value={{
         theme,
+        targetTheme,
+        isTransitioning,
         toggleTheme,
       }}
     >

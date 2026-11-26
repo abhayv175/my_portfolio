@@ -58,10 +58,11 @@ export default function CursorRibbon() {
     const handlePointerMove = (e: PointerEvent) => {
       if (e.pointerType === "touch") return;
 
-      const events =
+      const coalesced =
         typeof e.getCoalescedEvents === "function"
           ? e.getCoalescedEvents()
-          : [e];
+          : [];
+      const events = coalesced.length > 0 ? coalesced : [e];
 
       const now = performance.now();
       for (let i = 0; i < events.length; i++) {
@@ -130,11 +131,11 @@ export default function CursorRibbon() {
 
       ctx.save();
 
-      // Soft celestial aura glow for luminous wet paint
+      // Soft aura glow matching theme contrast (white-cyan in dark, subtle ink in light)
       ctx.shadowBlur = isDark ? 12 : 8;
       ctx.shadowColor = isDark
-        ? "rgba(56, 189, 248, 0.45)"
-        : "rgba(79, 70, 229, 0.35)";
+        ? "rgba(255, 255, 255, 0.35)"
+        : "rgba(0, 0, 0, 0.25)";
 
       // Helper function to draw a full segment sequence along the spline
       const drawSplineSegments = (
@@ -149,7 +150,7 @@ export default function CursorRibbon() {
           const u = 0;
           const age = now - points[0].time;
           const ageFade = Math.max(0, 1 - age / MAX_AGE_MS);
-          const tailFade = Math.pow(u, 1.6); // Dissolves down to 0 at the tail end
+          const tailFade = Math.pow(u, 1.15); // Dissolves smoothly at the tail tip
           const totalFade = tailFade * Math.pow(ageFade, 1.2);
 
           const style = drawSegment(0, u, totalFade);
@@ -169,7 +170,7 @@ export default function CursorRibbon() {
           const u = (j + 1) / (N - 1);
           const age = now - points[j + 1].time;
           const ageFade = Math.max(0, 1 - age / MAX_AGE_MS);
-          const tailFade = Math.pow(u, 1.6); // Continuous smooth fade from head to tail
+          const tailFade = Math.pow(u, 1.15);
           const totalFade = tailFade * Math.pow(ageFade, 1.2);
 
           const style = drawSegment(j + 1, u, totalFade);
@@ -209,47 +210,73 @@ export default function CursorRibbon() {
         }
       };
 
-      // PASS 1: Wet Paint Glaze Wash (Broad, translucent watercolor wash under the stroke)
+      // Keep the trailing ~50% of the ribbon pure white (dark) / pure black (light),
+      // blending to cyan / indigo only toward the active cursor head.
+      const headBlend = (u: number) =>
+        u <= 0.5 ? 0 : Math.pow((u - 0.5) / 0.5, 1.3);
+
+      // PASS 1: Wet Paint Glaze Wash (Tail: pure white in dark mode, pure black in light mode)
       drawSplineSegments((_, u, totalFade) => {
+        const m = headBlend(u);
         const washWidth = 1.0 + Math.pow(u, 1.2) * (MAX_PAINT_WIDTH * 1.35);
-        const washAlpha = totalFade * (isDark ? 0.22 : 0.18);
-        const strokeStyle = isDark
-          ? `rgba(56, 189, 248, ${washAlpha})`
-          : `rgba(79, 70, 229, ${washAlpha})`;
+        const washAlpha = totalFade * (isDark ? 0.24 : 0.2);
+        let strokeStyle = "";
+        if (isDark) {
+          const r = Math.round(255 - m * 199);
+          const g = Math.round(255 - m * 66);
+          const b = Math.round(255 - m * 7);
+          strokeStyle = `rgba(${r}, ${g}, ${b}, ${washAlpha})`;
+        } else {
+          const r = Math.round(m * 79);
+          const g = Math.round(m * 70);
+          const b = Math.round(m * 229);
+          strokeStyle = `rgba(${r}, ${g}, ${b}, ${washAlpha})`;
+        }
         return { width: washWidth, strokeStyle };
       });
 
-      // PASS 2: Main Calligraphic Paint Brush Body (Rich pigment, swelling body, fading tail)
+      // PASS 2: Main Calligraphic Paint Brush Body (Tail: pure white in dark, pure black in light)
       drawSplineSegments((_, u, totalFade) => {
+        const m = headBlend(u);
         // Tapers from ~0.6px at tail to ~18px at brush head
         const bodyWidth = 0.6 + Math.pow(u, 1.25) * (MAX_PAINT_WIDTH - 0.6);
-        const bodyAlpha = totalFade * (isDark ? 0.85 : 0.78);
+        const bodyAlpha = totalFade * (isDark ? 0.92 : 0.9);
 
         let strokeStyle = "";
         if (isDark) {
-          // Dark Mode: Head is Electric Cyan (#38bdf8) -> Tail is Deep Cosmic Violet (#818cf8)
-          const r = Math.round(129 - u * 73);
-          const g = Math.round(140 + u * 49);
-          const b = 248;
+          // Dark Mode: Tail (u <= 0.5) is White (#ffffff) -> Head (u=1) is Electric Cyan (#38bdf8)
+          const r = Math.round(255 - m * 199);
+          const g = Math.round(255 - m * 66);
+          const b = Math.round(255 - m * 7);
           strokeStyle = `rgba(${r}, ${g}, ${b}, ${bodyAlpha})`;
         } else {
-          // Light Mode: Head is Royal Indigo (#4f46e5) -> Tail is Soft Sky Cyan (#38bdf8)
-          const r = Math.round(56 + u * 23);
-          const g = Math.round(189 - u * 119);
-          const b = Math.round(248 - u * 19);
+          // Light Mode: Tail (u <= 0.5) is Black (#000000) -> Head (u=1) is Royal Indigo (#4f46e5)
+          const r = Math.round(m * 79);
+          const g = Math.round(m * 70);
+          const b = Math.round(m * 229);
           strokeStyle = `rgba(${r}, ${g}, ${b}, ${bodyAlpha})`;
         }
 
         return { width: bodyWidth, strokeStyle };
       });
 
-      // PASS 3: Luminous Core Sheen (Brilliant inner highlight down the spine of the wet stroke)
+      // PASS 3: Core Spine Sheen (pure white tail in dark mode, pure black tail in light mode)
       drawSplineSegments((_, u, totalFade) => {
+        const m = headBlend(u);
         const coreWidth = 0.4 + Math.pow(u, 1.4) * 3.5;
         const coreAlpha = totalFade * (isDark ? 0.95 : 0.85);
-        const strokeStyle = isDark
-          ? `rgba(224, 242, 254, ${coreAlpha})` // Sky-100 pure wet pigment sheen
-          : `rgba(199, 210, 254, ${coreAlpha})`; // Indigo-200 luminous sheen
+        let strokeStyle = "";
+        if (isDark) {
+          const r = Math.round(255 - m * 31);
+          const g = Math.round(255 - m * 13);
+          const b = Math.round(255 - m * 1);
+          strokeStyle = `rgba(${r}, ${g}, ${b}, ${coreAlpha})`;
+        } else {
+          const r = Math.round(m * 199);
+          const g = Math.round(m * 210);
+          const b = Math.round(m * 254);
+          strokeStyle = `rgba(${r}, ${g}, ${b}, ${coreAlpha})`;
+        }
         return { width: coreWidth, strokeStyle };
       });
 

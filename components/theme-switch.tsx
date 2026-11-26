@@ -6,7 +6,7 @@ import { BsMoonStarsFill, BsSunFill } from "react-icons/bs";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function ThemeSwitch() {
-  const { theme, toggleTheme } = useTheme();
+  const { targetTheme, toggleTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [rippleKey, setRippleKey] = useState(0);
 
@@ -14,15 +14,12 @@ export default function ThemeSwitch() {
     setMounted(true);
   }, []);
 
-  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = rect.left + rect.width / 2;
-    const y = rect.top + rect.height / 2;
+  const handleClick = () => {
     setRippleKey((prev) => prev + 1);
-    toggleTheme({ x, y });
+    toggleTheme();
   };
 
-  const isDark = theme === "dark";
+  const isDark = targetTheme === "dark";
 
   return (
     <motion.button
@@ -40,7 +37,7 @@ export default function ThemeSwitch() {
       className={`fixed top-[calc(1rem+env(safe-area-inset-top,0px))] left-[calc(1rem+env(safe-area-inset-left,0px))] sm:top-5 sm:left-6 z-[9999] pointer-events-auto isolate w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center backdrop-blur-2xl backdrop-saturate-150 transform-gpu cursor-pointer outline-none transition-[background-color,border-color,box-shadow] duration-300 group overflow-hidden ${
         isDark
           ? "bg-zinc-950/80 hover:bg-zinc-950/95 border border-sky-400/30 hover:border-sky-400/60 shadow-[0_8px_30px_rgba(0,0,0,0.6),0_0_20px_rgba(56,189,248,0.22)]"
-          : "bg-white/85 hover:bg-white border border-amber-400/35 hover:border-amber-500/60 shadow-[0_8px_25px_rgba(245,158,11,0.18),0_0_18px_rgba(245,158,11,0.25)]"
+          : "bg-white/55 hover:bg-white/80 border border-amber-400/35 hover:border-amber-500/60 shadow-[0_8px_25px_rgba(245,158,11,0.18),0_0_18px_rgba(245,158,11,0.25)]"
       }`}
       onClick={handleClick}
       aria-label="Toggle theme"
@@ -73,7 +70,7 @@ export default function ThemeSwitch() {
 
       {/* Modern Morphing Sun / Moon Stars Animation */}
       <AnimatePresence mode="wait" initial={false}>
-        {theme === "light" ? (
+        {targetTheme === "light" ? (
           <motion.div
             key="sun"
             initial={mounted ? { opacity: 0, rotate: -70, scale: 0.3 } : false}

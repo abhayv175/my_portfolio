@@ -1,4 +1,4 @@
-i"use client";
+"use client";
 
 import React, { useRef, useState, useEffect } from "react";
 import SectionHeading from "./section-heading";
@@ -161,13 +161,13 @@ export default function Contact() {
         </div>
         <SectionHeading>Contact me</SectionHeading>
 
-        <div className="text-gray-700 -mt-4 dark:text-white/80 font-normal leading-relaxed text-sm sm:text-base max-w-[34rem] mx-auto flex flex-wrap items-center justify-center gap-1.5 sm:gap-2">
-          <span className="text-gray-700 dark:text-white/80">Please contact me directly at</span>
+        <div className="text-gray-900 -mt-4 dark:text-white/80 font-normal leading-relaxed text-sm sm:text-base max-w-[34rem] mx-auto flex flex-wrap items-center justify-center gap-1.5 sm:gap-2">
+          <span className="text-gray-900 dark:text-white/80 drop-shadow-[0_1px_12px_rgba(250,250,250,0.95)] dark:drop-shadow-none">Please contact me directly at</span>
           <button
             type="button"
             onClick={handleCopyEmail}
             title="Click to copy email address"
-            className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/5 dark:bg-white/10 border border-black/10 dark:border-white/15 text-sm hover:bg-black/10 dark:hover:bg-white/15 hover:border-indigo-500/30 dark:hover:border-indigo-400/30 text-gray-900 dark:text-white transition-all duration-200 cursor-pointer group active:scale-95 shadow-sm"
+            className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/65 dark:bg-white/10 backdrop-blur-md border border-black/15 dark:border-white/15 text-sm hover:bg-white/85 dark:hover:bg-white/15 hover:border-indigo-500/30 dark:hover:border-indigo-400/30 text-gray-900 dark:text-white transition-all duration-200 cursor-pointer group active:scale-95 shadow-sm"
           >
             <BsEnvelope className="text-xs opacity-80 group-hover:opacity-100 transition-opacity text-gray-800 dark:text-white" />
             <span className="font-medium text-gray-900 dark:text-white">abhayv175@gmail.com</span>
@@ -177,7 +177,7 @@ export default function Contact() {
               <BsCopy className="text-xs opacity-70 group-hover:opacity-100 transition-opacity text-gray-800 dark:text-white" />
             )}
           </button>
-          <span className="text-gray-700 dark:text-white/80">or through this form.</span>
+          <span className="text-gray-900 dark:text-white/80 drop-shadow-[0_1px_12px_rgba(250,250,250,0.95)] dark:drop-shadow-none">or through this form.</span>
         </div>
 
         <ContactCardScrollWrapper
@@ -195,8 +195,8 @@ export default function Contact() {
             }}
             className={`w-full p-6 sm:p-10 rounded-3xl backdrop-blur-md md:backdrop-blur-xl transition-[border-color,background-color,box-shadow,transform] duration-150 ease-out relative overflow-hidden group ${
               isCardFocused
-                ? "bg-white/95 dark:bg-zinc-900/80 border-violet-400/80 dark:border-violet-400/80 shadow-[0_20px_50px_rgba(0,0,0,0.18),0_0_35px_rgba(168,85,247,0.32)] scale-[1.02] -translate-y-1.5"
-                : "bg-white/70 dark:bg-zinc-900/40 border border-black/10 dark:border-white/10 shadow-xl dark:shadow-[0_20px_50px_rgba(0,0,0,0.6)] hover:shadow-[0_20px_50px_rgba(0,0,0,0.18),0_0_35px_rgba(168,85,247,0.32)] hover:border-violet-400/70 dark:hover:border-violet-400/70 hover:bg-white/90 dark:hover:bg-zinc-900/75"
+                ? "bg-white/75 dark:bg-zinc-900/80 border-violet-400/80 dark:border-violet-400/80 shadow-[0_20px_50px_rgba(0,0,0,0.18),0_0_35px_rgba(168,85,247,0.32)] scale-[1.02] -translate-y-1.5"
+                : "bg-white/35 dark:bg-zinc-900/40 border border-black/10 dark:border-white/10 shadow-xl dark:shadow-[0_20px_50px_rgba(0,0,0,0.6)] hover:shadow-[0_20px_50px_rgba(0,0,0,0.18),0_0_35px_rgba(168,85,247,0.32)] hover:border-violet-400/70 dark:hover:border-violet-400/70 hover:bg-white/65 dark:hover:bg-zinc-900/75"
             }`}
           >
             {/* Ambient Violet Glow Sheen on Hover (not cursor-dependent) */}
@@ -210,6 +210,15 @@ export default function Contact() {
               action={formAction}
               className="flex flex-col gap-4 text-left relative z-10"
             >
+              {/* Hidden honeypot field for automated bot filtering */}
+              <input
+                type="text"
+                name="website"
+                tabIndex={-1}
+                autoComplete="off"
+                aria-hidden="true"
+                className="hidden"
+              />
               {/* Email Input Field & Custom Liquid Glass Error Badge */}
               <div className="flex flex-col w-full">
                 <input

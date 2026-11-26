@@ -4,18 +4,18 @@
 
 :root {
   --line-color: #d1d5db;
-  --bg-color: #f3f0ff;
+  --bg-color: #ffffff;
   --text-color: #0f172a;
 }
 
 .dark {
   --line-color: rgba(255, 255, 255, 0.35);
-  --bg-color: #0a0818;
+  --bg-color: #040408;
   --text-color: #f4f4f5;
 }
 
 html {
-  scroll-behavior: smooth !important;
+  position: relative;
   background-color: var(--bg-color);
   color: var(--text-color);
   min-height: 100dvh;
@@ -25,7 +25,7 @@ html {
 }
 
 body {
-  font-family: "Plus Jakarta Sans", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-family: var(--font-sans), "Plus Jakarta Sans", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   color: var(--text-color);
   background-color: transparent;
   overflow-x: clip;
@@ -81,7 +81,7 @@ button, a, input, textarea, select {
 @keyframes headerSlideDown {
   0% {
     opacity: 0;
-    transform: translate(-50%, -100%);
+    transform: translate(-50%, -65%);
   }
   100% {
     opacity: 1;
@@ -90,7 +90,7 @@ button, a, input, textarea, select {
 }
 
 .animate-header-in {
-  animation: headerSlideDown 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: headerSlideDown 0.75s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
 /* Frosted glass base for timeline elements */
@@ -108,30 +108,25 @@ button, a, input, textarea, select {
   }
 }
 
-/* Modern Circular View Transition Theme Ripple (Mobile & Desktop) */
-::view-transition-old(root),
-::view-transition-new(root) {
-  animation: none;
-  mix-blend-mode: normal;
-  transform: translateZ(0);
-  backface-visibility: hidden;
-  will-change: clip-path;
-  width: 100%;
-  height: 100%;
-}
-
-::view-transition-old(root) {
-  z-index: 1;
-}
-
-::view-transition-new(root) {
-  z-index: 999999;
-  clip-path: circle(0px at var(--theme-x, 50%) var(--theme-y, 50%));
-}
-
-.view-transition-active,
-.view-transition-active * {
-  transition: none !important;
+/* Smooth synchronized color wave across typography & glass surfaces during 1s WebGPU theme swap */
+html.theme-transitioning body,
+html.theme-transitioning section,
+html.theme-transitioning p,
+html.theme-transitioning h1,
+html.theme-transitioning h2,
+html.theme-transitioning h3,
+html.theme-transitioning span,
+html.theme-transitioning a,
+html.theme-transitioning button,
+html.theme-transitioning header,
+html.theme-transitioning nav,
+html.theme-transitioning input,
+html.theme-transitioning textarea,
+html.theme-transitioning label,
+html.theme-transitioning svg {
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow;
+  transition-duration: 420ms;
+  transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 @media (prefers-reduced-motion: reduce) {

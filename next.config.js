@@ -1,19 +1,25 @@
+const { wgslTurbopackRule } = require("@vgpu/wgsl/next");
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
     formats: ["image/avif", "image/webp"],
-    qualities: [25, 50, 75, 80, 95], 
-    remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "images.unsplash.com",
-      },
-    ],
   },
-  // 2. Server Actions are stable now; this block is usually only needed 
-  // if you are using specific experimental features like 'ppr' or 'taint'.
-  // Keeping it clean helps with build stability.
-  experimental: {}, 
+  turbopack: {
+    rules: {
+      "*.wgsl": wgslTurbopackRule({ minify: true }),
+    },
+  },
+  webpack(config, { dev }) {
+    config.module ??= {};
+    config.module.rules ??= [];
+    config.module.rules.push({
+      test: /\.wgsl$/,
+      loader: "@vgpu/wgsl/loader-webpack",
+      options: dev ? undefined : { minify: true },
+    });
+    return config;
+  },
 };
 
 module.exports = nextConfig;

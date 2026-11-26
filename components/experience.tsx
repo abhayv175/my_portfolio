@@ -161,10 +161,10 @@ function ExperienceTimelineCard({
           zIndex: isCardFocused ? 30 : 2,
           background: isCardFocused
             ? theme === "light"
-              ? "rgba(255, 255, 255, 0.95)"
+              ? "rgba(255, 255, 255, 0.68)"
               : "rgba(15, 23, 42, 0.85)"
             : theme === "light"
-              ? "rgba(255, 255, 255, 0.7)"
+              ? "rgba(255, 255, 255, 0.25)"
               : "rgba(255, 255, 255, 0.05)",
           backdropFilter: isMobile ? "blur(10px)" : "blur(20px)",
           WebkitBackdropFilter: isMobile ? "blur(10px)" : "blur(20px)",
@@ -333,7 +333,7 @@ export default function Experience() {
     >
       <style>{`
         #experience .vertical-timeline-element-content {
-          transition: transform 450ms cubic-bezier(0.16, 1, 0.3, 1), background-color 300ms ease-in-out, border-color 300ms ease-in-out, box-shadow 300ms ease-in-out, opacity 300ms ease-in-out !important;
+          transition: transform 450ms cubic-bezier(0.16, 1, 0.3, 1), background-color 520ms cubic-bezier(0.22, 1, 0.36, 1), border-color 520ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 520ms cubic-bezier(0.22, 1, 0.36, 1), color 520ms cubic-bezier(0.22, 1, 0.36, 1), opacity 300ms ease-in-out !important;
         }
         #experience .vertical-timeline-element {
           pointer-events: none;

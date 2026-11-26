@@ -27,20 +27,17 @@ export default function SmoothScroll({
 
   return (
     <MotionConfig reducedMotion="user">
-      {disableLenis ? (
-        children
-      ) : (
-        <ReactLenis
-          root
-          options={{
-            lerp: 0.08,
-            duration: 1.2,
-            smoothWheel: true,
-          }}
-        >
-          {children}
-        </ReactLenis>
-      )}
+      {/* Keep ReactLenis tree structure constant so children never unmount/remount on hydration */}
+      <ReactLenis
+        root
+        options={{
+          lerp: 0.08,
+          duration: 1.2,
+          smoothWheel: !disableLenis,
+        }}
+      >
+        {children}
+      </ReactLenis>
     </MotionConfig>
   );
 }

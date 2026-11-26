@@ -7,10 +7,7 @@ import { MdOutlineWork } from "react-icons/md";
 import { MdEngineering } from "react-icons/md";
 
 import MoveIt from "@/public/MoveIt.png";
-import PassengerText from "@/public/PassengerText.png";
-import BankingSystem from "@/public/BankingSystem.png";
 import PikaPanic from "@/public/PikaPanic.png";
-import PrintPulse from "@/public/PrintPulse.png";
 
 export const links = [
   {
@@ -88,7 +85,6 @@ export const projectsData = [
     description:
       "A zero-friction campus and retail print-on-demand infrastructure eliminating pen drives and kiosk queues with instant web uploads, zero-fee direct UPI settlements, and sub-50ms WebSocket push spooling to vendor Android tablets.",
     tags: ["FastAPI", "Flutter", "Python", "WebSockets", "Docker", "UPI"],
-    imageUrl: PrintPulse,
     url: "https://printpulse-info.netlify.app/",
   },
   {
@@ -104,7 +100,6 @@ export const projectsData = [
     description:
       "A modern messenger clone that enables real-time communication and seamless media sharing through a robust, cloud-integrated architecture.",
     tags: ["React", "TypeScript", "NextAuth", "Cloudinary", "Pusher", "MongoDB"],
-    imageUrl: PassengerText,
     url: "https://github.com/abhayv175/passenger-messenger",
   },
   {
@@ -112,7 +107,6 @@ export const projectsData = [
     description:
       "This JavaFX-based banking application features a custom-styled, user-friendly interface that enables seamless execution of various financial operations.",
     tags: ["Java", "JavaFX", "CSS", "SceneBuilder"],
-    imageUrl: BankingSystem,
     url: "https://github.com/abhayv175/Bank_Application",
   },
   {

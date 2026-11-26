@@ -1,4 +1,4 @@
-s"use client";
+"use client";
 
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -73,9 +73,23 @@ export default function CommandPalette() {
     setIsOpen(false);
   };
 
-  const filterProject = (tag: string) => {
+  const filterProject = (tag: string, matchedProjects: string[]) => {
     navigateTo("Projects", "#projects");
-    toast(`Filtering projects matching "${tag}"`, {
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(
+        new CustomEvent("highlight-projects", {
+          detail: { projects: matchedProjects, scrollToCard: true },
+        })
+      );
+      window.setTimeout(() => {
+        window.dispatchEvent(
+          new CustomEvent("highlight-projects", {
+            detail: { projects: [], scrollToCard: false },
+          })
+        );
+      }, 3500);
+    }
+    toast(`Highlighting projects matching "${tag}"`, {
       icon: "🔍",
       style: {
         borderRadius: "9999px",
@@ -181,7 +195,7 @@ export default function CommandPalette() {
       category: "Filter Projects",
       icon: <FiFolder className="text-amber-400" />,
       keywords: ["fastapi", "python", "backend", "websockets", "printpulse"],
-      action: () => filterProject("FastAPI & Python"),
+      action: () => filterProject("FastAPI & Python", ["PrintPulse"]),
     },
     {
       id: "filter-flutter",
@@ -190,7 +204,7 @@ export default function CommandPalette() {
       category: "Filter Projects",
       icon: <FiFolder className="text-cyan-400" />,
       keywords: ["flutter", "mobile", "android", "dart"],
-      action: () => filterProject("Flutter"),
+      action: () => filterProject("Flutter", ["PrintPulse"]),
     },
     {
       id: "filter-react",
@@ -199,7 +213,7 @@ export default function CommandPalette() {
       category: "Filter Projects",
       icon: <FiFolder className="text-blue-400" />,
       keywords: ["react", "nextjs", "typescript", "frontend"],
-      action: () => filterProject("React & Next.js"),
+      action: () => filterProject("React & Next.js", ["Move It", "Passenger Text"]),
     },
     {
       id: "filter-unity",
@@ -208,7 +222,7 @@ export default function CommandPalette() {
       category: "Filter Projects",
       icon: <FiFolder className="text-purple-400" />,
       keywords: ["unity", "c#", "game", "pika panic"],
-      action: () => filterProject("Unity & C#"),
+      action: () => filterProject("Unity & C#", ["Pika Panic"]),
     },
 
     // Social & Code Links
@@ -220,21 +234,22 @@ export default function CommandPalette() {
       icon: <FiExternalLink className="text-zinc-400" />,
       keywords: ["github", "repos", "code", "git"],
       action: () => {
-        window.open("https://github.com/abhayv175", "_blank");
+        window.open("https://github.com/abhayv175", "_blank", "noopener,noreferrer");
         setIsOpen(false);
       },
     },
     {
       id: "soc-linkedin",
       title: "Open LinkedIn Profile",
-      subtitle: "linkedin.com/in/abhay-verma-4b6b0b421/",
+      subtitle: "linkedin.com/in/abhayv175/",
       category: "Social",
       icon: <FiExternalLink className="text-blue-500" />,
       keywords: ["linkedin", "profile", "connect"],
       action: () => {
         window.open(
-          "https://www.linkedin.com/in/abhay-verma-4b6b0b421/",
-          "_blank"
+          "https://www.linkedin.com/in/abhayv175/",
+          "_blank",
+          "noopener,noreferrer"
         );
         setIsOpen(false);
       },
@@ -247,7 +262,7 @@ export default function CommandPalette() {
       icon: <FiExternalLink className="text-orange-400" />,
       keywords: ["leetcode", "dsa", "algorithms", "problems"],
       action: () => {
-        window.open("https://leetcode.com/u/abhayv175/", "_blank");
+        window.open("https://leetcode.com/u/abhayv175/", "_blank", "noopener,noreferrer");
         setIsOpen(false);
       },
     },
@@ -337,7 +352,7 @@ export default function CommandPalette() {
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         aria-label="Open command palette"
-        className="fixed bottom-[calc(1.25rem+env(safe-area-inset-bottom,0px))] right-[calc(1.25rem+env(safe-area-inset-right,0px))] sm:bottom-6 sm:right-6 z-[9990] hidden sm:flex items-center gap-2 px-4 py-2.5 sm:px-3.5 sm:py-2 rounded-full bg-white/80 dark:bg-zinc-950/80 backdrop-blur-xl border border-black/10 dark:border-white/15 text-xs font-semibold text-zinc-700 dark:text-zinc-300 shadow-lg hover:shadow-xl dark:shadow-[0_8px_30px_rgba(0,0,0,0.5)] hover:border-indigo-500/40 dark:hover:border-indigo-400/40 transition-all duration-200 cursor-pointer group"
+        className="fixed bottom-[calc(1.25rem+env(safe-area-inset-bottom,0px))] right-[calc(1.25rem+env(safe-area-inset-right,0px))] sm:bottom-6 sm:right-6 z-[9990] hidden sm:flex items-center gap-2 px-4 py-2.5 sm:px-3.5 sm:py-2 rounded-full bg-white/50 dark:bg-zinc-950/80 backdrop-blur-xl border border-black/10 dark:border-white/15 text-xs font-semibold text-zinc-700 dark:text-zinc-300 shadow-lg hover:shadow-xl dark:shadow-[0_8px_30px_rgba(0,0,0,0.5)] hover:border-indigo-500/40 dark:hover:border-indigo-400/40 transition-all duration-200 cursor-pointer group"
       >
         <FiCommand className="text-sm text-indigo-500 transition-transform duration-300 group-hover:rotate-12" />
         <span className="hidden sm:inline">Commands</span>

@@ -1,4 +1,4 @@
-t"use client";
+"use client";
 
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -20,43 +20,43 @@ const NAV_TAB_THEMES: Record<
 > = {
   Home: {
     hoverClass:
-      "hover:text-violet-600 dark:hover:text-violet-300 hover:bg-violet-500/10 hover:shadow-[0_0_18px_rgba(139,92,246,0.25)] border border-transparent hover:border-violet-500/20",
-    activeText: "text-violet-950 dark:text-white font-bold",
+      "hover:text-violet-700 dark:hover:text-violet-300 hover:bg-violet-500/20 hover:shadow-[0_0_20px_rgba(139,92,246,0.35)] border border-transparent hover:border-violet-500/45",
+    activeText: "text-violet-800 dark:text-white font-bold",
     activePill:
-      "border-violet-500/50 dark:border-violet-400/60 bg-violet-500/15 dark:bg-violet-950/70 shadow-[0_0_22px_rgba(139,92,246,0.4),inset_0_1px_1px_rgba(255,255,255,0.2)]",
-    glowDot: "bg-violet-500 shadow-[0_0_10px_rgba(139,92,246,0.8)]",
+      "border-violet-600/75 dark:border-violet-400/60 bg-violet-500/30 dark:bg-violet-950/70 shadow-[0_0_22px_rgba(139,92,246,0.45),inset_0_1px_1px_rgba(255,255,255,0.45)] dark:shadow-[0_0_22px_rgba(139,92,246,0.4),inset_0_1px_1px_rgba(255,255,255,0.2)]",
+    glowDot: "bg-violet-600 dark:bg-violet-500 shadow-[0_0_10px_rgba(139,92,246,0.85)]",
   },
   About: {
     hoverClass:
-      "hover:text-cyan-600 dark:hover:text-cyan-300 hover:bg-cyan-500/10 hover:shadow-[0_0_18px_rgba(6,182,212,0.25)] border border-transparent hover:border-cyan-500/20",
-    activeText: "text-cyan-950 dark:text-white font-bold",
+      "hover:text-cyan-700 dark:hover:text-cyan-300 hover:bg-cyan-500/20 hover:shadow-[0_0_20px_rgba(6,182,212,0.35)] border border-transparent hover:border-cyan-500/45",
+    activeText: "text-cyan-800 dark:text-white font-bold",
     activePill:
-      "border-cyan-500/50 dark:border-cyan-400/60 bg-cyan-500/15 dark:bg-cyan-950/70 shadow-[0_0_22px_rgba(6,182,212,0.4),inset_0_1px_1px_rgba(255,255,255,0.2)]",
-    glowDot: "bg-cyan-500 shadow-[0_0_10px_rgba(6,182,212,0.8)]",
+      "border-cyan-600/75 dark:border-cyan-400/60 bg-cyan-500/30 dark:bg-cyan-950/70 shadow-[0_0_22px_rgba(6,182,212,0.45),inset_0_1px_1px_rgba(255,255,255,0.45)] dark:shadow-[0_0_22px_rgba(6,182,212,0.4),inset_0_1px_1px_rgba(255,255,255,0.2)]",
+    glowDot: "bg-cyan-600 dark:bg-cyan-500 shadow-[0_0_10px_rgba(6,182,212,0.85)]",
   },
   Experience: {
     hoverClass:
-      "hover:text-sky-600 dark:hover:text-sky-300 hover:bg-sky-500/10 hover:shadow-[0_0_22px_rgba(56,189,248,0.35)] border border-transparent hover:border-sky-500/30",
-    activeText: "text-sky-950 dark:text-sky-200 font-bold",
+      "hover:text-sky-700 dark:hover:text-sky-300 hover:bg-sky-500/20 hover:shadow-[0_0_22px_rgba(14,165,233,0.4)] border border-transparent hover:border-sky-500/45",
+    activeText: "text-sky-800 dark:text-sky-200 font-bold",
     activePill:
-      "border-sky-500/60 dark:border-sky-400/70 bg-sky-500/15 dark:bg-sky-950/75 shadow-[0_0_25px_rgba(56,189,248,0.45),inset_0_1px_1px_rgba(255,255,255,0.25)]",
-    glowDot: "bg-sky-400 shadow-[0_0_10px_rgba(56,189,248,0.9)]",
+      "border-sky-600/80 dark:border-sky-400/70 bg-sky-500/30 dark:bg-sky-950/75 shadow-[0_0_24px_rgba(14,165,233,0.5),inset_0_1px_1px_rgba(255,255,255,0.45)] dark:shadow-[0_0_25px_rgba(56,189,248,0.45),inset_0_1px_1px_rgba(255,255,255,0.25)]",
+    glowDot: "bg-sky-500 dark:bg-sky-400 shadow-[0_0_10px_rgba(56,189,248,0.9)]",
   },
   Projects: {
     hoverClass:
-      "hover:text-indigo-600 dark:hover:text-indigo-300 hover:bg-indigo-500/10 hover:shadow-[0_0_22px_rgba(99,102,241,0.35)] border border-transparent hover:border-indigo-500/30",
-    activeText: "text-indigo-950 dark:text-indigo-200 font-bold",
+      "hover:text-indigo-700 dark:hover:text-indigo-300 hover:bg-indigo-500/20 hover:shadow-[0_0_22px_rgba(99,102,241,0.4)] border border-transparent hover:border-indigo-500/45",
+    activeText: "text-indigo-800 dark:text-indigo-200 font-bold",
     activePill:
-      "border-indigo-500/60 dark:border-indigo-400/70 bg-indigo-500/15 dark:bg-indigo-950/75 shadow-[0_0_25px_rgba(99,102,241,0.45),inset_0_1px_1px_rgba(255,255,255,0.25)]",
-    glowDot: "bg-indigo-400 shadow-[0_0_10px_rgba(99,102,241,0.9)]",
+      "border-indigo-600/80 dark:border-indigo-400/70 bg-indigo-500/30 dark:bg-indigo-950/75 shadow-[0_0_24px_rgba(99,102,241,0.5),inset_0_1px_1px_rgba(255,255,255,0.45)] dark:shadow-[0_0_25px_rgba(99,102,241,0.45),inset_0_1px_1px_rgba(255,255,255,0.25)]",
+    glowDot: "bg-indigo-600 dark:bg-indigo-400 shadow-[0_0_10px_rgba(99,102,241,0.9)]",
   },
   Skills: {
     hoverClass:
-      "hover:text-purple-600 dark:hover:text-purple-300 hover:bg-purple-500/10 hover:shadow-[0_0_22px_rgba(168,85,247,0.35)] border border-transparent hover:border-purple-500/30",
-    activeText: "text-purple-950 dark:text-purple-200 font-bold",
+      "hover:text-purple-700 dark:hover:text-purple-300 hover:bg-purple-500/20 hover:shadow-[0_0_22px_rgba(168,85,247,0.4)] border border-transparent hover:border-purple-500/45",
+    activeText: "text-purple-800 dark:text-purple-200 font-bold",
     activePill:
-      "border-purple-500/60 dark:border-purple-400/70 bg-purple-500/15 dark:bg-purple-950/75 shadow-[0_0_25px_rgba(168,85,247,0.45),inset_0_1px_1px_rgba(255,255,255,0.25)]",
-    glowDot: "bg-purple-400 shadow-[0_0_10px_rgba(168,85,247,0.9)]",
+      "border-purple-600/80 dark:border-purple-400/70 bg-purple-500/30 dark:bg-purple-950/75 shadow-[0_0_24px_rgba(168,85,247,0.5),inset_0_1px_1px_rgba(255,255,255,0.45)] dark:shadow-[0_0_25px_rgba(168,85,247,0.45),inset_0_1px_1px_rgba(255,255,255,0.25)]",
+    glowDot: "bg-purple-600 dark:bg-purple-400 shadow-[0_0_10px_rgba(168,85,247,0.9)]",
   },
 };
 
@@ -110,13 +110,13 @@ export default function Header() {
     <>
       {/* Top Viewport Soft Fade Mask (Apple scroll-edge diffusion) */}
       <div
-        className="fixed top-0 inset-x-0 h-28 z-[9990] pointer-events-none bg-gradient-to-b from-[#f3f0ff]/80 via-[#f3f0ff]/40 to-transparent dark:from-[#0a0818]/80 dark:via-[#0a0818]/40 dark:to-transparent backdrop-blur-[8px] [mask-image:linear-gradient(to_bottom,black_25%,transparent_100%)] [-webkit-mask-image:linear-gradient(to_bottom,black_25%,transparent_100%)]"
+        className="fixed top-0 inset-x-0 h-28 z-[9990] pointer-events-none bg-gradient-to-b from-white/75 via-white/30 to-transparent dark:from-[#040408]/75 dark:via-[#040408]/30 dark:to-transparent backdrop-blur-[8px] [mask-image:linear-gradient(to_bottom,black_25%,transparent_100%)] [-webkit-mask-image:linear-gradient(to_bottom,black_25%,transparent_100%)]"
         aria-hidden="true"
       />
 
-      {/* Subtle top ambient glow hairline (inspired by screenshot) */}
+      {/* Subtle top ambient glow hairline */}
       <div
-        className="fixed top-0 inset-x-0 h-[1px] z-[9991] pointer-events-none bg-gradient-to-r from-transparent via-indigo-500/30 dark:via-indigo-400/30 to-transparent shadow-[0_0_12px_rgba(99,102,241,0.25)]"
+        className="fixed top-0 inset-x-0 h-[1px] z-[9991] pointer-events-none bg-gradient-to-r from-transparent via-black/15 dark:via-white/20 to-transparent"
         aria-hidden="true"
       />
 
@@ -129,7 +129,7 @@ export default function Header() {
             backfaceVisibility: "hidden",
             outline: "1px solid transparent",
           }}
-          className="flex items-center justify-center rounded-full border border-black/10 dark:border-white/10 bg-white/80 dark:bg-zinc-950/75 p-1 sm:p-1.5 shadow-lg shadow-black/[0.04] dark:shadow-[0_12px_40px_rgba(0,0,0,0.65)] pointer-events-auto transform-gpu origin-center will-change-transform backface-hidden [backface-visibility:hidden] outline outline-1 outline-transparent hover:border-black/20 dark:hover:border-white/20 transition-all duration-300 ease-out"
+          className="flex items-center justify-center rounded-full border border-black/10 dark:border-white/10 bg-white/45 dark:bg-zinc-950/75 p-1 sm:p-1.5 shadow-lg shadow-black/[0.04] dark:shadow-[0_12px_40px_rgba(0,0,0,0.65)] pointer-events-auto transform-gpu origin-center will-change-transform backface-hidden [backface-visibility:hidden] outline outline-1 outline-transparent hover:border-black/20 dark:hover:border-white/20 transition-all duration-300 ease-out"
         >
           <ul className="flex items-center justify-center gap-0.5 text-[0.8rem] sm:text-[0.88rem] font-medium text-gray-700 dark:text-gray-300">
             {navLinks.map((link) => {
@@ -248,7 +248,7 @@ export default function Header() {
           backfaceVisibility: "hidden",
           isolation: "isolate",
         }}
-        className="fixed top-[calc(1rem+env(safe-area-inset-top,0px))] right-[calc(1rem+env(safe-area-inset-right,0px))] sm:top-6 sm:right-6 z-[9999] pointer-events-auto isolate md:hidden w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center bg-white/80 hover:bg-white/95 dark:bg-zinc-950/80 dark:hover:bg-zinc-950/95 border border-black/10 dark:border-white/15 shadow-lg dark:shadow-[0_8px_30px_rgba(0,0,0,0.5)] backdrop-blur-2xl backdrop-saturate-150 transform-gpu cursor-pointer outline-none transition-all duration-300 group overflow-hidden"
+        className="fixed top-[calc(1rem+env(safe-area-inset-top,0px))] right-[calc(1rem+env(safe-area-inset-right,0px))] sm:top-6 sm:right-6 z-[9999] pointer-events-auto isolate md:hidden w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center bg-white/50 hover:bg-white/75 dark:bg-zinc-950/80 dark:hover:bg-zinc-950/95 border border-black/10 dark:border-white/15 shadow-lg dark:shadow-[0_8px_30px_rgba(0,0,0,0.5)] backdrop-blur-2xl backdrop-saturate-150 transform-gpu cursor-pointer outline-none transition-all duration-300 group overflow-hidden"
       >
         {/* Subtle radial sheen on hover */}
         <div

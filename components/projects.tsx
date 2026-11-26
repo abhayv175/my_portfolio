@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import Image from "next/image";
 import SectionHeading from "./section-heading";
 import { projectsData } from "@/lib/data";
@@ -8,8 +8,13 @@ import { useSectionInView } from "@/lib/hooks";
 import {
   motion,
   useInView,
+  useScroll,
+  useSpring,
+  useTransform,
+  useReducedMotion,
   AnimatePresence,
 } from "framer-motion";
+import { useLenis } from "lenis/react";
 import {
   FiExternalLink,
   FiGithub,
@@ -29,33 +34,36 @@ import { FaGamepad, FaQrcode } from "react-icons/fa";
 
 type ProjectItem = (typeof projectsData)[number];
 
-const cardVariants = {
+const mobileCardVariants = {
   hidden: {
-    scale: 0.75,
     opacity: 0,
-    y: 30,
+    x: 48,
+    scale: 0.96,
     transition: {
-      duration: 0.6,
+      duration: 0.55,
       ease: [0.25, 0.1, 0.25, 1],
     },
   },
   visible: {
-    scale: 1,
     opacity: 1,
-    y: 0,
+    x: 0,
+    scale: 1,
     transition: {
-      duration: 0.6,
+      duration: 0.55,
       ease: [0.25, 0.1, 0.25, 1],
     },
   },
 };
 
-const ProjectCardFocusContext = React.createContext<{ isFocused: boolean; isMobile: boolean }>({
+const ProjectCardFocusContext = React.createContext<{
+  isFocused: boolean;
+  isMobile: boolean;
+}>({
   isFocused: false,
   isMobile: false,
 });
 
-function ProjectCardScrollWrapper({
+function MobileProjectCardWrapper({
   children,
   className = "",
 }: {
@@ -72,28 +80,18 @@ function ProjectCardScrollWrapper({
     amount: 0.2,
     once: false,
   });
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
-  }, []);
-
-  const isFocused = isMobile ? isMobileInCenter : false;
 
   return (
     <div ref={cardRef} className={className}>
       <motion.div
         initial="hidden"
         animate={isInScroll ? "visible" : "hidden"}
-        variants={cardVariants}
+        variants={mobileCardVariants}
         className="w-full h-full transform-gpu will-change-transform"
       >
-        <ProjectCardFocusContext.Provider value={{ isFocused, isMobile }}>
+        <ProjectCardFocusContext.Provider
+          value={{ isFocused: isMobileInCenter, isMobile: true }}
+        >
           {children}
         </ProjectCardFocusContext.Provider>
       </motion.div>
@@ -101,17 +99,256 @@ function ProjectCardScrollWrapper({
   );
 }
 
-export default function Projects() {
-  const { ref: sectionRef } = useSectionInView("Projects", 0.15);
+interface ProjectRailItem {
+  title: string;
+  shortLabel: string;
+  desktopWidthClass: string;
+  render: (isHighlighted: boolean) => React.ReactNode;
+}
 
-  // State for cross-highlighting triggered from Skills domain hover
+function DesktopHorizontalProjects({
+  items,
+  highlightedCards,
+  scrollTargetTitle,
+  onScrollHandled,
+}: {
+  items: ProjectRailItem[];
+  highlightedCards: string[];
+  scrollTargetTitle: string | null;
+  onScrollHandled: () => void;
+}) {
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const viewportRef = useRef<HTMLDivElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const cardMetricsRef = useRef<{ left: number; width: number; center: number }[]>([]);
+  const viewportWidthRef = useRef(0);
+  const activeIndexRef = useRef(0);
+
+  const lenis = useLenis();
+  const [maxTranslate, setMaxTranslate] = useState(0);
+  const [viewportHeight, setViewportHeight] = useState(900);
+  const [activeCardIndex, setActiveCardIndex] = useState(0);
+
+  const measure = useCallback(() => {
+    if (!viewportRef.current || !trackRef.current) return;
+    const vw = viewportRef.current.clientWidth;
+    const tw = trackRef.current.scrollWidth;
+    viewportWidthRef.current = vw;
+    const metrics = cardRefs.current.map((el) => {
+      if (!el) return { left: 0, width: 0, center: 0 };
+      const left = el.offsetLeft;
+      const width = el.offsetWidth;
+      return { left, width, center: left + width / 2 };
+    });
+    cardMetricsRef.current = metrics;
+    const lastMetric = metrics[metrics.length - 1];
+    const nextMaxTranslate = lastMetric
+      ? Math.max(0, lastMetric.center - vw / 2)
+      : Math.max(0, tw - vw);
+    setMaxTranslate(nextMaxTranslate);
+    setViewportHeight(window.innerHeight || 900);
+  }, []);
+
+  useEffect(() => {
+    measure();
+    const ro = new ResizeObserver(measure);
+    if (viewportRef.current) ro.observe(viewportRef.current);
+    if (trackRef.current) ro.observe(trackRef.current);
+    window.addEventListener("resize", measure);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", measure);
+    };
+  }, [measure]);
+
+  const { scrollYProgress } = useScroll({
+    target: scrollContainerRef,
+    offset: ["start start", "end end"],
+  });
+
+  const rawX = useTransform(scrollYProgress, [0, 1], [0, -maxTranslate]);
+  const x = useSpring(rawX, {
+    stiffness: 320,
+    damping: 36,
+    mass: 0.25,
+    restDelta: 0.5,
+  });
+
+  useEffect(() => {
+    return scrollYProgress.on("change", (latest) => {
+      if (maxTranslate <= 0) return;
+      const currentOffset = Math.min(1, Math.max(0, latest)) * maxTranslate;
+      const centerLine = currentOffset + viewportWidthRef.current * 0.5;
+      const metrics = cardMetricsRef.current;
+
+      let closestIdx = 0;
+      let minDist = Infinity;
+      for (let idx = 0; idx < metrics.length; idx++) {
+        const dist = Math.abs(metrics[idx].center - centerLine);
+        if (dist < minDist) {
+          minDist = dist;
+          closestIdx = idx;
+        }
+      }
+      if (closestIdx !== activeIndexRef.current) {
+        activeIndexRef.current = closestIdx;
+        setActiveCardIndex(closestIdx);
+      }
+    });
+  }, [scrollYProgress, maxTranslate]);
+
+  const scrollToCard = useCallback(
+    (index: number) => {
+      const container = scrollContainerRef.current;
+      const metric = cardMetricsRef.current[index];
+      if (!container || !metric) return;
+
+      const vw = viewportWidthRef.current;
+      const desiredTranslate = Math.min(
+        maxTranslate,
+        Math.max(0, metric.left - (vw - metric.width) / 2)
+      );
+      const targetProgress =
+        maxTranslate > 0 ? desiredTranslate / maxTranslate : 0;
+      const containerTop =
+        container.getBoundingClientRect().top + window.scrollY;
+      const targetY = containerTop + targetProgress * maxTranslate;
+
+      if (lenis) {
+        lenis.scrollTo(targetY, { duration: 0.85 });
+      } else {
+        window.scrollTo({ top: targetY, behavior: "smooth" });
+      }
+    },
+    [maxTranslate, lenis]
+  );
+
+  useEffect(() => {
+    if (!scrollTargetTitle) return;
+    const idx = items.findIndex((item) => item.title === scrollTargetTitle);
+    if (idx !== -1) {
+      // Wait briefly so vertical anchor scroll settles before targeting horizontal offset
+      const timer = window.setTimeout(() => {
+        scrollToCard(idx);
+        onScrollHandled();
+      }, 120);
+      return () => window.clearTimeout(timer);
+    }
+    onScrollHandled();
+  }, [scrollTargetTitle, items, scrollToCard, onScrollHandled]);
+
+  const containerHeight = viewportHeight + maxTranslate;
+
+  return (
+    <div
+      ref={scrollContainerRef}
+      style={{ height: `${containerHeight}px` }}
+      className="relative w-full"
+    >
+      <div className="sticky top-0 h-[100svh] min-h-[560px] pt-[5.25rem] sm:pt-24 pb-4 flex flex-col justify-start overflow-x-clip">
+        <div className="w-full max-w-7xl mx-auto px-4 sm:px-8">
+          <div className="flex justify-center mb-1.5">
+            <span className="text-xs font-bold uppercase tracking-widest px-3.5 py-1 rounded-full bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20 shadow-sm">
+              Projects
+            </span>
+          </div>
+          <SectionHeading className="!mb-3">Projects</SectionHeading>
+        </div>
+
+        {/* Horizontal Viewport Frame */}
+        <div
+          ref={viewportRef}
+          className="w-full overflow-x-clip pt-2 pb-4"
+        >
+          <motion.div
+            ref={trackRef}
+            style={{ x }}
+            className="flex flex-row items-stretch gap-6 w-max pl-6 sm:pl-12 lg:pl-[max(3rem,calc((100vw-72rem)/2))] pr-[50vw] transform-gpu will-change-transform"
+          >
+            <ProjectCardFocusContext.Provider
+              value={{ isFocused: false, isMobile: false }}
+            >
+              {items.map((item, idx) => (
+                <div
+                  key={item.title}
+                  ref={(el) => {
+                    cardRefs.current[idx] = el;
+                  }}
+                  className={`${item.desktopWidthClass} shrink-0`}
+                >
+                  {item.render(highlightedCards.includes(item.title))}
+                </div>
+              ))}
+            </ProjectCardFocusContext.Provider>
+          </motion.div>
+        </div>
+
+        {/* Sleek Horizontal Progress Bar & Quick-Jump Pills */}
+        <div className="w-full max-w-4xl mx-auto px-6 mt-1 flex flex-col items-center gap-2.5">
+          <div className="w-48 sm:w-64 h-1 rounded-full bg-black/10 dark:bg-white/10 overflow-hidden">
+            <motion.div
+              style={{ scaleX: scrollYProgress, transformOrigin: "left center" }}
+              className="h-full w-full rounded-full bg-gradient-to-r from-indigo-500 via-cyan-400 to-purple-500"
+            />
+          </div>
+
+          <div className="flex flex-wrap items-center justify-center gap-1.5">
+            {items.map((item, idx) => {
+              const isCurrent = activeCardIndex === idx;
+              return (
+                <button
+                  key={item.title}
+                  type="button"
+                  onClick={() => scrollToCard(idx)}
+                  className={`px-2.5 py-1 rounded-full text-[0.7rem] font-semibold transition-all duration-200 cursor-pointer border ${
+                    isCurrent
+                      ? "bg-indigo-600 text-white border-indigo-500 shadow-sm"
+                      : "bg-white/35 dark:bg-white/5 text-zinc-600 dark:text-zinc-400 border-black/10 dark:border-white/10 hover:text-zinc-950 dark:hover:text-white hover:border-indigo-400/40"
+                  }`}
+                >
+                  0{idx + 1} · {item.shortLabel}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default function Projects() {
+  const { ref: sectionRef } = useSectionInView("Projects", 0.08);
+  const shouldReduceMotion = useReducedMotion();
+
+  const [isDesktop, setIsDesktop] = useState(false);
   const [highlightedCards, setHighlightedCards] = useState<string[]>([]);
+  const [scrollTargetTitle, setScrollTargetTitle] = useState<string | null>(
+    null
+  );
+
+  useEffect(() => {
+    const checkDesktop = () => {
+      setIsDesktop(window.innerWidth >= 768);
+    };
+    checkDesktop();
+    window.addEventListener("resize", checkDesktop);
+    return () => window.removeEventListener("resize", checkDesktop);
+  }, []);
 
   useEffect(() => {
     const handleHighlight = (e: Event) => {
-      const customEvent = e as CustomEvent<{ projects: string[] }>;
+      const customEvent = e as CustomEvent<{
+        projects: string[];
+        scrollToCard?: boolean;
+      }>;
       if (customEvent.detail) {
-        setHighlightedCards(customEvent.detail.projects || []);
+        const nextProjects = customEvent.detail.projects || [];
+        setHighlightedCards(nextProjects);
+        if (customEvent.detail.scrollToCard && nextProjects.length > 0) {
+          setScrollTargetTitle(nextProjects[0]);
+        }
       }
     };
 
@@ -120,84 +357,116 @@ export default function Projects() {
       window.removeEventListener("highlight-projects", handleHighlight);
   }, []);
 
+  const clearScrollTarget = useCallback(() => {
+    setScrollTargetTitle(null);
+  }, []);
+
   const printPulse = projectsData[0]; // PrintPulse
   const moveIt = projectsData[1]; // Move It
   const passengerText = projectsData[2]; // Passenger Text
   const bankingApp = projectsData[3]; // Banking Application
   const pikaPanic = projectsData[4]; // Pika Panic
 
+  const projectItems: ProjectRailItem[] = [
+    {
+      title: "PrintPulse",
+      shortLabel: "PrintPulse",
+      desktopWidthClass: "w-[min(820px,72vw)]",
+      render: (isHighlighted) => (
+        <PrintPulseFeaturedCard
+          project={printPulse}
+          isHighlighted={isHighlighted}
+        />
+      ),
+    },
+    {
+      title: "Passenger Text",
+      shortLabel: "Passenger",
+      desktopWidthClass: "w-[min(450px,40vw)]",
+      render: (isHighlighted) => (
+        <PassengerTextCard
+          project={passengerText}
+          isHighlighted={isHighlighted}
+        />
+      ),
+    },
+    {
+      title: "Pika Panic",
+      shortLabel: "Pika Panic",
+      desktopWidthClass: "w-[min(410px,36vw)]",
+      render: (isHighlighted) => (
+        <PikaPanicCard project={pikaPanic} isHighlighted={isHighlighted} />
+      ),
+    },
+    {
+      title: "Move It",
+      shortLabel: "Move It",
+      desktopWidthClass: "w-[min(440px,38vw)]",
+      render: (isHighlighted) => (
+        <SpotlightProjectCard
+          project={moveIt}
+          badge="Logistics & Fleet"
+          isHighlighted={isHighlighted}
+        />
+      ),
+    },
+    {
+      title: "Banking Application",
+      shortLabel: "Banking",
+      desktopWidthClass: "w-[min(440px,38vw)]",
+      render: (isHighlighted) => (
+        <BankingSystemCard
+          project={bankingApp}
+          isHighlighted={isHighlighted}
+        />
+      ),
+    },
+  ];
+
   return (
     <section
       ref={sectionRef}
       id="projects"
-      className="scroll-mt-28 mb-28 max-w-6xl mx-auto px-4 relative z-10"
+      className="scroll-mt-28 mb-28 w-full relative z-10 overflow-x-clip"
     >
-      <div className="w-full">
-        <div className="flex justify-center mb-2">
-          <span className="text-xs font-bold uppercase tracking-widest px-3.5 py-1 rounded-full bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20 shadow-sm">
-            Projects
-          </span>
+      {isDesktop && !shouldReduceMotion ? (
+        <DesktopHorizontalProjects
+          items={projectItems}
+          highlightedCards={highlightedCards}
+          scrollTargetTitle={scrollTargetTitle}
+          onScrollHandled={clearScrollTarget}
+        />
+      ) : (
+        <div className="max-w-6xl mx-auto px-4 w-full">
+          <div className="flex justify-center mb-2">
+            <span className="text-xs font-bold uppercase tracking-widest px-3.5 py-1 rounded-full bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20 shadow-sm">
+              Projects
+            </span>
+          </div>
+          <SectionHeading>Projects</SectionHeading>
+
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+            {projectItems.map((item, idx) => {
+              const spanClass =
+                idx === 0
+                  ? "col-span-1 md:col-span-12"
+                  : idx === 1
+                  ? "col-span-1 md:col-span-7"
+                  : idx === 2
+                  ? "col-span-1 md:col-span-5"
+                  : "col-span-1 md:col-span-6";
+              return (
+                <MobileProjectCardWrapper
+                  key={item.title}
+                  className={spanClass}
+                >
+                  {item.render(highlightedCards.includes(item.title))}
+                </MobileProjectCardWrapper>
+              );
+            })}
+          </div>
         </div>
-        <SectionHeading>Projects</SectionHeading>
-
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
-          {/* =========================================================================
-              CARD 1: PRINTPULSE (FEATURED HERO CARD - 12 COLUMNS)
-              Interactive Live Toggle: Customer QR -> FastAPI RAM Relay -> Vendor App
-             ========================================================================= */}
-          <ProjectCardScrollWrapper className="col-span-1 md:col-span-12">
-            <PrintPulseFeaturedCard
-              project={printPulse}
-              isHighlighted={highlightedCards.includes("PrintPulse")}
-            />
-          </ProjectCardScrollWrapper>
-
-          {/* =========================================================================
-              CARD 2: PASSENGER TEXT (7 COLUMNS)
-              Simulated real-time typing / message bubble animation on hover
-             ========================================================================= */}
-          <ProjectCardScrollWrapper className="col-span-1 md:col-span-7">
-            <PassengerTextCard
-              project={passengerText}
-              isHighlighted={highlightedCards.includes("Passenger Text")}
-            />
-          </ProjectCardScrollWrapper>
-
-          {/* =========================================================================
-              CARD 3: PIKA PANIC (5 COLUMNS)
-              Unity 3D Parallax Depth Layers on Vilnius Landmark Game Artwork
-             ========================================================================= */}
-          <ProjectCardScrollWrapper className="col-span-1 md:col-span-5">
-            <PikaPanicCard
-              project={pikaPanic}
-              isHighlighted={highlightedCards.includes("Pika Panic")}
-            />
-          </ProjectCardScrollWrapper>
-
-          {/* =========================================================================
-              CARD 4: MOVE IT (6 COLUMNS)
-              Logistics & Fleet Glassmorphism with Cursor-Tracking Border Spotlight
-             ========================================================================= */}
-          <ProjectCardScrollWrapper className="col-span-1 md:col-span-6">
-            <SpotlightProjectCard
-              project={moveIt}
-              badge="Logistics & Fleet"
-              isHighlighted={highlightedCards.includes("Move It")}
-            />
-          </ProjectCardScrollWrapper>
-
-          {/* =========================================================================
-              CARD 5: BANKING APPLICATION (6 COLUMNS)
-              JavaFX Fintech Banking Ledger with Micro-Sparkline Preview
-             ========================================================================= */}
-          <ProjectCardScrollWrapper className="col-span-1 md:col-span-6">
-            <BankingSystemCard
-              project={bankingApp}
-              isHighlighted={highlightedCards.includes("Banking Application")}
-            />
-          </ProjectCardScrollWrapper>
-        </div>
-      </div>
+      )}
     </section>
   );
 }
@@ -266,17 +535,21 @@ function PrintPulseFeaturedCard({
     <motion.div
       whileHover={{ y: -6, scale: 1.015 }}
       transition={{ duration: 0.15, ease: "easeOut" }}
-      className={`w-full h-full p-5 sm:p-8 rounded-3xl backdrop-blur-lg md:backdrop-blur-2xl border transition-[border-color,background-color,box-shadow,transform] duration-150 ease-out relative overflow-hidden flex flex-col lg:flex-row gap-8 items-center group ${
+      className={`w-full h-full p-5 sm:p-7 rounded-3xl backdrop-blur-md border transition-[border-color,background-color,box-shadow,transform] duration-150 ease-out relative overflow-hidden flex flex-col lg:flex-row gap-6 items-center group ${
         isHighlighted
-          ? "border-cyan-500 ring-2 ring-cyan-500/50 bg-white/95 dark:bg-zinc-900/95 shadow-[0_20px_50px_rgba(56,189,248,0.3)] -translate-y-1.5"
+          ? "border-cyan-500 ring-2 ring-cyan-500/50 bg-white/85 dark:bg-zinc-900/95 shadow-[0_20px_50px_rgba(56,189,248,0.3)] -translate-y-1.5"
           : isFocused
-          ? "border-cyan-400/80 dark:border-cyan-400/80 bg-white/95 dark:bg-zinc-900/80 shadow-[0_20px_50px_rgba(0,0,0,0.18),0_0_35px_rgba(56,189,248,0.32)] scale-[1.03] -translate-y-1"
-          : "border-black/10 dark:border-white/10 bg-white/70 dark:bg-zinc-900/40 shadow-xl hover:shadow-[0_20px_50px_rgba(0,0,0,0.18),0_0_35px_rgba(56,189,248,0.32)] hover:border-cyan-400/70 dark:hover:border-cyan-400/70 hover:bg-white/90 dark:hover:bg-zinc-900/75"
+          ? "border-cyan-400/80 dark:border-cyan-400/80 bg-white/75 dark:bg-zinc-900/80 shadow-[0_20px_50px_rgba(0,0,0,0.18),0_0_35px_rgba(56,189,248,0.32)] scale-[1.03] -translate-y-1"
+          : "border-black/10 dark:border-white/10 bg-white/35 dark:bg-zinc-900/40 shadow-xl hover:shadow-[0_20px_50px_rgba(0,0,0,0.18),0_0_35px_rgba(56,189,248,0.32)] hover:border-cyan-400/70 dark:hover:border-cyan-400/70 hover:bg-white/65 dark:hover:bg-zinc-900/75"
       }`}
     >
-      {/* Background Top Ambient Accent */}
-      <div className="hidden sm:block absolute top-0 right-0 w-96 h-96 bg-gradient-to-bl from-cyan-500/20 via-sky-500/15 to-transparent rounded-full blur-3xl pointer-events-none" />
-      <div className={`absolute inset-0 rounded-3xl bg-gradient-to-br from-cyan-500/20 via-sky-500/10 to-transparent ${isFocused ? "opacity-100" : "opacity-0"} group-hover:opacity-100 transition-opacity duration-150 ease-out pointer-events-none`} />
+      {/* Background Top Ambient Accent (zero-blur radial gradient for smooth 60fps rail scroll) */}
+      <div className="hidden sm:block absolute top-0 right-0 w-96 h-96 bg-[radial-gradient(circle_at_top_right,rgba(56,189,248,0.22),transparent_68%)] pointer-events-none" />
+      <div
+        className={`absolute inset-0 rounded-3xl bg-gradient-to-br from-cyan-500/20 via-sky-500/10 to-transparent ${
+          isFocused ? "opacity-100" : "opacity-0"
+        } group-hover:opacity-100 transition-opacity duration-150 ease-out pointer-events-none`}
+      />
 
       {/* Left Column: Project Overview & Meta */}
       <div className="flex-1 text-left relative z-10 w-full">
@@ -303,16 +576,16 @@ function PrintPulseFeaturedCard({
           </a>
         </div>
 
-        <h3 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-gray-950 dark:text-white mb-3">
+        <h3 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-gray-950 dark:text-white mb-2.5">
           {project.title}
         </h3>
 
-        <p className="text-sm sm:text-base leading-relaxed text-gray-600 dark:text-zinc-300 font-normal mb-6 max-w-xl">
+        <p className="text-sm sm:text-[0.95rem] leading-relaxed text-gray-600 dark:text-zinc-300 font-normal mb-5 max-w-xl">
           {project.description}
         </p>
 
         {/* Tech Stack Pills */}
-        <div className="flex flex-wrap gap-1.5 mb-6">
+        <div className="flex flex-wrap gap-1.5 mb-5">
           {project.tags.map((tag, i) => (
             <span
               key={i}
@@ -324,7 +597,7 @@ function PrintPulseFeaturedCard({
         </div>
 
         {/* External Quick Action Links */}
-        <div className="flex flex-wrap items-center gap-3">
+        <div className="flex flex-wrap items-center gap-2.5">
           <a
             href={project.url}
             target="_blank"
@@ -335,7 +608,10 @@ function PrintPulseFeaturedCard({
             <FiExternalLink className="text-sm" />
           </a>
           <a
-            href={(project as any).githubUrl || "https://github.com/abhayv175/PrintPulse"}
+            href={
+              (project as any).githubUrl ||
+              "https://github.com/abhayv175/PrintPulse"
+            }
             target="_blank"
             rel="noopener noreferrer"
             aria-label="GitHub Repository"
@@ -356,16 +632,16 @@ function PrintPulseFeaturedCard({
       </div>
 
       {/* Right Column: Live Interactive Packet Flow Simulator + Real Dynamic Screenshot Switcher */}
-      <div className="w-full lg:w-[48%] flex flex-col gap-3 relative z-10">
+      <div className="w-full lg:w-[46%] flex flex-col gap-2.5 relative z-10">
         {/* The 3 Pipeline Stages (Clickable to switch photo below) */}
-        <div className="flex flex-col gap-2.5">
+        <div className="flex flex-col gap-2">
           {steps.map((s) => {
             const isActive = activeStep === s.id;
             return (
               <div
                 key={s.id}
                 onClick={() => setActiveStep(s.id)}
-                className={`p-3.5 rounded-2xl border transition-[border-color,background-color,box-shadow,transform] duration-200 cursor-pointer flex items-center justify-between group/step ${
+                className={`p-3 rounded-2xl border transition-[border-color,background-color,box-shadow,transform] duration-200 cursor-pointer flex items-center justify-between group/step ${
                   isActive
                     ? "bg-indigo-500/15 dark:bg-indigo-950/70 border-indigo-500/60 shadow-md ring-1 ring-indigo-500/30 scale-[1.01]"
                     : "bg-black/[0.02] dark:bg-white/[0.02] border-black/5 dark:border-white/5 hover:border-black/20 dark:hover:border-white/20 hover:bg-black/5 dark:hover:bg-white/5"
@@ -395,7 +671,9 @@ function PrintPulseFeaturedCard({
                   <span className="text-xs font-mono font-bold text-indigo-600 dark:text-indigo-400">
                     {s.latency}
                   </span>
-                  <p className="text-[0.68rem] text-zinc-400 hidden xs:block">{s.meta}</p>
+                  <p className="text-[0.68rem] text-zinc-400 hidden xs:block">
+                    {s.meta}
+                  </p>
                 </div>
               </div>
             );
@@ -403,7 +681,7 @@ function PrintPulseFeaturedCard({
         </div>
 
         {/* Dynamic Real Screenshot Container: Switches based on activeStep */}
-        <div className="relative h-44 sm:h-52 w-full rounded-2xl overflow-hidden border border-black/10 dark:border-white/10 mt-1 shadow-inner bg-slate-950">
+        <div className="relative h-40 sm:h-44 w-full rounded-2xl overflow-hidden border border-black/10 dark:border-white/10 mt-0.5 shadow-inner bg-slate-950">
           <AnimatePresence mode="wait">
             {activeStep === 1 && (
               <motion.div
@@ -424,7 +702,9 @@ function PrintPulseFeaturedCard({
                 <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent flex items-end p-3 gap-2 justify-between pointer-events-none">
                   <span className="text-xs font-medium text-white flex items-center gap-1.5 min-w-0 drop-shadow">
                     <FaQrcode className="text-emerald-400 shrink-0" />
-                    <span className="truncate">Customer Web Portal: Active Queue & Pricing</span>
+                    <span className="truncate">
+                      Customer Web Portal: Active Queue & Pricing
+                    </span>
                   </span>
                   <span className="text-[0.68rem] font-mono font-bold text-emerald-400 bg-black/70 px-2 py-0.5 rounded-full border border-white/10 shrink-0 whitespace-nowrap">
                     Zero Install
@@ -452,7 +732,9 @@ function PrintPulseFeaturedCard({
                 <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent flex items-end p-3 gap-2 justify-between pointer-events-none">
                   <span className="text-xs font-medium text-white flex items-center gap-1.5 min-w-0 drop-shadow">
                     <FiShield className="text-emerald-400 shrink-0" />
-                    <span className="truncate">Direct NPCI UPI QR & 12-Digit UTR Settlement</span>
+                    <span className="truncate">
+                      Direct NPCI UPI QR & 12-Digit UTR Settlement
+                    </span>
                   </span>
                   <span className="text-[0.68rem] font-mono font-bold text-emerald-400 bg-black/70 px-2 py-0.5 rounded-full border border-white/10 shrink-0 whitespace-nowrap">
                     0% Gateway Fee
@@ -480,7 +762,9 @@ function PrintPulseFeaturedCard({
                 <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent flex items-end p-3 gap-2 justify-between pointer-events-none">
                   <span className="text-xs font-medium text-white flex items-center gap-1.5 min-w-0 drop-shadow">
                     <FiTablet className="text-emerald-400 shrink-0" />
-                    <span className="truncate">Flutter Kiosk Terminal: Printer Spooler & Stats</span>
+                    <span className="truncate">
+                      Flutter Kiosk Terminal: Printer Spooler & Stats
+                    </span>
                   </span>
                   <span className="text-[0.68rem] font-mono font-bold text-emerald-400 bg-black/70 px-2 py-0.5 rounded-full border border-white/10 shrink-0 whitespace-nowrap">
                     Sub-50ms Spool
@@ -515,15 +799,19 @@ function PassengerTextCard({
       transition={{ duration: 0.15, ease: "easeOut" }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className={`w-full h-full p-5 sm:p-7 rounded-3xl backdrop-blur-lg md:backdrop-blur-2xl border transition-[border-color,background-color,box-shadow,transform] duration-150 ease-out relative overflow-hidden flex flex-col justify-between text-left group ${
+      className={`w-full h-full p-5 sm:p-7 rounded-3xl backdrop-blur-md border transition-[border-color,background-color,box-shadow,transform] duration-150 ease-out relative overflow-hidden flex flex-col justify-between text-left group ${
         isHighlighted
-          ? "border-blue-500 ring-2 ring-blue-500/50 bg-white/95 dark:bg-zinc-900/95 shadow-[0_20px_50px_rgba(59,130,246,0.3)] -translate-y-1.5"
+          ? "border-blue-500 ring-2 ring-blue-500/50 bg-white/85 dark:bg-zinc-900/95 shadow-[0_20px_50px_rgba(59,130,246,0.3)] -translate-y-1.5"
           : isFocused
-          ? "border-blue-400/70 dark:border-blue-400/70 bg-white/95 dark:bg-zinc-900/80 shadow-[0_20px_50px_rgba(0,0,0,0.18),0_0_35px_rgba(59,130,246,0.28)] scale-[1.03] -translate-y-1"
-          : "border-black/10 dark:border-white/10 bg-white/70 dark:bg-zinc-900/40 shadow-xl hover:shadow-[0_20px_50px_rgba(0,0,0,0.18),0_0_35px_rgba(59,130,246,0.28)] hover:border-blue-400/60 dark:hover:border-blue-400/60 hover:bg-white/90 dark:hover:bg-zinc-900/75"
+          ? "border-blue-400/70 dark:border-blue-400/70 bg-white/75 dark:bg-zinc-900/80 shadow-[0_20px_50px_rgba(0,0,0,0.18),0_0_35px_rgba(59,130,246,0.28)] scale-[1.03] -translate-y-1"
+          : "border-black/10 dark:border-white/10 bg-white/35 dark:bg-zinc-900/40 shadow-xl hover:shadow-[0_20px_50px_rgba(0,0,0,0.18),0_0_35px_rgba(59,130,246,0.28)] hover:border-blue-400/60 dark:hover:border-blue-400/60 hover:bg-white/65 dark:hover:bg-zinc-900/75"
       }`}
     >
-      <div className={`absolute inset-0 rounded-3xl bg-gradient-to-br from-blue-500/20 via-indigo-500/15 to-transparent ${isFocused ? "opacity-100" : "opacity-0"} group-hover:opacity-100 transition-opacity duration-150 ease-out pointer-events-none`} />
+      <div
+        className={`absolute inset-0 rounded-3xl bg-gradient-to-br from-blue-500/20 via-indigo-500/15 to-transparent ${
+          isFocused ? "opacity-100" : "opacity-0"
+        } group-hover:opacity-100 transition-opacity duration-150 ease-out pointer-events-none`}
+      />
 
       <div>
         <div className="flex items-center justify-between mb-3 relative z-10">
@@ -610,7 +898,7 @@ function PikaPanicCard({
   project,
   isHighlighted,
 }: {
-  project: ProjectItem;
+  project: Extract<ProjectItem, { imageUrl: unknown }>;
   isHighlighted: boolean;
 }) {
   const { isFocused } = React.useContext(ProjectCardFocusContext);
@@ -619,15 +907,19 @@ function PikaPanicCard({
     <motion.div
       whileHover={{ y: -6, scale: 1.018 }}
       transition={{ duration: 0.15, ease: "easeOut" }}
-      className={`w-full h-full p-5 sm:p-7 rounded-3xl backdrop-blur-lg md:backdrop-blur-2xl border transition-[border-color,background-color,box-shadow,transform] duration-150 ease-out relative overflow-hidden flex flex-col justify-between text-left group ${
+      className={`w-full h-full p-5 sm:p-7 rounded-3xl backdrop-blur-md border transition-[border-color,background-color,box-shadow,transform] duration-150 ease-out relative overflow-hidden flex flex-col justify-between text-left group ${
         isHighlighted
-          ? "border-purple-500 ring-2 ring-purple-500/50 bg-white/95 dark:bg-zinc-900/95 shadow-[0_20px_50px_rgba(168,85,247,0.3)] -translate-y-1.5"
+          ? "border-purple-500 ring-2 ring-purple-500/50 bg-white/85 dark:bg-zinc-900/95 shadow-[0_20px_50px_rgba(168,85,247,0.3)] -translate-y-1.5"
           : isFocused
-          ? "border-purple-400/70 dark:border-purple-400/70 bg-white/95 dark:bg-zinc-900/80 shadow-[0_20px_50px_rgba(0,0,0,0.18),0_0_35px_rgba(168,85,247,0.28)] scale-[1.03] -translate-y-1"
-          : "border-black/10 dark:border-white/10 bg-white/70 dark:bg-zinc-900/40 shadow-xl hover:shadow-[0_20px_50px_rgba(0,0,0,0.18),0_0_35px_rgba(168,85,247,0.28)] hover:border-purple-400/60 dark:hover:border-purple-400/60 hover:bg-white/90 dark:hover:bg-zinc-900/75"
+          ? "border-purple-400/70 dark:border-purple-400/70 bg-white/75 dark:bg-zinc-900/80 shadow-[0_20px_50px_rgba(0,0,0,0.18),0_0_35px_rgba(168,85,247,0.28)] scale-[1.03] -translate-y-1"
+          : "border-black/10 dark:border-white/10 bg-white/35 dark:bg-zinc-900/40 shadow-xl hover:shadow-[0_20px_50px_rgba(0,0,0,0.18),0_0_35px_rgba(168,85,247,0.28)] hover:border-purple-400/60 dark:hover:border-purple-400/60 hover:bg-white/65 dark:hover:bg-zinc-900/75"
       }`}
     >
-      <div className={`absolute inset-0 rounded-3xl bg-gradient-to-br from-purple-500/20 via-violet-500/15 to-transparent ${isFocused ? "opacity-100" : "opacity-0"} group-hover:opacity-100 transition-opacity duration-150 ease-out pointer-events-none`} />
+      <div
+        className={`absolute inset-0 rounded-3xl bg-gradient-to-br from-purple-500/20 via-violet-500/15 to-transparent ${
+          isFocused ? "opacity-100" : "opacity-0"
+        } group-hover:opacity-100 transition-opacity duration-150 ease-out pointer-events-none`}
+      />
 
       <div>
         <div className="flex items-center justify-between mb-3 relative z-10">
@@ -693,7 +985,7 @@ function SpotlightProjectCard({
   badge,
   isHighlighted,
 }: {
-  project: ProjectItem;
+  project: Extract<ProjectItem, { imageUrl: unknown }>;
   badge: string;
   isHighlighted: boolean;
 }) {
@@ -714,12 +1006,12 @@ function SpotlightProjectCard({
       whileHover={{ y: -6, scale: 1.018 }}
       transition={{ duration: 0.15, ease: "easeOut" }}
       onMouseMove={handleMouseMove}
-      className={`w-full h-full p-5 sm:p-7 rounded-3xl backdrop-blur-lg md:backdrop-blur-2xl border transition-[border-color,background-color,box-shadow,transform] duration-150 ease-out relative overflow-hidden flex flex-col justify-between text-left group ${
+      className={`w-full h-full p-5 sm:p-7 rounded-3xl backdrop-blur-md border transition-[border-color,background-color,box-shadow,transform] duration-150 ease-out relative overflow-hidden flex flex-col justify-between text-left group ${
         isHighlighted
-          ? "border-emerald-500 ring-2 ring-emerald-500/50 bg-white/95 dark:bg-zinc-900/95 shadow-[0_20px_50px_rgba(16,185,129,0.3)] -translate-y-1.5"
+          ? "border-emerald-500 ring-2 ring-emerald-500/50 bg-white/85 dark:bg-zinc-900/95 shadow-[0_20px_50px_rgba(16,185,129,0.3)] -translate-y-1.5"
           : isFocused
-          ? "border-emerald-400/70 dark:border-emerald-400/70 bg-white/95 dark:bg-zinc-900/80 shadow-[0_20px_50px_rgba(0,0,0,0.18),0_0_35px_rgba(16,185,129,0.28)] scale-[1.03] -translate-y-1"
-          : "border-black/10 dark:border-white/10 bg-white/70 dark:bg-zinc-900/40 shadow-xl hover:shadow-[0_20px_50px_rgba(0,0,0,0.18),0_0_35px_rgba(16,185,129,0.28)] hover:border-emerald-400/60 dark:hover:border-emerald-400/60 hover:bg-white/90 dark:hover:bg-zinc-900/75"
+          ? "border-emerald-400/70 dark:border-emerald-400/70 bg-white/75 dark:bg-zinc-900/80 shadow-[0_20px_50px_rgba(0,0,0,0.18),0_0_35px_rgba(16,185,129,0.28)] scale-[1.03] -translate-y-1"
+          : "border-black/10 dark:border-white/10 bg-white/35 dark:bg-zinc-900/40 shadow-xl hover:shadow-[0_20px_50px_rgba(0,0,0,0.18),0_0_35px_rgba(16,185,129,0.28)] hover:border-emerald-400/60 dark:hover:border-emerald-400/60 hover:bg-white/65 dark:hover:bg-zinc-900/75"
       }`}
     >
       {/* Interactive Cursor Spotlight Glow */}
@@ -729,7 +1021,11 @@ function SpotlightProjectCard({
           background: `radial-gradient(400px circle at ${mousePos.x}px ${mousePos.y}px, rgba(16, 185, 129, 0.2), transparent 80%)`,
         }}
       />
-      <div className={`absolute inset-0 rounded-3xl bg-gradient-to-br from-emerald-500/20 via-teal-500/15 to-transparent ${isFocused ? "opacity-100" : "opacity-0"} group-hover:opacity-100 transition-opacity duration-150 ease-out pointer-events-none`} />
+      <div
+        className={`absolute inset-0 rounded-3xl bg-gradient-to-br from-emerald-500/20 via-teal-500/15 to-transparent ${
+          isFocused ? "opacity-100" : "opacity-0"
+        } group-hover:opacity-100 transition-opacity duration-150 ease-out pointer-events-none`}
+      />
 
       <div>
         <div className="flex items-center justify-between mb-3 relative z-10">
@@ -811,15 +1107,19 @@ function BankingSystemCard({
     <motion.div
       whileHover={{ y: -6, scale: 1.018 }}
       transition={{ duration: 0.15, ease: "easeOut" }}
-      className={`w-full h-full p-5 sm:p-7 rounded-3xl backdrop-blur-lg md:backdrop-blur-2xl border transition-[border-color,background-color,box-shadow,transform] duration-150 ease-out relative overflow-hidden flex flex-col justify-between text-left group ${
+      className={`w-full h-full p-5 sm:p-7 rounded-3xl backdrop-blur-md border transition-[border-color,background-color,box-shadow,transform] duration-150 ease-out relative overflow-hidden flex flex-col justify-between text-left group ${
         isHighlighted
-          ? "border-amber-500 ring-2 ring-amber-500/50 bg-white/95 dark:bg-zinc-900/95 shadow-[0_20px_50px_rgba(245,158,11,0.3)] -translate-y-1.5"
+          ? "border-amber-500 ring-2 ring-amber-500/50 bg-white/85 dark:bg-zinc-900/95 shadow-[0_20px_50px_rgba(245,158,11,0.3)] -translate-y-1.5"
           : isFocused
-          ? "border-amber-400/70 dark:border-amber-400/70 bg-white/95 dark:bg-zinc-900/80 shadow-[0_20px_50px_rgba(0,0,0,0.18),0_0_35px_rgba(245,158,11,0.28)] scale-[1.03] -translate-y-1"
-          : "border-black/10 dark:border-white/10 bg-white/70 dark:bg-zinc-900/40 shadow-xl hover:shadow-[0_20px_50px_rgba(0,0,0,0.18),0_0_35px_rgba(245,158,11,0.28)] hover:border-amber-400/60 dark:hover:border-amber-400/60 hover:bg-white/90 dark:hover:bg-zinc-900/75"
+          ? "border-amber-400/70 dark:border-amber-400/70 bg-white/75 dark:bg-zinc-900/80 shadow-[0_20px_50px_rgba(0,0,0,0.18),0_0_35px_rgba(245,158,11,0.28)] scale-[1.03] -translate-y-1"
+          : "border-black/10 dark:border-white/10 bg-white/35 dark:bg-zinc-900/40 shadow-xl hover:shadow-[0_20px_50px_rgba(0,0,0,0.18),0_0_35px_rgba(245,158,11,0.28)] hover:border-amber-400/60 dark:hover:border-amber-400/60 hover:bg-white/65 dark:hover:bg-zinc-900/75"
       }`}
     >
-      <div className={`absolute inset-0 rounded-3xl bg-gradient-to-br from-amber-500/20 via-cyan-500/15 to-transparent ${isFocused ? "opacity-100" : "opacity-0"} group-hover:opacity-100 transition-opacity duration-150 ease-out pointer-events-none`} />
+      <div
+        className={`absolute inset-0 rounded-3xl bg-gradient-to-br from-amber-500/20 via-cyan-500/15 to-transparent ${
+          isFocused ? "opacity-100" : "opacity-0"
+        } group-hover:opacity-100 transition-opacity duration-150 ease-out pointer-events-none`}
+      />
 
       <div>
         <div className="flex items-center justify-between mb-3 relative z-10">
