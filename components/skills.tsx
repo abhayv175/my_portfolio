@@ -4,6 +4,7 @@ import React, { useRef, useState, useEffect } from "react";
 import SectionHeading from "./section-heading";
 import { useSectionInView } from "@/lib/hooks";
 import { motion, useInView } from "framer-motion";
+import { SURFACE } from "./surface-styles";
 import {
   FiLayout,
   FiServer,
@@ -177,14 +178,14 @@ function SkillDomainCard({
         setActiveCategory(null);
         handleCategoryHover(null);
       }}
-      className={`group relative p-5 sm:p-6 rounded-3xl backdrop-blur-md md:backdrop-blur-xl border transition-all duration-300 cursor-default flex flex-col justify-between w-full h-full ${
+      className={`group relative p-5 sm:p-6 rounded-3xl ${SURFACE.cardFrame} duration-300 cursor-default flex flex-col justify-between w-full h-full ${
         isCardActive
           ? domain.id === "frontend-mobile"
-            ? "border-blue-500/60 dark:border-blue-400/60 bg-white/72 dark:bg-zinc-900/80 shadow-[0_16px_40px_rgba(0,0,0,0.12),0_0_30px_rgba(59,130,246,0.3)] -translate-y-1.5 scale-[1.03]"
+            ? `border-blue-500/60 dark:border-blue-400/60 ${SURFACE.cardFocus} shadow-[0_16px_40px_rgba(0,0,0,0.12),0_0_30px_rgba(59,130,246,0.3)] -translate-y-1.5 scale-[1.03]`
             : domain.id === "backend-cloud"
-            ? "border-emerald-500/60 dark:border-emerald-400/60 bg-white/72 dark:bg-zinc-900/80 shadow-[0_16px_40px_rgba(0,0,0,0.12),0_0_30px_rgba(16,185,129,0.3)] -translate-y-1.5 scale-[1.03]"
-            : "border-purple-500/60 dark:border-purple-400/60 bg-white/72 dark:bg-zinc-900/80 shadow-[0_16px_40px_rgba(0,0,0,0.12),0_0_30px_rgba(168,85,247,0.3)] -translate-y-1.5 scale-[1.03]"
-          : `border-black/10 dark:border-white/10 bg-white/35 dark:bg-zinc-900/40 shadow-lg hover:bg-white/65 hover:shadow-xl`
+            ? `border-emerald-500/60 dark:border-emerald-400/60 ${SURFACE.cardFocus} shadow-[0_16px_40px_rgba(0,0,0,0.12),0_0_30px_rgba(16,185,129,0.3)] -translate-y-1.5 scale-[1.03]`
+            : `border-purple-500/60 dark:border-purple-400/60 ${SURFACE.cardFocus} shadow-[0_16px_40px_rgba(0,0,0,0.12),0_0_30px_rgba(168,85,247,0.3)] -translate-y-1.5 scale-[1.03]`
+          : `${SURFACE.cardRest} shadow-lg hover:shadow-xl`
       }`}
     >
       {/* Subtle Top Ambient Gradient Sheen */}
@@ -198,13 +199,13 @@ function SkillDomainCard({
         {/* Header: Icon + Highlight Badge */}
         <div className="flex items-center justify-between mb-4">
           <div
-            className={`w-10 h-10 rounded-2xl flex items-center justify-center bg-black/5 dark:bg-white/10 text-xl text-gray-900 dark:text-white border border-black/5 dark:border-white/10 ${
+            className={`w-10 h-10 rounded-2xl flex items-center justify-center ${SURFACE.inset} text-xl text-gray-900 dark:text-white ${
               isCardActive ? "scale-110" : "group-hover:scale-110"
             } transition-transform duration-300`}
           >
             <Icon />
           </div>
-          <span className="text-[0.7rem] px-2.5 py-1 rounded-full font-semibold uppercase tracking-wider bg-black/5 dark:bg-white/10 text-gray-700 dark:text-gray-300 border border-black/5 dark:border-white/10 flex items-center gap-1">
+          <span className={`text-[0.7rem] px-2.5 py-1 rounded-full font-semibold uppercase tracking-wider ${SURFACE.inset} text-gray-700 dark:text-gray-300 flex items-center gap-1`}>
             <FiZap className="text-amber-500 text-xs" />
             <span>Highlights {domain.matchedProjects.length} Apps</span>
           </span>
@@ -222,7 +223,7 @@ function SkillDomainCard({
           {domain.skills.map((skill, sIdx) => (
             <span
               key={sIdx}
-              className="text-[0.75rem] font-medium px-2.5 py-1 rounded-xl bg-black/5 dark:bg-white/5 border border-black/5 dark:border-white/10 text-gray-800 dark:text-gray-200 transition-colors duration-200 group-hover:border-black/15 dark:group-hover:border-white/20"
+              className={`text-[0.75rem] font-medium px-2.5 py-1 rounded-xl ${SURFACE.inset} text-gray-800 dark:text-gray-200 transition-colors duration-200 group-hover:border-black/15 dark:group-hover:border-white/20`}
             >
               {skill}
             </span>

@@ -1,193 +1,196 @@
-# ✦ Abhay Verma — Personal Portfolio
+<div align="center">
 
-A modern, high-performance personal portfolio built with **Next.js 15 (App Router)**, **Tailwind CSS**, and **Framer Motion**. Designed around an Apple-inspired **Liquid Glass** aesthetic, featuring specular light highlights, dynamic multi-layer backdrop blurs, organic pill geometry, and 60fps GPU-accelerated micro-interactions.
+# Abhay Verma — Cosmic Portfolio
 
-🌐 **Live Website**: [https://abhayv175.netlify.app](https://abhayv175.netlify.app)
+**Interactive WebGPU Black Hole & White Hole Portfolio Built with Next.js 15, Custom WGSL Shaders, Procedural Web Audio, and Monochrome Glassmorphism**
 
-[![Deployed on Netlify](https://img.shields.io/badge/Deployed%20on-Netlify-00C7B7?style=for-the-badge&logo=netlify&logoColor=white)](https://abhayv175.netlify.app)
-[![Next.js 15](https://img.shields.io/badge/Next.js-15-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4-38B2AC?style=for-the-badge&logo=tailwind-css)](https://tailwindcss.com/)
-[![Framer Motion](https://img.shields.io/badge/Framer_Motion-11-black?style=for-the-badge&logo=framer)](https://www.framer.com/motion/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.6-blue?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
+[![Live Site](https://img.shields.io/badge/Live-abhayv175.netlify.app-09090b?style=for-the-badge&logo=netlify&logoColor=white)](https://abhayv175.netlify.app)
+[![Next.js 15](https://img.shields.io/badge/Next.js-15-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)](https://nextjs.org/)
+[![WebGPU + WGSL](https://img.shields.io/badge/WebGPU-vgpu%20%2F%20WGSL-4f46e5?style=for-the-badge&logo=webgpu&logoColor=white)](https://www.w3.org/TR/webgpu/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.6-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
+[![Web Audio API](https://img.shields.io/badge/Audio-Procedural%20Web%20Audio-18181b?style=for-the-badge)](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API)
 
----
+| Dark Mode — Black Hole Singularity | Light Mode — White Hole Inversion |
+| :---: | :---: |
+| ![Hero Dark Mode with WebGPU Black Hole](./docs/screenshots/hero-dark.png) | ![Hero Light Mode with WebGPU White Hole](./docs/screenshots/hero-light.png) |
 
-## 🎨 Design Aesthetic: Liquid Glass
-
-The portfolio's visual language is built upon Apple VisionOS and macOS liquid glass design principles:
-- **Frosted Glassmorphism**: High-blur background diffusion (`backdrop-blur-xl` and `backdrop-blur-2xl`) combined with semi-translucent fills.
-- **Specular Highlights & Inner Sheens**: Multi-stop borders (`border-white/20`, `border-black/10`) and radial gradient reflections simulating real-world refraction.
-- **Fluid Dynamic Lighting**: Ambient dual-orb glow layers cross-fading smoothly between light mode (`#f8fafc`) and dark mode (`#09090b`).
-- **Organic Pill Geometries**: Curved radii (`rounded-full`, `rounded-3xl`) creating a warm, polished, and tactile feel.
+</div>
 
 ---
 
-## 🛠️ Tech Stack Breakdown
+## Overview
 
-| Layer | Technology | Purpose |
+A personal software engineering and QA portfolio built around a live **60 FPS WebGPU gravitational-lensing simulation** that orbits between a **Black Hole** (Dark Mode) and a mirrored **White Hole** (Light Mode). Every interface layer—from procedural cosmic soundscapes and theme-adaptive favicons to unified translucent glass cards and an opposite-polarity brush cursor trail—is synchronized around the dual-singularity theme.
+
+🌐 **Live Deployment:** [https://abhayv175.netlify.app](https://abhayv175.netlify.app)
+
+---
+
+## Highlights & Features
+
+### 1. Real-Time WebGPU Black Hole ↔ White Hole Engine (`optimized-black-hole/`)
+- **Geodesic Ray-Marched G-Buffers:** Integrates Schwarzschild-like relativistic light paths (`MAX_STEPS = 768` in `geodesic.wgsl`) into multi-target HDR textures (`rg32float` / `rgba16float`) across three pre-baked camera poses (`dark`, `mid`, `light`), refined per pixel (`refine.wgsl`).
+- **60 FPS Volumetric Shading & Bloom:** Decodes G-buffers each frame (`shade.wgsl`) with 6-tap accretion anti-aliasing, 3D toroidal plasma noise (`noise-volume.mjs`), rotating starfield projection (`stars.wgsl`), 3-level mip bloom (`bloom.wgsl`), ACES filmic tone mapping (`composite.wgsl`), and smooth cursor parallax (`mouseYaw`).
+- **1-Second Swirling Orbital Theme Flight:** Toggling Light ↔ Dark launches an `easeInOutCubic` cross-viewport flight (`right ↔ left`) with mid-flight vortex swirl (`morph.wgsl`), gravitational wavefront color inversion (`composite.wgsl`), vsync-locked frame pacing (`renderer.ts`), and a non-blocking `320ms` DOM midpoint crossfade (`theme-context.tsx`).
+- **Graceful Progressive Fallback:** Automatically renders multi-orb Framer Motion ambient lighting (`components/ambient-glow.tsx`) on browsers without WebGPU or when `prefers-reduced-motion` is enabled.
+
+### 2. Motion-Reactive Procedural Space Audio & Minimal `SOUND` Control
+- **Deep-Space Black Hole Synthesis (`lib/space-audio.ts`):** Pure Web Audio API synthesis requiring **zero audio file downloads**—combining a `D1 / A1 / D2` sub-gravity foundation, slow phase-beating pressure waves, `F3` void choir tones, Brownian cosmos turbulence sculpted through high-`Q` harmonic corona resonators (`146.8Hz`, `220Hz`, `349.2Hz`), and a **5.4-second** stereo cosmos convolution reverb (`ConvolverNode`).
+- **Kinetic Velocity Coupling:** Tracks real-time black-hole camera yaw velocity, theme-flight gravitational surges, and scroll speed (`context/sound-context.tsx`) without causing React re-renders—staying calm and low at rest while blooming deeper and wider as the hole accelerates.
+- **Directional Theme-Switch Audio:** Plays distinct horizon sound sweeps every time the theme switches while sound is enabled (inward singularity collapse for Light → Dark; outward crystalline corona bloom for Dark → Light).
+- **Minimal Bottom-Left Toggle (`components/sound-toggle.tsx`):** Starts **muted by default** (`~~SOUND~~` with animated strikethrough) using bare monochrome tracked typography to respect browser autoplay policies and stay visually unobtrusive.
+
+### 3. Editorial Monochrome Hero & Opposite-Hole Cursor Ribbon
+- **Dual-Portrait 3D Avatar Flip (`components/intro.tsx`):** Pairs custom monochrome portraits—childhood (`hero_dark.png`) in Dark Mode and current adult (`hero_light.png`) in Light Mode—inside a rotating orbital photon-ring halo with click-to-flip 3D perspective physics and an interactive emoji cycle badge.
+- **Opposite-Singularity Brush Ribbon (`components/red-ribbon.tsx`):** Hardware-friendly 2D Canvas trail using `getCoalescedEvents()` and C¹ midpoint quadratic Bézier splines—painting Luminous White Hole mist in Dark Mode and Obsidian Black Hole ink with silver photon streaks in Light Mode.
+- **Staggered Smooth Load Choreography:** Orchestrated `~1.4s` WebGPU reveal paired with zero-reflow typed headline text, slide-in header, and fade-in hero actions.
+
+### 4. Unified Glassmorphism System (`components/surface-styles.ts`)
+- Centralized design tokens synchronize surface translucency, borders, and backdrop blur symmetrically across **all sections and both themes**:
+  - **Section Cards** (`Experience`, `Projects`, `Skills`, `Contact`): `45%` rest → `65%` hover → `75%` mobile scroll focus → `85%` cross-highlight (`12px` mobile / `24px` desktop blur).
+  - **Floating Controls & Nav Pills** (`Header` desktop & mobile hamburger pill menu, `ThemeSwitch`, `Commands`, Intro social links, Contact copy pill): `45%` rest → `65%` hover (`24px` blur).
+  - **Nested Panels, Tags & Inputs**: `5%` rest → `10%` interactive hover (`bg-black/5 dark:bg-white/5`).
+  - **Modals** (`Experience` & `CommandPalette`): `85%` fill (`backdrop-blur-2xl`) over unified translucent backdrops.
+
+### 5. Interactive Sections & Productivity Controls
+- **Horizontal Projects Rail (`components/projects.tsx`):** Scroll-driven sticky horizontal track on desktop with Lenis smooth-scroll quick-jump pills (`01 · PrintPulse` through `05 · Banking`) and center-focus stacked layout on mobile:
+  - *PrintPulse:* Interactive 3-stage packet-flow simulator (`Customer Web Portal` → `Direct UPI Settlement` → `Vendor Android Tablet`) with live screenshot switching.
+  - *Passenger Text:* Hover/scroll-reactive real-time chat preview.
+  - *Pika Panic:* Unity 3D Vilnius level artwork showcase.
+  - *Move It:* Cursor-tracking radial spotlight hover card.
+  - *Banking Application:* Interactive simulated balance & quick-deposit preview.
+- **Work Experience Timeline & Portaled Modals (`components/experience.tsx`):** Color-coded staggered timeline (`Marquistech`, `Unity`, `UAB First Riddle`, `Infowiz`) expanding into centered keyboard-dismissible (`Esc`) frosted glass modals.
+- **Cross-Highlighting Skills Grid (`components/skills.tsx`):** Hovering or focusing *Frontend & Mobile*, *Backend & Cloud Architecture*, or *QA, Modem Testing & Game Dev* highlights matching apps inside the Projects rail via custom browser events.
+- **Command Palette (`⌘K` / `/`) (`components/command-palette.tsx`):** Instant fuzzy launcher to jump sections, copy email, download CV, toggle Dark/Light theme, mute/enable space audio, filter & scroll directly to projects by tech stack, and open external profiles.
+- **Theme-Synced Favicons (`app/layout.tsx`, `public/favicon-*.svg`):** Multi-size Black Hole `favicon.ico` (`16/32/48px`), `180x180` `apple-icon.png`, and runtime-swapped Dark/Light SVG tab icons synchronized before first paint and on every theme toggle.
+- **Protected Contact Form (`components/contact.tsx`, `actions/sendEmail.ts`):** Custom inline validation badges, click-to-copy email pill, honeypot spam trap, and HTML email templates sent via Resend + React Email.
+
+---
+
+## Visual Showcase
+
+### Command Palette (`⌘K` / `/`) & Responsive Mobile Views
+| Interactive Command Palette | Mobile Hero (Dark Mode) | Mobile Pill Nav (Dark) | Mobile Pill Nav (Light) |
+| :---: | :---: | :---: | :---: |
+| ![Command Palette Modal](./docs/screenshots/command-palette.png) | ![Mobile Hero Dark](./docs/screenshots/mobile-hero-dark.png) | ![Mobile Pill Nav Dark](./docs/screenshots/mobile-nav-dark.png) | ![Mobile Pill Nav Light](./docs/screenshots/mobile-nav-light.png) |
+
+### Projects Horizontal Rail & Interactive Skills Domains
+| Desktop Projects Rail (`PrintPulse` Simulator + `Passenger Text`) | Cross-Highlighting Skills Domain Grid |
+| :---: | :---: |
+| ![Desktop Projects Rail](./docs/screenshots/projects-desktop.png) | ![Skills Domain Grid](./docs/screenshots/skills-domains.png) |
+
+### Staggered Experience Timeline & Expanded Detail Modal
+| Color-Coded Glass Timeline | Portaled Experience Detail Dialog |
+| :---: | :---: |
+| ![Work Experience Timeline](./docs/screenshots/experience-active-focus.png) | ![Experience Modal Dialog](./docs/screenshots/experience-modal-maximized.png) |
+
+### Contact Section & Unified Glass Surfaces (Light ↔ Dark)
+| Dark Mode Contact Card | Light Mode Contact Card |
+| :---: | :---: |
+| ![Contact Form Dark](./docs/screenshots/contact-dark.png) | ![Contact Form Light](./docs/screenshots/contact-light.png) |
+
+---
+
+## Tech Stack
+
+| Layer | Technologies | Usage |
 | :--- | :--- | :--- |
-| **Framework** | [Next.js 15](https://nextjs.org/) | App Router, React Server Components (RSC), Server Actions, and Dynamic Imports |
-| **Styling** | [Tailwind CSS 3.4](https://tailwindcss.com/) | Utility-first styling with custom glassmorphism and animation tokens |
-| **Animations** | [Framer Motion 11](https://www.framer.com/motion/) | GPU-accelerated spring physics, presence transitions, and layout morphing |
-| **Icons** | [React Icons](https://react-icons.github.io/react-icons/) & [Lucide Icons](https://lucide.dev/) | High-resolution scalable vector icons |
-| **Email Delivery** | [Resend](https://resend.com/) & [React Email](https://react.email/) | Serverless contact form delivery with responsive HTML email templates |
-| **Type Safety** | [TypeScript 5.6](https://www.typescriptlang.org/) | Strict end-to-end type safety across data schemas and component props |
-| **Toast Notifications** | [React Hot Toast](https://react-hot-toast.com/) | Specular liquid glass feedback toasts |
+| **Framework & Runtime** | **Next.js 15** (`^15.1.5`), **React 18.3**, **TypeScript 5.6** | App Router, Server Actions, static metadata routes (`sitemap.ts`, `robots.ts`), dynamic layout |
+| **WebGPU & Shaders** | **vgpu** (`^0.6.0`), **@vgpu/wgsl** (`^0.6.0`), Custom **WGSL** | Multi-pass G-buffer raymarching, bloom, vortex morph, composite tone mapping |
+| **Spatial Audio** | **Web Audio API** (`AudioContext`, `ConvolverNode`, `BiquadFilterNode`) | Motion-reactive cosmos ambience, 5.4s void reverb, directional theme-switch SFX |
+| **Styling & Fonts** | **Tailwind CSS 3.4**, **Plus Jakarta Sans** (`next/font/google`), **clsx** | Monochrome glassmorphism (`surface-styles.ts`), smooth CSS theme waves |
+| **Animation & Scroll** | **Framer Motion 11**, **Lenis** (`^1.3.27`), **Intersection Observer** | Spring physics, 3D portrait flip, horizontal sticky scroll rail, mobile focus tracking |
+| **Email & Feedback** | **Resend** (`^4.1.1`), **React Email**, **React Hot Toast** | Serverless contact form delivery with styled HTML emails and toast alerts |
+| **Icons & UI Widgets** | **React Icons** (`^5.4.0`), **react-vertical-timeline-component** | Section iconography and responsive alternating work history timeline |
 
 ---
 
-## ✨ Core Features
+## Project Structure
 
-### 1. Interactive 3D Hero Avatar
-- **Dual-Sided 3D Card**: Smooth 180° Y-axis flip animation between light and dark mode portraits when toggling themes.
-- **Dynamic Emoji Reactor**: Clickable interactive emoji badge cycling through custom states (`👋`, `🚀`, `💻`, `⚡`, `🎯`, `🔥`) with bouncy spring physics.
-- **Liquid Glass CTA Pills**: High-contrast, tactile download CV and contact buttons with smooth hover scaling and specular shadows.
-
-### 2. Dual-Engine Floating Navigation
-- **Desktop Floating Pill**:
-  - Centered floating pill with hardware acceleration, `hover:scale-105` zoom, and active section tracking via Framer Motion's shared `layoutId`.
-  - Zero-flicker sub-pixel anti-aliasing via dedicated GPU layers.
-- **Mobile Menu Drawer**:
-  - Isolated morphing 3-line hamburger to close (`X`) toggle button.
-  - Compact, pill-shaped floating dropdown (`w-[78%] max-w-[260px]`) anchored neatly below header controls.
-  - Theme-adaptive colors (`bg-white/80` in light, `dark:bg-slate-900/80` in dark).
-  - Multi-trigger dismissal: backdrop click-away, Escape key listener, and instant nav routing.
-
-### 3. Work Experience Interactive Timeline
-- Clean alternating desktop timeline and single-column mobile stack with safe vertical spacing (`space-y-12 sm:space-y-16 md:space-y-24`).
-- Rich role history, milestone node icons, and frosted glass cards with interactive hover highlights.
-
-### 4. Smooth 60fps Project Cards
-- **Damped Spring Physics**: Tuned with `stiffness: 180, damping: 24, mass: 0.8` for natural presence and expansion without snap-back.
-- **Hardware Acceleration**: Card containers locked to the GPU via `transform-gpu will-change-transform backface-hidden [transform-style:preserve-3d]`.
-- **Sub-Pixel Edge Locking**: `overflow-hidden rounded-3xl` prevents corner anti-aliasing jitter during hover scale.
-
-### 5. Liquid Glass Contact Form & Validation
-- **Accessible Custom Validation**: Replaces native browser tooltips (`noValidate`) with animated liquid glass warning alerts.
-- **Focus Illumination**: Fields illuminate with specular outer rings on focus (`focus:ring-2 focus:ring-slate-900/20 dark:focus:ring-white/20`).
-- **Server Action Integration**: Direct email submission powered by Resend with optimistic pending spinners and success toasts.
-- **Theme-Aware Submit Button**: High-contrast dark fill in light mode (`bg-slate-900 text-white`) and illuminated frosted glass in dark mode (`dark:bg-white/20 dark:backdrop-blur-md`).
-
-### 6. Seamless Viewport Background Coverage
-- Root background and ambient glow layers use dynamic viewport units (`min-h-[100dvh] w-full`) and `fixed inset-0 -z-10` to eliminate white bottom gaps on mobile browsers during address bar collapse or iOS rubber-band overscroll.
-
----
-
-## ⚡ Performance & Optimization Highlights
-
-- **Core Web Vitals**:
-  - **Zero Layout Shift (CLS: 0.00)**: Aspect ratio reservation and fixed dimension bounding boxes for all images and interactive cards.
-  - **Sub-second LCP**: Next.js `next/image` with `priority={true}`, modern WebP/AVIF compression, and responsive `sizes` attributes.
-- **Chromium Re-rasterization Prevention**:
-  - Navigation tabs and project cards run on dedicated GPU compositing layers:
-    ```css
-    transform-gpu will-change-[transform,opacity] backface-hidden [transform-style:preserve-3d]
-    ```
-- **Sub-Pixel Border Anti-Aliasing**:
-  - Clean `outline: 1px solid transparent` applied to floating glass containers stops 1px border vibration during hover state transitions.
-- **Code Splitting & Dynamic Imports**:
-  - Heavy below-the-fold modules (`About`, `Projects`, `Skills`, `Experience`, `Contact`) are dynamically loaded via `next/dynamic` to ensure lightning-fast initial page loads.
+```text
+├── actions/
+│   └── sendEmail.ts                 # Resend Server Action with validation & honeypot check
+├── app/
+│   ├── apple-icon.png               # 180x180 monochrome Black Hole Apple touch icon
+│   ├── favicon.ico                  # Multi-size (16/32/48) Black Hole fallback favicon
+│   ├── globals.css                  # Tailwind layers, glass blur rules, entrance & theme wave animations
+│   ├── layout.tsx                   # Root metadata, pre-paint theme/favicon sync, global providers
+│   ├── page.tsx                     # Single-page section composition
+│   ├── robots.ts / sitemap.ts       # Automated SEO crawler configuration
+├── components/
+│   ├── surface-styles.ts            # Unified Light/Dark glass translucency tokens
+│   ├── black-hole-background.tsx    # WebGPU canvas mount, lifecycle & audio velocity hook
+│   ├── ambient-glow.tsx             # Adaptive backdrop wrapper + non-WebGPU gradient fallback
+│   ├── red-ribbon.tsx               # Opposite-theme C1 Bézier pointer ribbon canvas
+│   ├── sound-toggle.tsx             # Minimal bottom-left SOUND / strikethrough toggle
+│   ├── command-palette.tsx          # Keyboard launcher (⌘K / /) for navigation & actions
+│   ├── header.tsx / theme-switch.tsx
+│   ├── intro.tsx / about.tsx / section-divider.tsx / section-heading.tsx
+│   ├── experience.tsx / projects.tsx / skills.tsx / contact.tsx / footer.tsx
+│   └── smooth-scroll.tsx / magnetic.tsx / submit-btn.tsx
+├── context/
+│   ├── sound-context.tsx            # Mute state + scroll/fallback motion telemetry
+│   ├── theme-context.tsx            # Dark/Light orchestration, WebGPU midpoint delay & tab favicon sync
+│   └── active-section-context.tsx   # Active section & scroll-spy lock state
+├── email/
+│   └── contact-form-email.tsx       # React Email message layout
+├── lib/
+│   ├── space-audio.ts               # Procedural black-hole Web Audio engine & 5.4s reverb
+│   ├── data.ts / hooks.ts / types.ts / utils.ts
+├── optimized-black-hole/            # WebGPU renderer, pipeline & 10 custom WGSL shaders
+│   ├── renderer.ts / pipeline.ts / settings.ts / noise-volume.mjs
+│   └── *.wgsl                       # bake, refine, geodesic, gbuffer, disk, stars, shade, morph, bloom, composite
+├── docs/screenshots/                # Live desktop & mobile screenshots for README
+└── public/                          # Portraits, project previews, CV.pdf, favicon-dark/light SVGs
+```
 
 ---
 
-## 📸 Screenshots & Interactive Feature Showcases
-
-### 1. Dual-Sided 3D Avatar & Theme Flip (Light ↔ Dark)
-Smooth 180° Y-axis card flip synchronized with theme toggle transitions.
-![Avatar Theme Flip](./docs/screenshots/avatar-theme-flip.png)
-
-### 2. Interactive Hero Emoji Reactor
-Clicking the hero avatar cycles through dynamic emoji reaction states with spring physics.
-![Hero Emoji Reaction](./docs/screenshots/hero-emoji-reaction.png)
-
-### 3. Unified Active Focus State (Liquid Glass Highlights)
-Cards elevate with a smooth `scale-[1.02]` spring, `border-sky-400/30` specular border, `text-sky-400` primary title accent, and ambient glow.
-| Highlighted Project Card | Highlighted Work Experience Card |
-| :---: | :---: |
-| ![Project Active Focus](./docs/screenshots/project-active-focus.png) | ![Experience Active Focus](./docs/screenshots/experience-active-focus.png) |
-
-### 4. Work Experience 3D Maximized Modal
-Clicking any timeline card smoothly projects it into a centered 3D frosted glass modal dialog with milestone badges and comprehensive role history.
-![Work Experience Maximized Modal](./docs/screenshots/experience-modal-maximized.png)
-
-### 5. Projects Showcase & Direct Redirection
-Hardware-accelerated project showcase with direct live demo and GitHub repository navigation.
-| Desktop View & Direct Link Hit-Box | Mobile View (Scroll Focus) |
-| :---: | :---: |
-| ![Project Redirect Interaction](./docs/screenshots/project-redirect-interaction.png) | ![Projects Mobile](./docs/screenshots/projects-mobile.png) |
-
-### 6. Full Hero & Navigation
-| Light Mode | Dark Mode |
-| :---: | :---: |
-| ![Hero Light](./docs/screenshots/hero-light.png) | ![Hero Dark](./docs/screenshots/hero-dark.png) |
-
-### 7. Contact Section & Custom Liquid Glass Validation
-| Light Mode Form | Dark Mode Liquid Glass Validation Alerts |
-| :---: | :---: |
-| ![Contact Light](./docs/screenshots/contact-light.png) | ![Contact Validation Dark](./docs/screenshots/contact-dark.png) |
-
-### 8. Compact Pill Mobile Navigation Drawer
-| Open Drawer (Light) | Open Drawer (Dark) |
-| :---: | :---: |
-| ![Mobile Nav Light](./docs/screenshots/mobile-nav-light.png) | ![Mobile Nav Dark](./docs/screenshots/mobile-nav-dark.png) |
-
----
-
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
-- **Node.js**: `v18.18+` or `v20+`
-- **Package Manager**: `npm`, `pnpm`, or `yarn`
+- **Node.js** `18.18+` or `20+`
+- **npm** (or `pnpm` / `yarn`)
+- Modern WebGPU-capable browser (Chrome 113+, Edge 113+, Safari 26+/Technology Preview) for the live GPU simulation; non-WebGPU browsers gracefully receive the animated ambient gradient fallback.
 
-### Installation
+### Local Development
 
-1. **Clone the repository**:
+1. **Clone the repository**
    ```bash
    git clone https://github.com/abhayv175/my_portfolio.git
    cd my_portfolio
    ```
 
-2. **Install dependencies**:
+2. **Install dependencies**
    ```bash
    npm install
    ```
 
-3. **Configure Environment Variables**:
-   Create a `.env.local` file in the root directory:
+3. **Configure environment variables**
+   Create `.env.local` in the project root to enable the contact form server action:
    ```env
    RESEND_API_KEY=your_resend_api_key_here
    ```
 
-4. **Run the development server**:
+4. **Start the development server**
    ```bash
    npm run dev
    ```
-   Open [http://localhost:3000](http://localhost:3000) in your browser to view the application.
+   Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-5. **Build for production**:
+5. **Type-check and build for production**
    ```bash
+   npx tsc --noEmit
    npm run build
    npm run start
    ```
 
 ---
 
-## 🌐 Deployment
+## Deployment
 
-This portfolio is deployed on [Netlify](https://www.netlify.com/):
-
-🔗 **Live Website**: [https://abhayv175.netlify.app](https://abhayv175.netlify.app)
-
-### Deploying to Netlify
-1. Push your code to a GitHub repository.
-2. Log into [Netlify](https://app.netlify.com/) and click **Add new site > Import an existing project**.
-3. Select your GitHub repository.
-4. Netlify will automatically detect Next.js with `@netlify/plugin-nextjs`.
-5. Add the `RESEND_API_KEY` environment variable under **Site configuration > Environment variables**.
-6. Click **Deploy portfolio**.
-
----
-
-## 📄 License
-
-This project is open source and available under the [MIT License](LICENSE).
+Deployed on **[Netlify](https://www.netlify.com/)** at [https://abhayv175.netlify.app](https://abhayv175.netlify.app):
+1. Import the repository into Netlify (detected automatically as Next.js with `@netlify/plugin-nextjs`).
+2. Add `RESEND_API_KEY` under **Site configuration → Environment variables**.
+3. Trigger deploy.

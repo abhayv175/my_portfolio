@@ -9,6 +9,7 @@ import SubmitBtn from "./submit-btn";
 import toast from "react-hot-toast";
 import { BsCheck, BsCopy, BsEnvelope, BsExclamationCircle } from "react-icons/bs";
 import clsx from "clsx";
+import { SURFACE } from "./surface-styles";
 
 const cardVariants = {
   hidden: {
@@ -167,7 +168,7 @@ export default function Contact() {
             type="button"
             onClick={handleCopyEmail}
             title="Click to copy email address"
-            className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/65 dark:bg-white/10 backdrop-blur-md border border-black/15 dark:border-white/15 text-sm hover:bg-white/85 dark:hover:bg-white/15 hover:border-indigo-500/30 dark:hover:border-indigo-400/30 text-gray-900 dark:text-white transition-all duration-200 cursor-pointer group active:scale-95 shadow-sm"
+            className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full ${SURFACE.pillInteractive} text-sm hover:border-indigo-500/30 dark:hover:border-indigo-400/30 text-gray-900 dark:text-white transition-all duration-200 cursor-pointer group active:scale-95 shadow-sm`}
           >
             <BsEnvelope className="text-xs opacity-80 group-hover:opacity-100 transition-opacity text-gray-800 dark:text-white" />
             <span className="font-medium text-gray-900 dark:text-white">abhayv175@gmail.com</span>
@@ -193,10 +194,10 @@ export default function Contact() {
             onMouseLeave={() => {
               if (!isMobile) setIsHovered(false);
             }}
-            className={`w-full p-6 sm:p-10 rounded-3xl backdrop-blur-md md:backdrop-blur-xl transition-[border-color,background-color,box-shadow,transform] duration-150 ease-out relative overflow-hidden group ${
+            className={`w-full p-6 sm:p-10 rounded-3xl ${SURFACE.cardFrame} relative overflow-hidden group ${
               isCardFocused
-                ? "bg-white/75 dark:bg-zinc-900/80 border-violet-400/80 dark:border-violet-400/80 shadow-[0_20px_50px_rgba(0,0,0,0.18),0_0_35px_rgba(168,85,247,0.32)] scale-[1.02] -translate-y-1.5"
-                : "bg-white/35 dark:bg-zinc-900/40 border border-black/10 dark:border-white/10 shadow-xl dark:shadow-[0_20px_50px_rgba(0,0,0,0.6)] hover:shadow-[0_20px_50px_rgba(0,0,0,0.18),0_0_35px_rgba(168,85,247,0.32)] hover:border-violet-400/70 dark:hover:border-violet-400/70 hover:bg-white/65 dark:hover:bg-zinc-900/75"
+                ? `${SURFACE.cardFocus} border-violet-400/80 dark:border-violet-400/80 shadow-[0_20px_50px_rgba(0,0,0,0.18),0_0_35px_rgba(168,85,247,0.32)] scale-[1.02] -translate-y-1.5`
+                : `${SURFACE.cardRest} shadow-xl dark:shadow-[0_20px_50px_rgba(0,0,0,0.6)] hover:shadow-[0_20px_50px_rgba(0,0,0,0.18),0_0_35px_rgba(168,85,247,0.32)] hover:border-violet-400/70 dark:hover:border-violet-400/70`
             }`}
           >
             {/* Ambient Violet Glow Sheen on Hover (not cursor-dependent) */}
@@ -235,10 +236,10 @@ export default function Contact() {
                     }
                   }}
                   className={clsx(
-                    "h-14 px-5 rounded-2xl backdrop-blur-xl bg-black/5 text-slate-900 placeholder:text-slate-500 dark:bg-white/5 dark:text-white dark:placeholder:text-white/60 focus:outline-none transition-all duration-300 text-base shadow-sm",
+                    `h-14 px-5 rounded-2xl backdrop-blur-xl bg-black/5 text-slate-900 placeholder:text-slate-500 dark:bg-white/5 dark:text-white dark:placeholder:text-white/60 focus:outline-none transition-all duration-300 text-base shadow-sm`,
                     errors.email
                       ? "border border-rose-500/50 focus:border-rose-400 focus:ring-2 focus:ring-rose-500/20"
-                      : "border border-black/15 dark:border-white/10 focus:ring-2 focus:ring-slate-900/20 dark:focus:ring-white/20"
+                      : "border border-black/10 dark:border-white/10 focus:ring-2 focus:ring-slate-900/20 dark:focus:ring-white/20"
                   )}
                 />
                 <AnimatePresence>
@@ -274,7 +275,7 @@ export default function Contact() {
                     "h-48 p-5 rounded-2xl backdrop-blur-xl bg-black/5 text-slate-900 placeholder:text-slate-500 dark:bg-white/5 dark:text-white dark:placeholder:text-white/60 focus:outline-none transition-all duration-300 text-base leading-relaxed resize-none shadow-sm",
                     errors.message
                       ? "border border-rose-500/50 focus:border-rose-400 focus:ring-2 focus:ring-rose-500/20"
-                      : "border border-black/15 dark:border-white/10 focus:ring-2 focus:ring-slate-900/20 dark:focus:ring-white/20"
+                      : "border border-black/10 dark:border-white/10 focus:ring-2 focus:ring-slate-900/20 dark:focus:ring-white/20"
                   )}
                 />
                 <AnimatePresence>

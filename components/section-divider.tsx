@@ -18,7 +18,7 @@ export default function SectionDivider() {
       aria-hidden="true"
     >
       <motion.div
-        className="h-full w-full rounded-full bg-gradient-to-b from-indigo-500/40 via-sky-500/30 to-transparent dark:from-indigo-400/50 dark:via-sky-400/40 dark:to-transparent backdrop-blur-md shadow-[0_0_12px_rgba(99,102,241,0.25)] border border-indigo-500/20 dark:border-indigo-400/25 transform-gpu will-change-transform origin-top"
+        className="h-full w-full rounded-full bg-gradient-to-b from-indigo-500/40 via-sky-500/30 to-transparent dark:from-indigo-400/40 dark:via-sky-400/30 dark:to-transparent backdrop-blur-md shadow-[0_0_12px_rgba(99,102,241,0.25)] border border-indigo-500/20 dark:border-indigo-400/20 transform-gpu will-change-transform origin-top"
         style={{ transformOrigin: "top center" }}
         animate={
           shouldReduceMotion || !isInView

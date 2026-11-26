@@ -118,26 +118,3 @@ export const projectsData = [
     url: "https://cloud.unity.com/home/organizations/24756934479511c6-4dab-94d2-c940bf45f6a4/details",
   },
 ] as const;
-
-export const skillsData = [
-  "Cross Platform Testing",
-  "Regression Testing",
-  "Structured Debugging",
-  "Jira",
-  "API Testing",
-  "REST API",
-  "React.js",
-  "Next.js",
-  "UI/UX",
-  "MongoDB",
-  "MS SQL",
-  "C#",
-  "C++",
-  "Python",
-  "JavaScript",
-  "Plastic SCM",
-  "Android Studio",
-  "GitHub",
-  "Linux",
-  "Custom OS Testing",
-] as const;

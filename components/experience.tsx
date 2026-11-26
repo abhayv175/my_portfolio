@@ -13,6 +13,7 @@ import { useSectionInView } from "@/lib/hooks";
 import { useTheme } from "@/context/theme-context";
 import { motion, AnimatePresence, useInView } from "framer-motion";
 import { FiX, FiMapPin, FiCalendar } from "react-icons/fi";
+import { SURFACE, SURFACE_RGBA } from "./surface-styles";
 
 const cardVariants = {
   hidden: {
@@ -159,15 +160,13 @@ function ExperienceTimelineCard({
         textClassName="cursor-pointer group/card transition-all duration-300 ease-out transform-gpu will-change-transform select-none [-webkit-tap-highlight-color:transparent] relative overflow-hidden pointer-events-auto"
         contentStyle={{
           zIndex: isCardFocused ? 30 : 2,
-          background: isCardFocused
-            ? theme === "light"
-              ? "rgba(255, 255, 255, 0.68)"
-              : "rgba(15, 23, 42, 0.85)"
-            : theme === "light"
-              ? "rgba(255, 255, 255, 0.25)"
-              : "rgba(255, 255, 255, 0.05)",
-          backdropFilter: isMobile ? "blur(10px)" : "blur(20px)",
-          WebkitBackdropFilter: isMobile ? "blur(10px)" : "blur(20px)",
+          background: isMobile
+            ? isMobileInCenter
+              ? SURFACE_RGBA.cardFocus[theme === "light" ? "light" : "dark"]
+              : SURFACE_RGBA.cardRest[theme === "light" ? "light" : "dark"]
+            : isHovered
+              ? SURFACE_RGBA.cardHover[theme === "light" ? "light" : "dark"]
+              : SURFACE_RGBA.cardRest[theme === "light" ? "light" : "dark"],
           boxShadow: isCardFocused
             ? itemTheme.shadowFocus
             : theme === "light"
@@ -183,7 +182,7 @@ function ExperienceTimelineCard({
           textAlign: "left",
           padding: "1.5rem 2rem",
           borderRadius: "1.25rem",
-          opacity: activeIndex === index ? 0.35 : isCardFocused ? 1 : 0.75,
+          opacity: activeIndex === index ? 0.35 : 1,
           cursor: "pointer",
           transition:
             "transform 250ms ease-out, background-color 250ms ease-out, border-color 250ms ease-out, box-shadow 250ms ease-out, opacity 250ms ease-out",
@@ -201,8 +200,8 @@ function ExperienceTimelineCard({
         iconClassName="cursor-pointer md:hover:scale-110 transition-transform duration-300 [-webkit-tap-highlight-color:transparent]"
         iconStyle={{
           background:
-            theme === "light" ? "rgba(255, 255, 255, 0.9)" : "rgba(24, 24, 27, 0.9)",
-          border: `2px solid ${isCardFocused ? itemTheme.iconBorder : theme === "light" ? "rgba(0, 0, 0, 0.08)" : "rgba(255, 255, 255, 0.15)"}`,
+            SURFACE_RGBA.iconCircle[theme === "light" ? "light" : "dark"],
+          border: `2px solid ${isCardFocused ? itemTheme.iconBorder : theme === "light" ? "rgba(0, 0, 0, 0.10)" : "rgba(255, 255, 255, 0.15)"}`,
           color: theme === "light" ? "#1e293b" : "#f8fafc",
           fontSize: "1.5rem",
           boxShadow: isCardFocused
@@ -414,7 +413,7 @@ export default function Experience() {
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.2 }}
                 onClick={() => setActiveIndex(null)}
-                className="fixed inset-0 z-[10000] bg-slate-900/25 dark:bg-black/70 backdrop-blur-md cursor-pointer touch-none overscroll-none"
+                className={`fixed inset-0 z-[10000] ${SURFACE.backdrop} cursor-pointer touch-none overscroll-none`}
                 aria-label="Close modal overlay"
               />
             )}
@@ -431,7 +430,7 @@ export default function Experience() {
                   role="dialog"
                   aria-modal="true"
                   aria-labelledby="experience-modal-title"
-                  className={`pointer-events-auto w-[94vw] sm:w-[92vw] max-w-lg md:max-w-2xl max-h-[88vh] sm:max-h-[85vh] overflow-y-auto p-5 sm:p-8 md:p-10 flex flex-col justify-start relative bg-white/85 dark:bg-zinc-900/90 backdrop-blur-2xl border ${
+                  className={`pointer-events-auto w-[94vw] sm:w-[92vw] max-w-lg md:max-w-2xl max-h-[88vh] sm:max-h-[85vh] overflow-y-auto p-5 sm:p-8 md:p-10 flex flex-col justify-start relative ${SURFACE.modal} ${
                     EXPERIENCE_THEMES[activeIndex % EXPERIENCE_THEMES.length].modalBorder
                   } ${
                     EXPERIENCE_THEMES[activeIndex % EXPERIENCE_THEMES.length].modalShadow
@@ -453,7 +452,7 @@ export default function Experience() {
                   <button
                     type="button"
                     onClick={() => setActiveIndex(null)}
-                    className="absolute top-4 right-4 sm:top-6 sm:right-6 w-9 h-9 sm:w-9 sm:h-9 rounded-full bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/20 transition-all flex items-center justify-center text-gray-700 dark:text-zinc-300 hover:text-gray-950 dark:hover:text-white hover:scale-110 active:scale-95 border border-black/10 dark:border-white/10 z-20 cursor-pointer"
+                    className={`absolute top-4 right-4 sm:top-6 sm:right-6 w-9 h-9 sm:w-9 sm:h-9 rounded-full ${SURFACE.insetInteractive} transition-all flex items-center justify-center text-gray-700 dark:text-zinc-300 hover:text-gray-950 dark:hover:text-white hover:scale-110 active:scale-95 z-20 cursor-pointer`}
                     aria-label="Close experience details"
                   >
                     <FiX className="text-base" />
@@ -461,7 +460,7 @@ export default function Experience() {
 
                   {/* Header with Icon, Company Pill, and Title */}
                   <div className="flex items-start gap-3.5 sm:gap-5 mb-5 pr-8 relative z-10">
-                    <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-2xl flex-shrink-0 flex items-center justify-center text-xl sm:text-2xl md:text-3xl border border-black/10 dark:border-white/10 bg-white/80 dark:bg-white/10 shadow-sm text-gray-950 dark:text-white">
+                    <div className={`w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-2xl flex-shrink-0 flex items-center justify-center text-xl sm:text-2xl md:text-3xl ${SURFACE.inset} shadow-sm text-gray-950 dark:text-white`}>
                       {experiencesData[activeIndex].icon}
                     </div>
                     <div className="min-w-0">
@@ -485,11 +484,11 @@ export default function Experience() {
 
                   {/* Location & Date Pills */}
                   <div className="flex flex-wrap items-center gap-2 mb-5 sm:mb-6 relative z-10">
-                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-black/5 dark:bg-white/5 text-gray-800 dark:text-zinc-200 border border-black/10 dark:border-white/10">
+                    <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium ${SURFACE.inset} text-gray-800 dark:text-zinc-200`}>
                       <FiMapPin className="text-xs opacity-70 shrink-0" />
                       <span>{experiencesData[activeIndex].location}</span>
                     </span>
-                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-black/5 dark:bg-white/5 text-gray-800 dark:text-zinc-200 border border-black/10 dark:border-white/10">
+                    <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium ${SURFACE.inset} text-gray-800 dark:text-zinc-200`}>
                       <FiCalendar className="text-xs opacity-70 shrink-0" />
                       <span>{experiencesData[activeIndex].date}</span>
                     </span>
@@ -506,7 +505,7 @@ export default function Experience() {
                       <span className="w-1.5 h-1.5 rounded-full bg-emerald-500/80 animate-pulse" />
                       <span>Click card or outside to close</span>
                     </span>
-                    <kbd className="hidden sm:inline-block px-2 py-0.5 text-[0.68rem] font-mono font-medium rounded-md bg-black/5 dark:bg-white/10 border border-black/10 dark:border-white/10 text-gray-700 dark:text-zinc-300">
+                    <kbd className={`hidden sm:inline-block px-2 py-0.5 text-[0.68rem] font-mono font-medium rounded-md ${SURFACE.inset} text-gray-700 dark:text-zinc-300`}>
                       ESC to close
                     </kbd>
                   </div>

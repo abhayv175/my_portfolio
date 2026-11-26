@@ -40,6 +40,7 @@ interface RendererOptions {
   canvas: HTMLCanvasElement;
   active?: boolean;
   variant?: HoleVariant;
+  onMotionChange?: (intensity: number, pan: number) => void;
 }
 
 type RenderSize = { width: number; height: number };
@@ -52,6 +53,7 @@ export function createRenderer({
   canvas,
   active: initialActive = true,
   variant: initialVariant = "dark",
+  onMotionChange,
 }: RendererOptions) {
   let active = initialActive;
   const settings = defaultHeroSettings();
@@ -239,19 +241,37 @@ export function createRenderer({
     }
   }
 
+  const TARGET_FRAME_INTERVAL_MS = 1000 / TARGET_FPS;
+  let currentFrameNow = 0;
+
+  function submitFrame(
+    vgpu: VgpuApi,
+    activeGpu: Gpu,
+    frameNow = clockMs()
+  ): void {
+    currentFrameNow = frameNow;
+    vgpu.frame(activeGpu, renderFrame);
+  }
+
   function startPacedLoop(vgpu: VgpuApi, activeGpu: Gpu): { stop(): void } {
     let stopped = false;
 
     let lastPresentedAt: number | undefined;
     const tick = (timestamp: number): void => {
       if (stopped) return;
-      if (
-        lastPresentedAt === undefined ||
-        timestamp - lastPresentedAt >= MIN_FRAME_INTERVAL_MS
-      ) {
-        lastPresentedAt = timestamp;
+      const elapsed =
+        lastPresentedAt === undefined
+          ? TARGET_FRAME_INTERVAL_MS
+          : timestamp - lastPresentedAt;
+      if (lastPresentedAt === undefined || elapsed >= MIN_FRAME_INTERVAL_MS) {
+        // Stay phase-locked to display vsync unless a multi-frame stall occurs
+        lastPresentedAt =
+          lastPresentedAt === undefined ||
+          elapsed > TARGET_FRAME_INTERVAL_MS * 2
+            ? timestamp
+            : lastPresentedAt + TARGET_FRAME_INTERVAL_MS;
         try {
-          vgpu.frame(activeGpu, renderFrame);
+          submitFrame(vgpu, activeGpu, timestamp);
         } catch (error) {
           handleFailure(error);
         }
@@ -309,9 +329,12 @@ export function createRenderer({
     return animationTime;
   };
 
+  let lastYawSpeed = 0;
+
   const advanceSceneYaw = (now: number): number => {
     if (settings.mouseYaw <= 0) {
       currentSceneYaw = 0;
+      lastYawSpeed = 0;
       lastYawAt = now;
       return 0;
     }
@@ -321,8 +344,10 @@ export function createRenderer({
         : Math.min(Math.max((now - lastYawAt) / 1000, 0), MAX_FRAME_DT_S);
     lastYawAt = now;
     const target = pointerXNormalized * Math.max(0, settings.mouseYaw);
+    const prevYaw = currentSceneYaw;
     currentSceneYaw +=
       (target - currentSceneYaw) * (1 - Math.exp(-dt / SCENE_YAW_TAU_S));
+    lastYawSpeed = dt > 0 ? Math.abs(currentSceneYaw - prevYaw) / dt : 0;
     return currentSceneYaw;
   };
 
@@ -406,11 +431,14 @@ export function createRenderer({
 
   const renderFrame = (frame: Frame): void => {
     if (disposed || !effects || !targets || !surface) return;
-    const now = clockMs();
+    const now = currentFrameNow || clockMs();
     const transitioning = updateTransitionProgress(now);
     const p = currentProgress;
     const time = advanceAnimationTime(now, p, transitioning);
     const sceneYaw = advanceSceneYaw(now);
+    const surge = transitioning ? Math.sin(Math.PI * p) : 0;
+    const panIntensity = Math.min(1, lastYawSpeed / 0.45);
+    onMotionChange?.(Math.min(1, Math.max(panIntensity, surge)), pointerXNormalized);
 
     const morph = computeMorphParams(p, transitioning, time, sceneYaw);
     if (!morph) return;
@@ -482,7 +510,7 @@ export function createRenderer({
       scheduleSecondaryBakes();
 
       if (!active && started) {
-        api.frame(gpu, renderFrame);
+        submitFrame(api, gpu);
       }
     } catch (error) {
       handleFailure(error);
@@ -568,7 +596,7 @@ export function createRenderer({
 
     ensureSlotBaked(primary);
     // Present first frame before signaling ready so opacity reveal never flashes blank
-    vgpu.frame(gpu, renderFrame);
+    submitFrame(vgpu, gpu);
 
     observer =
       typeof ResizeObserver === "undefined"
@@ -614,7 +642,7 @@ export function createRenderer({
       animStartAtMs = undefined;
       applyResponsiveLayout();
       if (started && !active && gpu && api) {
-        api.frame(gpu, renderFrame);
+        submitFrame(api, gpu);
       }
       return;
     }
@@ -630,7 +658,8 @@ export function createRenderer({
     animStartProgress = currentProgress;
     animTargetProgress = nextTarget;
     animDirection = nextTarget > currentProgress ? 1 : -1;
-    animStartAtMs = clockMs();
+    // Stamp t = 0 lazily on the first rendered animation frame after setup completes
+    animStartAtMs = undefined;
     animDurationMs = Math.max(
       240,
       TRANSITION_DURATION_MS * Math.abs(nextTarget - currentProgress)

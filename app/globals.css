@@ -39,30 +39,6 @@ button, a, input, textarea, select {
   -webkit-tap-highlight-color: transparent;
 }
 
-.borderBlack {
-  border: 1px solid rgba(0, 0, 0, 0.15);
-}
-
-.dark .borderBlack {
-  border: 1px solid rgba(255, 255, 255, 0.3);
-}
-
-/* Fast, smooth 0.8s entrance fade up */
-@keyframes entranceFadeUp {
-  0% {
-    opacity: 0;
-    transform: translateY(18px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.animate-entrance {
-  animation: entranceFadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
 /* Smooth ambient glow fade in */
 @keyframes glowFadeIn {
   0% {
@@ -96,15 +72,15 @@ button, a, input, textarea, select {
 /* Frosted glass base for timeline elements */
 .vertical-timeline-element-content {
   border-radius: 1rem !important;
-  backdrop-filter: blur(10px) !important;
-  -webkit-backdrop-filter: blur(10px) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
   transition: background-color 300ms ease-in-out, border-color 300ms ease-in-out, box-shadow 300ms ease-in-out !important;
 }
 
 @media (min-width: 768px) {
   .vertical-timeline-element-content {
-    backdrop-filter: blur(16px) !important;
-    -webkit-backdrop-filter: blur(16px) !important;
+    backdrop-filter: blur(24px) !important;
+    -webkit-backdrop-filter: blur(24px) !important;
   }
 }
 
@@ -124,7 +100,7 @@ html.theme-transitioning input,
 html.theme-transitioning textarea,
 html.theme-transitioning label,
 html.theme-transitioning svg {
-  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity;
   transition-duration: 420ms;
   transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -134,7 +110,6 @@ html.theme-transitioning svg {
     scroll-behavior: auto !important;
   }
 
-  .animate-entrance,
   .animate-glow-in,
   .animate-header-in {
     animation: none !important;

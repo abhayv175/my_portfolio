@@ -3,13 +3,15 @@ import type { Metadata } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import Header from "@/components/header";
 import AmbientGlow from "@/components/ambient-glow";
-import RedRibbon from "@/components/red-ribbon";
+import CursorRibbon from "@/components/red-ribbon";
 import SmoothScroll from "@/components/smooth-scroll";
 import CommandPalette from "@/components/command-palette";
 import ActiveSectionContextProvider from "@/context/active-section-context";
 import Footer from "@/components/footer";
 import ThemeSwitch from "@/components/theme-switch";
 import ThemeContextProvider from "@/context/theme-context";
+import SoundContextProvider from "@/context/sound-context";
+import SoundToggle from "@/components/sound-toggle";
 import { Toaster } from "react-hot-toast";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
@@ -46,6 +48,10 @@ export const metadata: Metadata = {
       "Abhay Verma is a Software Developer and QA engineer with 2 years of experience.",
     images: ["/hero_dark.png"],
   },
+  icons: {
+    icon: [{ url: "/favicon-dark.svg", type: "image/svg+xml", sizes: "any" }],
+    apple: [{ url: "/apple-icon.png", sizes: "180x180", type: "image/png" }],
+  },
 };
 
 export default function RootLayout({
@@ -64,10 +70,16 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{
             __html: `
               try {
-                if (localStorage.getItem('theme') === 'light') {
+                var isLight = localStorage.getItem('theme') === 'light';
+                if (isLight) {
                   document.documentElement.classList.remove('dark');
                 } else {
                   document.documentElement.classList.add('dark');
+                }
+                var href = isLight ? '/favicon-light.svg' : '/favicon-dark.svg';
+                var icon = document.querySelector('link[rel="icon"][type="image/svg+xml"]');
+                if (icon) {
+                  icon.setAttribute('href', href);
                 }
               } catch (_) {}
             `,
@@ -77,22 +89,25 @@ export default function RootLayout({
       <body
         className="font-sans relative min-h-[100dvh] w-full bg-transparent text-gray-950 dark:text-gray-50 overflow-x-clip"
       >
-        <ThemeContextProvider>
-          <SmoothScroll>
-            <AmbientGlow />
-            <RedRibbon />
+        <SoundContextProvider>
+          <ThemeContextProvider>
+            <SmoothScroll>
+              <AmbientGlow />
+              <CursorRibbon />
 
-            <ActiveSectionContextProvider>
-              <Header />
-              {children}
-              <Footer />
+              <ActiveSectionContextProvider>
+                <Header />
+                {children}
+                <Footer />
 
-              <Toaster position="top-right" />
-              <ThemeSwitch />
-              <CommandPalette />
-            </ActiveSectionContextProvider>
-          </SmoothScroll>
-        </ThemeContextProvider>
+                <Toaster position="top-right" />
+                <ThemeSwitch />
+                <SoundToggle />
+                <CommandPalette />
+              </ActiveSectionContextProvider>
+            </SmoothScroll>
+          </ThemeContextProvider>
+        </SoundContextProvider>
       </body>
     </html>
   );

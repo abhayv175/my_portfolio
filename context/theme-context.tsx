@@ -2,11 +2,13 @@
 
 import React, {
   createContext,
+  startTransition,
   useContext,
   useEffect,
   useRef,
   useState,
 } from "react";
+import { spaceAudio } from "@/lib/space-audio";
 
 type Theme = "light" | "dark";
 
@@ -51,14 +53,36 @@ export default function ThemeContextProvider({
     return clearTimers;
   }, []);
 
-  const applyDomTheme = (nextTheme: Theme) => {
-    setTheme(nextTheme);
-    window.localStorage.setItem("theme", nextTheme);
+  const syncDocumentTheme = (nextTheme: Theme) => {
     if (nextTheme === "dark") {
       document.documentElement.classList.add("dark");
     } else {
       document.documentElement.classList.remove("dark");
     }
+
+    const faviconHref =
+      nextTheme === "light" ? "/favicon-light.svg" : "/favicon-dark.svg";
+    let svgIcon = document.querySelector<HTMLLinkElement>(
+      'link[rel="icon"][type="image/svg+xml"]'
+    );
+    if (!svgIcon) {
+      svgIcon = document.createElement("link");
+      svgIcon.rel = "icon";
+      svgIcon.type = "image/svg+xml";
+      svgIcon.setAttribute("sizes", "any");
+      document.head.appendChild(svgIcon);
+    }
+    if (svgIcon.getAttribute("href") !== faviconHref) {
+      svgIcon.setAttribute("href", faviconHref);
+    }
+  };
+
+  const applyDomTheme = (nextTheme: Theme) => {
+    window.localStorage.setItem("theme", nextTheme);
+    syncDocumentTheme(nextTheme);
+    startTransition(() => {
+      setTheme(nextTheme);
+    });
   };
 
   const toggleTheme = () => {
@@ -66,6 +90,7 @@ export default function ThemeContextProvider({
     clearTimers();
     setTargetTheme(nextTheme);
     window.localStorage.setItem("theme", nextTheme);
+    spaceAudio.playThemeTransition(nextTheme);
 
     const reducedMotion =
       typeof window !== "undefined" &&
@@ -110,12 +135,7 @@ export default function ThemeContextProvider({
 
     setTheme(resolvedTheme);
     setTargetTheme(resolvedTheme);
-
-    if (resolvedTheme === "dark") {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
+    syncDocumentTheme(resolvedTheme);
   }, []);
 
   return (

@@ -4,6 +4,7 @@ import { useTheme } from "@/context/theme-context";
 import React, { useState, useEffect } from "react";
 import { BsMoonStarsFill, BsSunFill } from "react-icons/bs";
 import { motion, AnimatePresence } from "framer-motion";
+import { SURFACE } from "./surface-styles";
 
 export default function ThemeSwitch() {
   const { targetTheme, toggleTheme } = useTheme();
@@ -35,16 +36,16 @@ export default function ThemeSwitch() {
       whileTap={{ scale: 0.92 }}
       transition={{ type: "spring", stiffness: 450, damping: 24 }}
       style={{
-        backdropFilter: "blur(28px) saturate(180%)",
-        WebkitBackdropFilter: "blur(28px) saturate(180%)",
+        backdropFilter: "blur(24px)",
+        WebkitBackdropFilter: "blur(24px)",
         transform: "translateZ(0)",
         backfaceVisibility: "hidden",
         isolation: "isolate",
       }}
-      className={`fixed top-[calc(1rem+env(safe-area-inset-top,0px))] left-[calc(1rem+env(safe-area-inset-left,0px))] sm:top-5 sm:left-6 z-[9999] pointer-events-auto isolate w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center backdrop-blur-2xl backdrop-saturate-150 transform-gpu cursor-pointer outline-none transition-[background-color,border-color,box-shadow] duration-300 group overflow-hidden ${
+      className={`fixed top-[calc(1rem+env(safe-area-inset-top,0px))] left-[calc(1rem+env(safe-area-inset-left,0px))] sm:top-5 sm:left-6 z-[9999] pointer-events-auto isolate w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center ${SURFACE.pillInteractive} transform-gpu cursor-pointer outline-none transition-[background-color,border-color,box-shadow] duration-300 group overflow-hidden ${
         isDark
-          ? "bg-zinc-950/80 hover:bg-zinc-950/95 border border-sky-400/30 hover:border-sky-400/60 shadow-[0_8px_30px_rgba(0,0,0,0.6),0_0_20px_rgba(56,189,248,0.22)]"
-          : "bg-white/55 hover:bg-white/80 border border-amber-400/35 hover:border-amber-500/60 shadow-[0_8px_25px_rgba(245,158,11,0.18),0_0_18px_rgba(245,158,11,0.25)]"
+          ? "hover:border-sky-400/60 shadow-[0_8px_30px_rgba(0,0,0,0.6),0_0_20px_rgba(56,189,248,0.22)]"
+          : "hover:border-amber-500/60 shadow-[0_8px_25px_rgba(245,158,11,0.18),0_0_18px_rgba(245,158,11,0.25)]"
       }`}
       onClick={handleClick}
       aria-label="Toggle theme"

@@ -10,6 +10,7 @@ import { SiLeetcode } from "react-icons/si";
 import { useSectionInView } from "@/lib/hooks";
 import { useTheme } from "@/context/theme-context";
 import Magnetic from "@/components/magnetic";
+import { SURFACE } from "./surface-styles";
 
 const EMOJIS = ["👋", "🚀", "💻", "⚡", "🎯", "🔥"];
 const GREETING_PREFIX = "Hi, I'm ";
@@ -183,7 +184,7 @@ export default function Intro() {
 
           {/* Sleek Corner Interactive Badge */}
           <div
-            className="absolute -bottom-0.5 -right-0.5 flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white/90 dark:bg-[#0b0b12]/90 border border-black/15 dark:border-white/20 shadow-md backdrop-blur-md transition-transform duration-300 group-hover:scale-110 z-10"
+            className={`absolute -bottom-0.5 -right-0.5 flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-full ${SURFACE.modal} shadow-md transition-transform duration-300 group-hover:scale-110 z-10`}
           >
             <motion.span
               key={emojiIndex}
@@ -256,7 +257,7 @@ export default function Intro() {
           <div className="flex items-center justify-center gap-3 shrink-0">
             <Magnetic strength={0.35}>
               <a
-                className="bg-white/80 dark:bg-zinc-900/80 p-3.5 text-zinc-700 hover:text-black dark:text-zinc-300 dark:hover:text-white flex items-center justify-center rounded-full hover:scale-110 active:scale-95 transition-all duration-300 cursor-pointer border border-black/10 hover:border-black/30 dark:border-white/10 dark:hover:border-white/30 shadow-sm hover:shadow-md backdrop-blur-md text-lg"
+                className={`${SURFACE.pillInteractive} p-3.5 text-zinc-700 hover:text-black dark:text-zinc-300 dark:hover:text-white flex items-center justify-center rounded-full hover:scale-110 active:scale-95 transition-all duration-300 cursor-pointer hover:border-black/30 dark:hover:border-white/30 shadow-sm hover:shadow-md text-lg`}
                 href="https://www.linkedin.com/in/abhayv175/"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -268,7 +269,7 @@ export default function Intro() {
 
             <Magnetic strength={0.35}>
               <a
-                className="bg-white/80 dark:bg-zinc-900/80 p-3.5 text-zinc-700 hover:text-black dark:text-zinc-300 dark:hover:text-white flex items-center justify-center rounded-full hover:scale-110 active:scale-95 transition-all duration-300 cursor-pointer border border-black/10 hover:border-black/30 dark:border-white/10 dark:hover:border-white/30 shadow-sm hover:shadow-md backdrop-blur-md text-lg"
+                className={`${SURFACE.pillInteractive} p-3.5 text-zinc-700 hover:text-black dark:text-zinc-300 dark:hover:text-white flex items-center justify-center rounded-full hover:scale-110 active:scale-95 transition-all duration-300 cursor-pointer hover:border-black/30 dark:hover:border-white/30 shadow-sm hover:shadow-md text-lg`}
                 href="https://github.com/abhayv175"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -280,7 +281,7 @@ export default function Intro() {
 
             <Magnetic strength={0.35}>
               <a
-                className="bg-white/80 dark:bg-zinc-900/80 p-3.5 text-zinc-700 hover:text-black dark:text-zinc-300 dark:hover:text-white flex items-center justify-center rounded-full hover:scale-110 active:scale-95 transition-all duration-300 cursor-pointer border border-black/10 hover:border-black/30 dark:border-white/10 dark:hover:border-white/30 shadow-sm hover:shadow-md backdrop-blur-md text-lg"
+                className={`${SURFACE.pillInteractive} p-3.5 text-zinc-700 hover:text-black dark:text-zinc-300 dark:hover:text-white flex items-center justify-center rounded-full hover:scale-110 active:scale-95 transition-all duration-300 cursor-pointer hover:border-black/30 dark:hover:border-white/30 shadow-sm hover:shadow-md text-lg`}
                 href="https://leetcode.com/u/abhayv175/"
                 target="_blank"
                 rel="noopener noreferrer"

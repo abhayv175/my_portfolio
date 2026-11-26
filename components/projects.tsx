@@ -5,6 +5,7 @@ import Image from "next/image";
 import SectionHeading from "./section-heading";
 import { projectsData } from "@/lib/data";
 import { useSectionInView } from "@/lib/hooks";
+import { SURFACE } from "./surface-styles";
 import {
   motion,
   useInView,
@@ -19,15 +20,9 @@ import {
   FiExternalLink,
   FiGithub,
   FiActivity,
-  FiSend,
-  FiLayers,
-  FiWifi,
   FiShield,
   FiDollarSign,
   FiArrowRight,
-  FiCheckCircle,
-  FiFileText,
-  FiDatabase,
   FiTablet,
 } from "react-icons/fi";
 import { FaGamepad, FaQrcode } from "react-icons/fa";
@@ -304,7 +299,7 @@ function DesktopHorizontalProjects({
                   className={`px-2.5 py-1 rounded-full text-[0.7rem] font-semibold transition-all duration-200 cursor-pointer border ${
                     isCurrent
                       ? "bg-indigo-600 text-white border-indigo-500 shadow-sm"
-                      : "bg-white/35 dark:bg-white/5 text-zinc-600 dark:text-zinc-400 border-black/10 dark:border-white/10 hover:text-zinc-950 dark:hover:text-white hover:border-indigo-400/40"
+                      : `${SURFACE.pillInteractive} text-zinc-600 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-white hover:border-indigo-400/40`
                   }`}
                 >
                   0{idx + 1} · {item.shortLabel}
@@ -535,12 +530,12 @@ function PrintPulseFeaturedCard({
     <motion.div
       whileHover={{ y: -6, scale: 1.015 }}
       transition={{ duration: 0.15, ease: "easeOut" }}
-      className={`w-full h-full p-5 sm:p-7 rounded-3xl backdrop-blur-md border transition-[border-color,background-color,box-shadow,transform] duration-150 ease-out relative overflow-hidden flex flex-col lg:flex-row gap-6 items-center group ${
+      className={`w-full h-full p-5 sm:p-7 rounded-3xl ${SURFACE.cardFrame} relative overflow-hidden flex flex-col lg:flex-row gap-6 items-center group ${
         isHighlighted
-          ? "border-cyan-500 ring-2 ring-cyan-500/50 bg-white/85 dark:bg-zinc-900/95 shadow-[0_20px_50px_rgba(56,189,248,0.3)] -translate-y-1.5"
+          ? `border-cyan-500 ring-2 ring-cyan-500/50 ${SURFACE.cardHighlight} shadow-[0_20px_50px_rgba(56,189,248,0.3)] -translate-y-1.5`
           : isFocused
-          ? "border-cyan-400/80 dark:border-cyan-400/80 bg-white/75 dark:bg-zinc-900/80 shadow-[0_20px_50px_rgba(0,0,0,0.18),0_0_35px_rgba(56,189,248,0.32)] scale-[1.03] -translate-y-1"
-          : "border-black/10 dark:border-white/10 bg-white/35 dark:bg-zinc-900/40 shadow-xl hover:shadow-[0_20px_50px_rgba(0,0,0,0.18),0_0_35px_rgba(56,189,248,0.32)] hover:border-cyan-400/70 dark:hover:border-cyan-400/70 hover:bg-white/65 dark:hover:bg-zinc-900/75"
+          ? `border-cyan-400/80 dark:border-cyan-400/80 ${SURFACE.cardFocus} shadow-[0_20px_50px_rgba(0,0,0,0.18),0_0_35px_rgba(56,189,248,0.32)] scale-[1.03] -translate-y-1`
+          : `${SURFACE.cardRest} shadow-xl hover:shadow-[0_20px_50px_rgba(0,0,0,0.18),0_0_35px_rgba(56,189,248,0.32)] hover:border-cyan-400/70 dark:hover:border-cyan-400/70`
       }`}
     >
       {/* Background Top Ambient Accent (zero-blur radial gradient for smooth 60fps rail scroll) */}
@@ -559,7 +554,7 @@ function PrintPulseFeaturedCard({
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
               <span>Featured Infrastructure</span>
             </span>
-            <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-black/5 dark:bg-white/10 text-zinc-600 dark:text-zinc-300 border border-black/5 dark:border-white/10">
+            <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${SURFACE.inset} text-zinc-600 dark:text-zinc-300`}>
               Sub-50ms Relay
             </span>
           </div>
@@ -569,7 +564,7 @@ function PrintPulseFeaturedCard({
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Visit PrintPulse Live Website"
-            className="w-8 h-8 rounded-full flex items-center justify-center bg-black/5 dark:bg-white/10 text-zinc-700 dark:text-zinc-200 hover:scale-110 transition-transform"
+            className={`w-8 h-8 rounded-full flex items-center justify-center ${SURFACE.insetInteractive} text-zinc-700 dark:text-zinc-200 hover:scale-110 transition-transform`}
             title="Visit live website"
           >
             <FiExternalLink />
@@ -589,7 +584,7 @@ function PrintPulseFeaturedCard({
           {project.tags.map((tag, i) => (
             <span
               key={i}
-              className="px-2.5 py-1 text-xs font-semibold uppercase tracking-wider rounded-lg bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 text-gray-800 dark:text-zinc-200"
+              className={`px-2.5 py-1 text-xs font-semibold uppercase tracking-wider rounded-lg ${SURFACE.inset} text-gray-800 dark:text-zinc-200`}
             >
               {tag}
             </span>
@@ -615,7 +610,7 @@ function PrintPulseFeaturedCard({
             target="_blank"
             rel="noopener noreferrer"
             aria-label="GitHub Repository"
-            className="w-10 h-10 rounded-full flex items-center justify-center bg-black/5 dark:bg-white/10 text-zinc-700 dark:text-zinc-200 hover:scale-110 hover:bg-black/10 dark:hover:bg-white/15 transition-all text-base border border-black/5 dark:border-white/10"
+            className={`w-10 h-10 rounded-full flex items-center justify-center ${SURFACE.insetInteractive} text-zinc-700 dark:text-zinc-200 hover:scale-110 transition-all text-base`}
             title="View GitHub Repository"
           >
             <FiGithub />
@@ -643,8 +638,8 @@ function PrintPulseFeaturedCard({
                 onClick={() => setActiveStep(s.id)}
                 className={`p-3 rounded-2xl border transition-[border-color,background-color,box-shadow,transform] duration-200 cursor-pointer flex items-center justify-between group/step ${
                   isActive
-                    ? "bg-indigo-500/15 dark:bg-indigo-950/70 border-indigo-500/60 shadow-md ring-1 ring-indigo-500/30 scale-[1.01]"
-                    : "bg-black/[0.02] dark:bg-white/[0.02] border-black/5 dark:border-white/5 hover:border-black/20 dark:hover:border-white/20 hover:bg-black/5 dark:hover:bg-white/5"
+                    ? "bg-indigo-500/15 dark:bg-indigo-500/20 border-indigo-500/60 shadow-md ring-1 ring-indigo-500/30 scale-[1.01]"
+                    : SURFACE.insetInteractive
                 }`}
               >
                 <div className="flex items-center gap-3 min-w-0">
@@ -799,12 +794,12 @@ function PassengerTextCard({
       transition={{ duration: 0.15, ease: "easeOut" }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className={`w-full h-full p-5 sm:p-7 rounded-3xl backdrop-blur-md border transition-[border-color,background-color,box-shadow,transform] duration-150 ease-out relative overflow-hidden flex flex-col justify-between text-left group ${
+      className={`w-full h-full p-5 sm:p-7 rounded-3xl ${SURFACE.cardFrame} relative overflow-hidden flex flex-col justify-between text-left group ${
         isHighlighted
-          ? "border-blue-500 ring-2 ring-blue-500/50 bg-white/85 dark:bg-zinc-900/95 shadow-[0_20px_50px_rgba(59,130,246,0.3)] -translate-y-1.5"
+          ? `border-blue-500 ring-2 ring-blue-500/50 ${SURFACE.cardHighlight} shadow-[0_20px_50px_rgba(59,130,246,0.3)] -translate-y-1.5`
           : isFocused
-          ? "border-blue-400/70 dark:border-blue-400/70 bg-white/75 dark:bg-zinc-900/80 shadow-[0_20px_50px_rgba(0,0,0,0.18),0_0_35px_rgba(59,130,246,0.28)] scale-[1.03] -translate-y-1"
-          : "border-black/10 dark:border-white/10 bg-white/35 dark:bg-zinc-900/40 shadow-xl hover:shadow-[0_20px_50px_rgba(0,0,0,0.18),0_0_35px_rgba(59,130,246,0.28)] hover:border-blue-400/60 dark:hover:border-blue-400/60 hover:bg-white/65 dark:hover:bg-zinc-900/75"
+          ? `border-blue-400/70 dark:border-blue-400/70 ${SURFACE.cardFocus} shadow-[0_20px_50px_rgba(0,0,0,0.18),0_0_35px_rgba(59,130,246,0.28)] scale-[1.03] -translate-y-1`
+          : `${SURFACE.cardRest} shadow-xl hover:shadow-[0_20px_50px_rgba(0,0,0,0.18),0_0_35px_rgba(59,130,246,0.28)] hover:border-blue-400/60 dark:hover:border-blue-400/60`
       }`}
     >
       <div
@@ -823,7 +818,7 @@ function PassengerTextCard({
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Passenger Text GitHub"
-            className="w-8 h-8 rounded-full flex items-center justify-center bg-black/5 dark:bg-white/10 text-zinc-700 dark:text-zinc-200 hover:scale-110 transition-transform"
+            className={`w-8 h-8 rounded-full flex items-center justify-center ${SURFACE.insetInteractive} text-zinc-700 dark:text-zinc-200 hover:scale-110 transition-transform`}
           >
             <FiGithub />
           </a>
@@ -838,7 +833,7 @@ function PassengerTextCard({
         </p>
 
         {/* Simulated Real-Time Chat Typing Animation Container */}
-        <div className="p-4 rounded-2xl bg-black/5 dark:bg-black/30 border border-black/5 dark:border-white/10 mb-5 flex flex-col gap-2.5 relative z-10">
+        <div className={`p-4 rounded-2xl ${SURFACE.inset} mb-5 flex flex-col gap-2.5 relative z-10`}>
           {/* Incoming Message */}
           <div className="flex items-start gap-2 max-w-[85%]">
             <div className="w-6 h-6 rounded-full bg-indigo-600 text-[0.65rem] font-bold text-white flex items-center justify-center shrink-0">
@@ -881,7 +876,7 @@ function PassengerTextCard({
         {project.tags.map((tag, i) => (
           <span
             key={i}
-            className="px-2 py-0.5 text-[0.72rem] font-medium rounded-lg bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 text-gray-700 dark:text-zinc-300"
+            className={`px-2 py-0.5 text-[0.72rem] font-medium rounded-lg ${SURFACE.inset} text-gray-700 dark:text-zinc-300`}
           >
             {tag}
           </span>
@@ -907,12 +902,12 @@ function PikaPanicCard({
     <motion.div
       whileHover={{ y: -6, scale: 1.018 }}
       transition={{ duration: 0.15, ease: "easeOut" }}
-      className={`w-full h-full p-5 sm:p-7 rounded-3xl backdrop-blur-md border transition-[border-color,background-color,box-shadow,transform] duration-150 ease-out relative overflow-hidden flex flex-col justify-between text-left group ${
+      className={`w-full h-full p-5 sm:p-7 rounded-3xl ${SURFACE.cardFrame} relative overflow-hidden flex flex-col justify-between text-left group ${
         isHighlighted
-          ? "border-purple-500 ring-2 ring-purple-500/50 bg-white/85 dark:bg-zinc-900/95 shadow-[0_20px_50px_rgba(168,85,247,0.3)] -translate-y-1.5"
+          ? `border-purple-500 ring-2 ring-purple-500/50 ${SURFACE.cardHighlight} shadow-[0_20px_50px_rgba(168,85,247,0.3)] -translate-y-1.5`
           : isFocused
-          ? "border-purple-400/70 dark:border-purple-400/70 bg-white/75 dark:bg-zinc-900/80 shadow-[0_20px_50px_rgba(0,0,0,0.18),0_0_35px_rgba(168,85,247,0.28)] scale-[1.03] -translate-y-1"
-          : "border-black/10 dark:border-white/10 bg-white/35 dark:bg-zinc-900/40 shadow-xl hover:shadow-[0_20px_50px_rgba(0,0,0,0.18),0_0_35px_rgba(168,85,247,0.28)] hover:border-purple-400/60 dark:hover:border-purple-400/60 hover:bg-white/65 dark:hover:bg-zinc-900/75"
+          ? `border-purple-400/70 dark:border-purple-400/70 ${SURFACE.cardFocus} shadow-[0_20px_50px_rgba(0,0,0,0.18),0_0_35px_rgba(168,85,247,0.28)] scale-[1.03] -translate-y-1`
+          : `${SURFACE.cardRest} shadow-xl hover:shadow-[0_20px_50px_rgba(0,0,0,0.18),0_0_35px_rgba(168,85,247,0.28)] hover:border-purple-400/60 dark:hover:border-purple-400/60`
       }`}
     >
       <div
@@ -932,7 +927,7 @@ function PikaPanicCard({
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Pika Panic Unity Details"
-            className="w-8 h-8 rounded-full flex items-center justify-center bg-black/5 dark:bg-white/10 text-zinc-700 dark:text-zinc-200 hover:scale-110 transition-transform"
+            className={`w-8 h-8 rounded-full flex items-center justify-center ${SURFACE.insetInteractive} text-zinc-700 dark:text-zinc-200 hover:scale-110 transition-transform`}
           >
             <FiExternalLink />
           </a>
@@ -967,7 +962,7 @@ function PikaPanicCard({
         {project.tags.map((tag, i) => (
           <span
             key={i}
-            className="px-2 py-0.5 text-[0.72rem] font-medium rounded-lg bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 text-gray-700 dark:text-zinc-300"
+            className={`px-2 py-0.5 text-[0.72rem] font-medium rounded-lg ${SURFACE.inset} text-gray-700 dark:text-zinc-300`}
           >
             {tag}
           </span>
@@ -1006,12 +1001,12 @@ function SpotlightProjectCard({
       whileHover={{ y: -6, scale: 1.018 }}
       transition={{ duration: 0.15, ease: "easeOut" }}
       onMouseMove={handleMouseMove}
-      className={`w-full h-full p-5 sm:p-7 rounded-3xl backdrop-blur-md border transition-[border-color,background-color,box-shadow,transform] duration-150 ease-out relative overflow-hidden flex flex-col justify-between text-left group ${
+      className={`w-full h-full p-5 sm:p-7 rounded-3xl ${SURFACE.cardFrame} relative overflow-hidden flex flex-col justify-between text-left group ${
         isHighlighted
-          ? "border-emerald-500 ring-2 ring-emerald-500/50 bg-white/85 dark:bg-zinc-900/95 shadow-[0_20px_50px_rgba(16,185,129,0.3)] -translate-y-1.5"
+          ? `border-emerald-500 ring-2 ring-emerald-500/50 ${SURFACE.cardHighlight} shadow-[0_20px_50px_rgba(16,185,129,0.3)] -translate-y-1.5`
           : isFocused
-          ? "border-emerald-400/70 dark:border-emerald-400/70 bg-white/75 dark:bg-zinc-900/80 shadow-[0_20px_50px_rgba(0,0,0,0.18),0_0_35px_rgba(16,185,129,0.28)] scale-[1.03] -translate-y-1"
-          : "border-black/10 dark:border-white/10 bg-white/35 dark:bg-zinc-900/40 shadow-xl hover:shadow-[0_20px_50px_rgba(0,0,0,0.18),0_0_35px_rgba(16,185,129,0.28)] hover:border-emerald-400/60 dark:hover:border-emerald-400/60 hover:bg-white/65 dark:hover:bg-zinc-900/75"
+          ? `border-emerald-400/70 dark:border-emerald-400/70 ${SURFACE.cardFocus} shadow-[0_20px_50px_rgba(0,0,0,0.18),0_0_35px_rgba(16,185,129,0.28)] scale-[1.03] -translate-y-1`
+          : `${SURFACE.cardRest} shadow-xl hover:shadow-[0_20px_50px_rgba(0,0,0,0.18),0_0_35px_rgba(16,185,129,0.28)] hover:border-emerald-400/60 dark:hover:border-emerald-400/60`
       }`}
     >
       {/* Interactive Cursor Spotlight Glow */}
@@ -1038,7 +1033,7 @@ function SpotlightProjectCard({
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Live Demo"
-              className="w-8 h-8 rounded-full flex items-center justify-center bg-black/5 dark:bg-white/10 text-zinc-700 dark:text-zinc-200 hover:scale-110 transition-transform"
+              className={`w-8 h-8 rounded-full flex items-center justify-center ${SURFACE.insetInteractive} text-zinc-700 dark:text-zinc-200 hover:scale-110 transition-transform`}
             >
               <FiExternalLink />
             </a>
@@ -1070,7 +1065,7 @@ function SpotlightProjectCard({
           {project.tags.map((tag, i) => (
             <span
               key={i}
-              className="px-2 py-0.5 text-[0.72rem] font-medium rounded-lg bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 text-gray-700 dark:text-zinc-300"
+              className={`px-2 py-0.5 text-[0.72rem] font-medium rounded-lg ${SURFACE.inset} text-gray-700 dark:text-zinc-300`}
             >
               {tag}
             </span>
@@ -1107,12 +1102,12 @@ function BankingSystemCard({
     <motion.div
       whileHover={{ y: -6, scale: 1.018 }}
       transition={{ duration: 0.15, ease: "easeOut" }}
-      className={`w-full h-full p-5 sm:p-7 rounded-3xl backdrop-blur-md border transition-[border-color,background-color,box-shadow,transform] duration-150 ease-out relative overflow-hidden flex flex-col justify-between text-left group ${
+      className={`w-full h-full p-5 sm:p-7 rounded-3xl ${SURFACE.cardFrame} relative overflow-hidden flex flex-col justify-between text-left group ${
         isHighlighted
-          ? "border-amber-500 ring-2 ring-amber-500/50 bg-white/85 dark:bg-zinc-900/95 shadow-[0_20px_50px_rgba(245,158,11,0.3)] -translate-y-1.5"
+          ? `border-amber-500 ring-2 ring-amber-500/50 ${SURFACE.cardHighlight} shadow-[0_20px_50px_rgba(245,158,11,0.3)] -translate-y-1.5`
           : isFocused
-          ? "border-amber-400/70 dark:border-amber-400/70 bg-white/75 dark:bg-zinc-900/80 shadow-[0_20px_50px_rgba(0,0,0,0.18),0_0_35px_rgba(245,158,11,0.28)] scale-[1.03] -translate-y-1"
-          : "border-black/10 dark:border-white/10 bg-white/35 dark:bg-zinc-900/40 shadow-xl hover:shadow-[0_20px_50px_rgba(0,0,0,0.18),0_0_35px_rgba(245,158,11,0.28)] hover:border-amber-400/60 dark:hover:border-amber-400/60 hover:bg-white/65 dark:hover:bg-zinc-900/75"
+          ? `border-amber-400/70 dark:border-amber-400/70 ${SURFACE.cardFocus} shadow-[0_20px_50px_rgba(0,0,0,0.18),0_0_35px_rgba(245,158,11,0.28)] scale-[1.03] -translate-y-1`
+          : `${SURFACE.cardRest} shadow-xl hover:shadow-[0_20px_50px_rgba(0,0,0,0.18),0_0_35px_rgba(245,158,11,0.28)] hover:border-amber-400/60 dark:hover:border-amber-400/60`
       }`}
     >
       <div
@@ -1132,7 +1127,7 @@ function BankingSystemCard({
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Banking Application GitHub"
-            className="w-8 h-8 rounded-full flex items-center justify-center bg-black/5 dark:bg-white/10 text-zinc-700 dark:text-zinc-200 hover:scale-110 transition-transform"
+            className={`w-8 h-8 rounded-full flex items-center justify-center ${SURFACE.insetInteractive} text-zinc-700 dark:text-zinc-200 hover:scale-110 transition-transform`}
           >
             <FiGithub />
           </a>
@@ -1147,7 +1142,7 @@ function BankingSystemCard({
         </p>
 
         {/* Micro-Sparkline Ledger Preview */}
-        <div className="p-3.5 rounded-2xl bg-black/5 dark:bg-black/30 border border-black/5 dark:border-white/10 mb-5 flex items-center justify-between relative z-10">
+        <div className={`p-3.5 rounded-2xl ${SURFACE.inset} mb-5 flex items-center justify-between relative z-10`}>
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-500 flex items-center justify-center">
               <FiDollarSign className="text-base" />
@@ -1176,7 +1171,7 @@ function BankingSystemCard({
         {project.tags.map((tag, i) => (
           <span
             key={i}
-            className="px-2 py-0.5 text-[0.72rem] font-medium rounded-lg bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 text-gray-700 dark:text-zinc-300"
+            className={`px-2 py-0.5 text-[0.72rem] font-medium rounded-lg ${SURFACE.inset} text-gray-700 dark:text-zinc-300`}
           >
             {tag}
           </span>

@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import { createRenderer, type HoleVariant } from "@/optimized-black-hole/renderer";
+import { spaceAudio } from "@/lib/space-audio";
 
 export type BlackHoleStatus = "pending" | "ready" | "fallback";
 
@@ -64,6 +65,8 @@ export default function BlackHoleBackground({
       canvas,
       active: activeRef.current,
       variant: domVariant,
+      onMotionChange: (intensity, pan) =>
+        spaceAudio.setHoleMotion(intensity, pan),
     });
     rendererRef.current = renderer;
 
@@ -82,6 +85,7 @@ export default function BlackHoleBackground({
 
     return () => {
       cancelled = true;
+      spaceAudio.setHoleMotion(0, 0);
       if (rendererRef.current === renderer) {
         rendererRef.current = null;
       }
@@ -107,8 +111,8 @@ export default function BlackHoleBackground({
         className="pointer-events-none block h-full w-full select-none"
       />
       {/* Subtle center vignettes to preserve contrast for centered Hero & About copy */}
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_58%_50%_at_50%_46%,rgba(255,255,255,0.42),rgba(255,255,255,0.12)_65%,transparent_100%)] opacity-100 dark:opacity-0 transition-opacity duration-500 ease-out" />
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_62%_56%_at_50%_46%,rgba(4,4,8,0.48),rgba(4,4,8,0.16)_65%,transparent_100%)] opacity-0 dark:opacity-100 transition-opacity duration-500 ease-out" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_58%_50%_at_50%_46%,rgba(255,255,255,0.45),rgba(255,255,255,0.14)_65%,transparent_100%)] opacity-100 dark:opacity-0 transition-opacity duration-500 ease-out" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_58%_50%_at_50%_46%,rgba(4,4,8,0.45),rgba(4,4,8,0.14)_65%,transparent_100%)] opacity-0 dark:opacity-100 transition-opacity duration-500 ease-out" />
     </div>
   );
 }

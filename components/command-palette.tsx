@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTheme } from "@/context/theme-context";
+import { useSound } from "@/context/sound-context";
 import { useActiveSectionContext } from "@/context/active-section-context";
 import toast from "react-hot-toast";
 import {
@@ -13,11 +14,14 @@ import {
   FiDownload,
   FiMoon,
   FiSun,
+  FiVolume2,
+  FiVolumeX,
   FiFolder,
   FiExternalLink,
   FiCornerDownLeft,
 } from "react-icons/fi";
 import type { SectionName } from "@/lib/types";
+import { SURFACE } from "./surface-styles";
 
 interface CommandItem {
   id: string;
@@ -36,6 +40,7 @@ export default function CommandPalette() {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const { theme, toggleTheme } = useTheme();
+  const { isSoundEnabled, toggleSound } = useSound();
   const { setActiveSection, setTimeOfLastClick } = useActiveSectionContext();
 
   const navigateTo = (section: SectionName, hash: string) => {
@@ -183,6 +188,22 @@ export default function CommandPalette() {
       keywords: ["mode", "theme", "dark", "light", "color"],
       action: () => {
         toggleTheme();
+        setIsOpen(false);
+      },
+    },
+    {
+      id: "act-toggle-sound",
+      title: isSoundEnabled ? "Mute Space Sound" : "Enable Space Sound",
+      subtitle: "Web Audio cosmic ambience & theme SFX",
+      category: "Quick Actions",
+      icon: isSoundEnabled ? (
+        <FiVolume2 className="text-sky-400" />
+      ) : (
+        <FiVolumeX className="text-zinc-400" />
+      ),
+      keywords: ["sound", "audio", "mute", "unmute", "space", "music"],
+      action: () => {
+        toggleSound();
         setIsOpen(false);
       },
     },
@@ -360,11 +381,11 @@ export default function CommandPalette() {
         whileTap={{ scale: 0.95 }}
         transition={{ type: "spring", stiffness: 420, damping: 24 }}
         aria-label="Open command palette"
-        className="fixed bottom-[calc(1.25rem+env(safe-area-inset-bottom,0px))] right-[calc(1.25rem+env(safe-area-inset-right,0px))] sm:bottom-6 sm:right-6 z-[9990] hidden sm:flex items-center gap-2 px-4 py-2.5 sm:px-3.5 sm:py-2 rounded-full bg-white/50 dark:bg-zinc-950/80 backdrop-blur-xl border border-black/10 dark:border-white/15 text-xs font-semibold text-zinc-700 dark:text-zinc-300 shadow-lg hover:shadow-xl dark:shadow-[0_8px_30px_rgba(0,0,0,0.5)] hover:border-indigo-500/40 dark:hover:border-indigo-400/40 transition-all duration-200 cursor-pointer group"
+        className={`fixed bottom-[calc(1.25rem+env(safe-area-inset-bottom,0px))] right-[calc(1.25rem+env(safe-area-inset-right,0px))] sm:bottom-6 sm:right-6 z-[9990] hidden sm:flex items-center gap-2 px-4 py-2.5 sm:px-3.5 sm:py-2 rounded-full ${SURFACE.pillInteractive} text-xs font-semibold text-zinc-700 dark:text-zinc-300 shadow-lg hover:shadow-xl dark:shadow-[0_8px_30px_rgba(0,0,0,0.5)] hover:border-indigo-500/40 dark:hover:border-indigo-400/40 transition-all duration-200 cursor-pointer group`}
       >
         <FiCommand className="text-sm text-indigo-500 transition-transform duration-300 group-hover:rotate-12" />
         <span className="hidden sm:inline">Commands</span>
-        <kbd className="px-1.5 py-0.5 rounded bg-black/5 dark:bg-white/10 text-[0.65rem] font-mono text-zinc-500 dark:text-zinc-400 border border-black/5 dark:border-white/10">
+        <kbd className={`px-1.5 py-0.5 rounded ${SURFACE.inset} text-[0.65rem] font-mono text-zinc-500 dark:text-zinc-400`}>
           ⌘K
         </kbd>
       </motion.button>
@@ -380,7 +401,7 @@ export default function CommandPalette() {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
               onClick={() => setIsOpen(false)}
-              className="fixed inset-0 bg-black/50 dark:bg-black/75 backdrop-blur-md"
+              className={`fixed inset-0 ${SURFACE.backdrop}`}
             />
 
             {/* Modal Dialog */}
@@ -389,7 +410,7 @@ export default function CommandPalette() {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: -12 }}
               transition={{ type: "spring", stiffness: 380, damping: 28 }}
-              className="relative w-full max-w-xl rounded-2xl bg-white/95 dark:bg-zinc-900/95 border border-black/10 dark:border-white/15 shadow-2xl backdrop-blur-2xl overflow-hidden z-10 flex flex-col max-h-[80vh] sm:max-h-[75vh]"
+              className={`relative w-full max-w-xl rounded-2xl ${SURFACE.modal} shadow-2xl overflow-hidden z-10 flex flex-col max-h-[80vh] sm:max-h-[75vh]`}
             >
               {/* Search Bar Input */}
               <div className="flex items-center gap-3 px-4 py-3.5 border-b border-black/10 dark:border-white/10">
@@ -405,7 +426,7 @@ export default function CommandPalette() {
                   placeholder="Type a command or search..."
                   className="w-full bg-transparent text-base text-zinc-900 dark:text-white placeholder:text-zinc-400 outline-none"
                 />
-                <kbd className="hidden sm:inline px-1.5 py-0.5 rounded bg-black/5 dark:bg-white/10 text-[0.65rem] font-mono text-zinc-500 dark:text-zinc-400 border border-black/5 dark:border-white/10">
+                <kbd className={`hidden sm:inline px-1.5 py-0.5 rounded ${SURFACE.inset} text-[0.65rem] font-mono text-zinc-500 dark:text-zinc-400`}>
                   ESC
                 </kbd>
               </div>

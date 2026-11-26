@@ -43,11 +43,11 @@ export default function About() {
       {/* Cardless radial washes in Light & Dark Modes so copy stays crisp over ring arcs */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -inset-x-10 -inset-y-6 -z-10 rounded-[3rem] bg-[radial-gradient(ellipse_90%_78%_at_48%_55%,rgba(255,255,255,0.72),rgba(255,255,255,0.34)_58%,transparent_88%)] blur-xl opacity-100 dark:opacity-0 transition-opacity duration-500 ease-out"
+        className="pointer-events-none absolute -inset-x-10 -inset-y-6 -z-10 rounded-[3rem] bg-[radial-gradient(ellipse_90%_78%_at_48%_55%,rgba(255,255,255,0.70),rgba(255,255,255,0.32)_58%,transparent_88%)] blur-xl opacity-100 dark:opacity-0 transition-opacity duration-500 ease-out"
       />
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -inset-x-10 -inset-y-6 -z-10 rounded-[3rem] bg-[radial-gradient(ellipse_90%_78%_at_48%_55%,rgba(4,4,8,0.68),rgba(4,4,8,0.28)_58%,transparent_88%)] blur-xl opacity-0 dark:opacity-100 transition-opacity duration-500 ease-out"
+        className="pointer-events-none absolute -inset-x-10 -inset-y-6 -z-10 rounded-[3rem] bg-[radial-gradient(ellipse_90%_78%_at_48%_55%,rgba(4,4,8,0.70),rgba(4,4,8,0.32)_58%,transparent_88%)] blur-xl opacity-0 dark:opacity-100 transition-opacity duration-500 ease-out"
       />
       <div ref={motionRef} className="w-full">
         <motion.div
@@ -56,7 +56,7 @@ export default function About() {
           variants={cardVariants}
         >
           <div className="flex justify-center mb-2">
-            <span className="text-xs font-bold uppercase tracking-widest px-3.5 py-1 rounded-full bg-cyan-500/15 dark:bg-cyan-500/10 text-cyan-700 dark:text-cyan-400 border border-cyan-500/30 dark:border-cyan-500/20 shadow-sm backdrop-blur-sm">
+            <span className="text-xs font-bold uppercase tracking-widest px-3.5 py-1 rounded-full bg-cyan-500/10 text-cyan-700 dark:text-cyan-400 border border-cyan-500/20 shadow-sm">
               About Me
             </span>
           </div>

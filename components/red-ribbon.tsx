@@ -79,10 +79,6 @@ export default function CursorRibbon() {
       startLoop();
     };
 
-    const handlePointerLeave = () => {
-      // Remaining brush stroke smoothly lifts and dissolves away
-    };
-
     const handlePointerEnter = (e: PointerEvent) => {
       if (e.pointerType === "touch") return;
       points.length = 0;
@@ -97,7 +93,6 @@ export default function CursorRibbon() {
     window.addEventListener("pointermove", handlePointerMove, {
       passive: true,
     });
-    document.addEventListener("pointerleave", handlePointerLeave);
     document.addEventListener("pointerenter", handlePointerEnter);
 
     const render = () => {
@@ -272,7 +267,6 @@ export default function CursorRibbon() {
       cancelAnimationFrame(animFrameId);
       window.removeEventListener("resize", handleResize);
       window.removeEventListener("pointermove", handlePointerMove);
-      document.removeEventListener("pointerleave", handlePointerLeave);
       document.removeEventListener("pointerenter", handlePointerEnter);
     };
   }, []);
@@ -285,6 +279,3 @@ export default function CursorRibbon() {
     />
   );
 }
-
-// Re-export as RedRibbon for backwards compatibility
-export { CursorRibbon as RedRibbon };
