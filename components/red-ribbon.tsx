@@ -131,11 +131,11 @@ export default function CursorRibbon() {
 
       ctx.save();
 
-      // Soft aura glow matching theme contrast (white-cyan in dark, subtle ink in light)
+      // Pure monochrome aura matching opposite hole's luminescence/void
       ctx.shadowBlur = isDark ? 12 : 8;
       ctx.shadowColor = isDark
-        ? "rgba(255, 255, 255, 0.35)"
-        : "rgba(0, 0, 0, 0.25)";
+        ? "rgba(255, 255, 255, 0.38)"
+        : "rgba(0, 0, 0, 0.28)";
 
       // Helper function to draw a full segment sequence along the spline
       const drawSplineSegments = (
@@ -210,74 +210,57 @@ export default function CursorRibbon() {
         }
       };
 
-      // Keep the trailing ~50% of the ribbon pure white (dark) / pure black (light),
-      // blending to cyan / indigo only toward the active cursor head.
+      type Rgb = readonly [number, number, number];
+      const lerpRgba = (tail: Rgb, head: Rgb, t: number, alpha: number) => {
+        const r = Math.round(tail[0] + (head[0] - tail[0]) * t);
+        const g = Math.round(tail[1] + (head[1] - tail[1]) * t);
+        const b = Math.round(tail[2] + (head[2] - tail[2]) * t);
+        return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+      };
+
+      // Trailing ~50% stays pure white (dark) / pure black (light); head mirrors opposite hole's monochrome look:
+      // - Dark mode -> White Hole palette: pure white body & mist with subtle graphite-charcoal swirl core
+      // - Light mode -> Black Hole palette: obsidian black body & smoke with bright silver-white photon streak
       const headBlend = (u: number) =>
         u <= 0.5 ? 0 : Math.pow((u - 0.5) / 0.5, 1.3);
 
-      // PASS 1: Wet Paint Glaze Wash (Tail: pure white in dark mode, pure black in light mode)
+      const tailBase: Rgb = isDark ? [255, 255, 255] : [0, 0, 0];
+
+      // PASS 1: Outer Accretion Mist / Glaze Wash
       drawSplineSegments((_, u, totalFade) => {
         const m = headBlend(u);
         const washWidth = 1.0 + Math.pow(u, 1.2) * (MAX_PAINT_WIDTH * 1.35);
         const washAlpha = totalFade * (isDark ? 0.24 : 0.2);
-        let strokeStyle = "";
-        if (isDark) {
-          const r = Math.round(255 - m * 199);
-          const g = Math.round(255 - m * 66);
-          const b = Math.round(255 - m * 7);
-          strokeStyle = `rgba(${r}, ${g}, ${b}, ${washAlpha})`;
-        } else {
-          const r = Math.round(m * 79);
-          const g = Math.round(m * 70);
-          const b = Math.round(m * 229);
-          strokeStyle = `rgba(${r}, ${g}, ${b}, ${washAlpha})`;
-        }
-        return { width: washWidth, strokeStyle };
+        const headColor: Rgb = isDark ? [212, 212, 216] : [82, 82, 91];
+        return {
+          width: washWidth,
+          strokeStyle: lerpRgba(tailBase, headColor, m, washAlpha),
+        };
       });
 
-      // PASS 2: Main Calligraphic Paint Brush Body (Tail: pure white in dark, pure black in light)
+      // PASS 2: Main Calligraphic Brush Body
       drawSplineSegments((_, u, totalFade) => {
         const m = headBlend(u);
         // Tapers from ~0.6px at tail to ~18px at brush head
         const bodyWidth = 0.6 + Math.pow(u, 1.25) * (MAX_PAINT_WIDTH - 0.6);
-        const bodyAlpha = totalFade * (isDark ? 0.92 : 0.9);
-
-        let strokeStyle = "";
-        if (isDark) {
-          // Dark Mode: Tail (u <= 0.5) is White (#ffffff) -> Head (u=1) is Electric Cyan (#38bdf8)
-          const r = Math.round(255 - m * 199);
-          const g = Math.round(255 - m * 66);
-          const b = Math.round(255 - m * 7);
-          strokeStyle = `rgba(${r}, ${g}, ${b}, ${bodyAlpha})`;
-        } else {
-          // Light Mode: Tail (u <= 0.5) is Black (#000000) -> Head (u=1) is Royal Indigo (#4f46e5)
-          const r = Math.round(m * 79);
-          const g = Math.round(m * 70);
-          const b = Math.round(m * 229);
-          strokeStyle = `rgba(${r}, ${g}, ${b}, ${bodyAlpha})`;
-        }
-
-        return { width: bodyWidth, strokeStyle };
+        const bodyAlpha = totalFade * (isDark ? 0.92 : 0.92);
+        const headColor: Rgb = isDark ? [238, 238, 242] : [16, 16, 20];
+        return {
+          width: bodyWidth,
+          strokeStyle: lerpRgba(tailBase, headColor, m, bodyAlpha),
+        };
       });
 
-      // PASS 3: Core Spine Sheen (pure white tail in dark mode, pure black tail in light mode)
+      // PASS 3: Core Swirl / Photon Spine Sheen
       drawSplineSegments((_, u, totalFade) => {
         const m = headBlend(u);
         const coreWidth = 0.4 + Math.pow(u, 1.4) * 3.5;
-        const coreAlpha = totalFade * (isDark ? 0.95 : 0.85);
-        let strokeStyle = "";
-        if (isDark) {
-          const r = Math.round(255 - m * 31);
-          const g = Math.round(255 - m * 13);
-          const b = Math.round(255 - m * 1);
-          strokeStyle = `rgba(${r}, ${g}, ${b}, ${coreAlpha})`;
-        } else {
-          const r = Math.round(m * 199);
-          const g = Math.round(m * 210);
-          const b = Math.round(m * 254);
-          strokeStyle = `rgba(${r}, ${g}, ${b}, ${coreAlpha})`;
-        }
-        return { width: coreWidth, strokeStyle };
+        const coreAlpha = totalFade * (isDark ? 0.9 : 0.88);
+        const headColor: Rgb = isDark ? [56, 56, 64] : [228, 228, 232];
+        return {
+          width: coreWidth,
+          strokeStyle: lerpRgba(tailBase, headColor, m, coreAlpha),
+        };
       });
 
       ctx.restore();
