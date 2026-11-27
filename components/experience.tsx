@@ -80,21 +80,37 @@ const EXPERIENCE_THEMES = [
   },
 ];
 
-type OriginOffset = {
+type OriginGeometry = {
   x: number;
   y: number;
+  scale: number;
 };
 
-function measureOriginOffset(sourceEl?: HTMLElement | null): OriginOffset {
+function measureOriginGeometry(sourceEl?: HTMLElement | null): OriginGeometry {
   if (!sourceEl || typeof window === "undefined") {
-    return { x: 0, y: 20 };
+    return { x: 0, y: 24, scale: 0.65 };
   }
   const rect = sourceEl.getBoundingClientRect();
-  const dx = rect.left + rect.width / 2 - window.innerWidth / 2;
-  const dy = rect.top + rect.height / 2 - window.innerHeight / 2;
+  const vw = window.innerWidth;
+  const vh = window.innerHeight;
+  const dx = rect.left + rect.width / 2 - vw / 2;
+  const dy = rect.top + rect.height / 2 - vh / 2;
+  const modalMaxWidth = Math.min(768, vw - (vw >= 640 ? 48 : 24));
+  const modalEstHeight = vw >= 640 ? Math.min(vh * 0.86, 704) : vh * 0.82;
+  const scale = Math.min(
+    0.74,
+    Math.max(
+      0.48,
+      Math.min(
+        rect.width / Math.max(modalMaxWidth, 1),
+        rect.height / Math.max(modalEstHeight, 1)
+      )
+    )
+  );
   return {
-    x: Math.max(-220, Math.min(220, dx * 0.35)),
-    y: Math.max(-180, Math.min(180, dy * 0.35)),
+    x: Math.max(-vw * 0.42, Math.min(vw * 0.42, dx)),
+    y: Math.max(-vh * 0.42, Math.min(vh * 0.42, dy)),
+    scale,
   };
 }
 
@@ -326,14 +342,15 @@ export default function Experience() {
   const [mounted, setMounted] = React.useState(false);
   const [isMobile, setIsMobile] = React.useState(false);
   const [activeIndex, setActiveIndex] = React.useState<number | null>(null);
-  const [originOffset, setOriginOffset] = React.useState<OriginOffset>({
+  const [originGeometry, setOriginGeometry] = React.useState<OriginGeometry>({
     x: 0,
-    y: 20,
+    y: 24,
+    scale: 0.65,
   });
 
   const handleOpenExperience = React.useCallback(
     (index: number, sourceEl?: HTMLElement | null) => {
-      setOriginOffset(measureOriginOffset(sourceEl));
+      setOriginGeometry(measureOriginGeometry(sourceEl));
       setActiveIndex(index);
     },
     []
@@ -342,7 +359,17 @@ export default function Experience() {
   const handleStepExperience = React.useCallback((delta: number) => {
     setActiveIndex((prev) => {
       if (prev === null) return prev;
-      return (prev + delta + experiencesData.length) % experiencesData.length;
+      const next =
+        (prev + delta + experiencesData.length) % experiencesData.length;
+      if (typeof document !== "undefined") {
+        const cards = document.querySelectorAll<HTMLElement>(
+          "#experience .vertical-timeline-element-content"
+        );
+        if (cards[next]) {
+          setOriginGeometry(measureOriginGeometry(cards[next]));
+        }
+      }
+      return next;
     });
   }, []);
 
@@ -475,57 +502,81 @@ export default function Experience() {
         createPortal(
           <AnimatePresence>
             {activeIndex !== null && activeItem && (
-              <div
-                key="experience-overlay-root"
-                className="fixed inset-0 z-[10000] flex items-center justify-center p-3 sm:p-6 md:p-10"
-              >
-                {/* Frosted Scrim */}
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
-                  onClick={() => setActiveIndex(null)}
-                  className="fixed inset-0 bg-white/60 dark:bg-[#040408]/75 backdrop-blur-md cursor-pointer touch-none overscroll-none"
-                  aria-label="Close modal overlay"
-                />
+              <motion.div
+                key="experience-backdrop"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{
+                  duration: reducedMotion ? 0.16 : 0.3,
+                  ease: [0.22, 1, 0.36, 1],
+                }}
+                onClick={() => setActiveIndex(null)}
+                className="fixed inset-0 z-[10000] bg-white/60 dark:bg-[#040408]/75 backdrop-blur-md cursor-pointer touch-none overscroll-none"
+                aria-label="Close modal overlay"
+              />
+            )}
 
+            {activeIndex !== null && activeItem && (
+              <motion.div
+                key="experience-overlay-shell"
+                initial={false}
+                animate={{ opacity: 1 }}
+                exit={{
+                  opacity: 1,
+                  transition: { duration: reducedMotion ? 0.16 : 0.38 },
+                }}
+                className="fixed inset-0 z-[10001] flex items-center justify-center p-3 sm:p-6 md:p-10 pointer-events-none"
+              >
                 {/* Fullscreen / Expanded Glass Showcase Container */}
                 <motion.div
+                  key="experience-dialog-card"
                   initial={
                     reducedMotion
                       ? { opacity: 0 }
                       : {
                           opacity: 0,
-                          x: originOffset.x,
-                          y: originOffset.y,
-                          scale: 0.92,
+                          x: originGeometry.x,
+                          y: originGeometry.y,
+                          scale: originGeometry.scale,
                         }
                   }
-                  animate={{ opacity: 1, x: 0, y: 0, scale: 1 }}
+                  animate={{
+                    opacity: 1,
+                    x: 0,
+                    y: 0,
+                    scale: 1,
+                    transition: reducedMotion
+                      ? { duration: 0.16 }
+                      : {
+                          x: { duration: 0.38, ease: [0.22, 1, 0.36, 1] },
+                          y: { duration: 0.38, ease: [0.22, 1, 0.36, 1] },
+                          scale: { duration: 0.38, ease: [0.22, 1, 0.36, 1] },
+                          opacity: { duration: 0.24, ease: "easeOut" },
+                        },
+                  }}
                   exit={
                     reducedMotion
-                      ? { opacity: 0 }
+                      ? { opacity: 0, transition: { duration: 0.16 } }
                       : {
                           opacity: 0,
-                          x: originOffset.x * 0.55,
-                          y: originOffset.y * 0.55,
-                          scale: 0.94,
+                          x: originGeometry.x,
+                          y: originGeometry.y,
+                          scale: originGeometry.scale,
+                          transition: {
+                            x: { duration: 0.34, ease: [0.32, 0, 0.2, 1] },
+                            y: { duration: 0.34, ease: [0.32, 0, 0.2, 1] },
+                            scale: { duration: 0.34, ease: [0.32, 0, 0.2, 1] },
+                            opacity: { duration: 0.26, delay: 0.06, ease: [0.4, 0, 1, 1] },
+                          },
                         }
                   }
-                  transition={{
-                    duration: reducedMotion ? 0.16 : 0.34,
-                    ease: [0.16, 1, 0.3, 1],
-                  }}
                   onClick={(e) => e.stopPropagation()}
                   role="dialog"
                   aria-modal="true"
                   aria-labelledby="experience-modal-title"
-                  style={{
-                    transform: "translateZ(0)",
-                    backfaceVisibility: "hidden",
-                  }}
-                  className="relative z-10 w-full max-w-3xl max-h-[calc(100dvh-1.5rem)] sm:max-h-[min(86dvh,44rem)] flex flex-col rounded-[1.75rem] sm:rounded-[2rem] bg-white/88 dark:bg-[#090910]/86 backdrop-blur-xl border border-black/10 dark:border-white/15 shadow-[0_24px_80px_rgba(0,0,0,0.12),inset_0_1px_0_rgba(255,255,255,0.6)] dark:shadow-[0_32px_96px_rgba(0,0,0,0.75),inset_0_1px_0_rgba(255,255,255,0.12)] overflow-hidden text-left transform-gpu will-change-[transform,opacity]"
+                  style={{ backfaceVisibility: "hidden" }}
+                  className="pointer-events-auto relative z-10 w-full max-w-3xl max-h-[calc(100dvh-1.5rem)] sm:max-h-[min(86dvh,44rem)] flex flex-col rounded-[1.75rem] sm:rounded-[2rem] bg-white/88 dark:bg-[#090910]/86 backdrop-blur-xl border border-black/10 dark:border-white/15 shadow-[0_24px_80px_rgba(0,0,0,0.12),inset_0_1px_0_rgba(255,255,255,0.6)] dark:shadow-[0_32px_96px_rgba(0,0,0,0.75),inset_0_1px_0_rgba(255,255,255,0.12)] overflow-hidden text-left will-change-[transform,opacity]"
                 >
                   {/* Top Specular Edge Hairline (Matches Header Pill Aesthetic) */}
                   <div
@@ -674,8 +725,8 @@ export default function Experience() {
                       </button>
                     </div>
                   </div>
-                </motion.div>
-              </div>
+              </motion.div>
+              </motion.div>
             )}
           </AnimatePresence>,
           document.body
