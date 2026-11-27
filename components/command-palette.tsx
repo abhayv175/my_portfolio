@@ -5,6 +5,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useTheme } from "@/context/theme-context";
 import { useSound } from "@/context/sound-context";
 import { useActiveSectionContext } from "@/context/active-section-context";
+import { useLenis } from "lenis/react";
+import { scrollToSection } from "@/lib/scroll-to-section";
 import toast from "react-hot-toast";
 import {
   FiSearch,
@@ -42,15 +44,13 @@ export default function CommandPalette() {
   const { theme, toggleTheme } = useTheme();
   const { isSoundEnabled, toggleSound } = useSound();
   const { setActiveSection, setTimeOfLastClick } = useActiveSectionContext();
+  const lenis = useLenis();
 
   const navigateTo = (section: SectionName, hash: string) => {
-    setActiveSection(section);
-    setTimeOfLastClick(Date.now());
     setIsOpen(false);
-    const element = document.getElementById(hash.replace("#", ""));
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
-    }
+    const durationMs = scrollToSection(hash, lenis);
+    setActiveSection(section);
+    setTimeOfLastClick(Date.now() + Math.max(0, durationMs - 850));
   };
 
   const copyEmail = () => {

@@ -7,6 +7,8 @@ import clsx from "clsx";
 import { useActiveSectionContext } from "@/context/active-section-context";
 import type { SectionName } from "@/lib/types";
 import { BsArrowRight } from "react-icons/bs";
+import { useLenis } from "lenis/react";
+import { scrollToSection } from "@/lib/scroll-to-section";
 import Magnetic from "@/components/magnetic";
 import { SURFACE } from "./surface-styles";
 
@@ -64,6 +66,7 @@ function getContactCtaClass(isActiveContact: boolean) {
 export default function Header() {
   const { activeSection, setActiveSection, setTimeOfLastClick } =
     useActiveSectionContext();
+  const lenis = useLenis();
   const [isOpen, setIsOpen] = useState(false);
 
   // Lock background scroll and close drawer on Escape key press
@@ -92,16 +95,11 @@ export default function Header() {
   ) => {
     e.preventDefault();
     (e.currentTarget as HTMLElement)?.blur();
-    setActiveSection(linkName);
-    setTimeOfLastClick(Date.now());
     document.body.style.overflow = "";
     setIsOpen(false);
-
-    const targetId = hash.replace("#", "");
-    const element = document.getElementById(targetId);
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
-    }
+    const durationMs = scrollToSection(hash, lenis);
+    setActiveSection(linkName);
+    setTimeOfLastClick(Date.now() + Math.max(0, durationMs - 850));
   };
 
   const navLinks = links.filter((link) => link.name !== "Contact");
