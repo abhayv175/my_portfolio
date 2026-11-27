@@ -126,12 +126,6 @@ export default function CursorRibbon() {
 
       ctx.save();
 
-      // Pure monochrome aura matching opposite hole's luminescence/void
-      ctx.shadowBlur = isDark ? 12 : 8;
-      ctx.shadowColor = isDark
-        ? "rgba(255, 255, 255, 0.38)"
-        : "rgba(0, 0, 0, 0.28)";
-
       // Helper function to draw a full segment sequence along the spline
       const drawSplineSegments = (
         drawSegment: (
@@ -220,6 +214,18 @@ export default function CursorRibbon() {
         u <= 0.5 ? 0 : Math.pow((u - 0.5) / 0.5, 1.3);
 
       const tailBase: Rgb = isDark ? [255, 255, 255] : [0, 0, 0];
+
+      // PASS 0: Soft outer glow halo (replaces expensive per-segment GPU shadowBlur)
+      drawSplineSegments((_, u, totalFade) => {
+        const m = headBlend(u);
+        const auraWidth = 2.0 + Math.pow(u, 1.15) * (MAX_PAINT_WIDTH * 1.95);
+        const auraAlpha = totalFade * (isDark ? 0.11 : 0.08);
+        const headColor: Rgb = isDark ? [212, 212, 216] : [82, 82, 91];
+        return {
+          width: auraWidth,
+          strokeStyle: lerpRgba(tailBase, headColor, m, auraAlpha),
+        };
+      });
 
       // PASS 1: Outer Accretion Mist / Glaze Wash
       drawSplineSegments((_, u, totalFade) => {

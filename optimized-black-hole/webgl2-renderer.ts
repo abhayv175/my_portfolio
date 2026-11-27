@@ -1339,6 +1339,21 @@ export function createWebGl2Renderer({
     reconcileLoop();
   };
 
+  const captureSnapshot = (destCanvas: HTMLCanvasElement | null): boolean => {
+    if (disposed || !started || !destCanvas || !gl) return false;
+    const width = canvas.width;
+    const height = canvas.height;
+    if (width <= 0 || height <= 0) return false;
+    if (destCanvas.width !== width) destCanvas.width = width;
+    if (destCanvas.height !== height) destCanvas.height = height;
+    const ctx = destCanvas.getContext("2d");
+    if (!ctx) return false;
+    submitFrame();
+    ctx.clearRect(0, 0, width, height);
+    ctx.drawImage(canvas, 0, 0, width, height);
+    return true;
+  };
+
   const setVariant = (nextVariant: HoleVariant, animate = true) => {
     const nextTarget = nextVariant === "light" ? 1 : 0;
     if (nextTarget === targetProgress) return;
@@ -1383,5 +1398,5 @@ export function createWebGl2Renderer({
     handleFailure(error);
   });
 
-  return { ready, setActive, setVariant, dispose };
+  return { ready, setActive, setVariant, captureSnapshot, dispose };
 }

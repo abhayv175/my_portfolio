@@ -15,6 +15,7 @@ import { motion, AnimatePresence, useInView, useReducedMotion } from "framer-mot
 import { useLenis } from "lenis/react";
 import { FiX, FiMapPin, FiCalendar, FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import { SURFACE, SURFACE_RGBA } from "./surface-styles";
+import { freezeBlackHoleOverlay } from "./black-hole-background";
 
 const cardVariants = {
   hidden: {
@@ -98,9 +99,9 @@ function measureOriginGeometry(sourceEl?: HTMLElement | null): OriginGeometry {
   const modalMaxWidth = Math.min(768, vw - (vw >= 640 ? 48 : 24));
   const modalEstHeight = vw >= 640 ? Math.min(vh * 0.86, 704) : vh * 0.82;
   const scale = Math.min(
-    0.74,
+    0.82,
     Math.max(
-      0.48,
+      0.72,
       Math.min(
         rect.width / Math.max(modalMaxWidth, 1),
         rect.height / Math.max(modalEstHeight, 1)
@@ -226,7 +227,6 @@ function ExperienceTimelineCard({
           textAlign: "left",
           padding: "1.5rem 2rem",
           borderRadius: "1.25rem",
-          opacity: activeIndex === index ? 0.35 : 1,
           cursor: "pointer",
         }}
         contentArrowStyle={{
@@ -342,14 +342,38 @@ export default function Experience() {
   const [mounted, setMounted] = React.useState(false);
   const [isMobile, setIsMobile] = React.useState(false);
   const [activeIndex, setActiveIndex] = React.useState<number | null>(null);
+  const activeIndexRef = React.useRef<number | null>(null);
+  activeIndexRef.current = activeIndex;
+  const scrollBodyRef = React.useRef<HTMLDivElement>(null);
+  const isOverlayFrozenRef = React.useRef(false);
   const [originGeometry, setOriginGeometry] = React.useState<OriginGeometry>({
     x: 0,
     y: 24,
-    scale: 0.65,
+    scale: 0.76,
   });
+
+  const releaseOverlayFreeze = React.useCallback(() => {
+    if (isOverlayFrozenRef.current) {
+      isOverlayFrozenRef.current = false;
+      freezeBlackHoleOverlay(false);
+    }
+  }, []);
+
+  React.useEffect(() => {
+    return () => {
+      if (isOverlayFrozenRef.current) {
+        isOverlayFrozenRef.current = false;
+        freezeBlackHoleOverlay(false);
+      }
+    };
+  }, []);
 
   const handleOpenExperience = React.useCallback(
     (index: number, sourceEl?: HTMLElement | null) => {
+      if (!isOverlayFrozenRef.current) {
+        isOverlayFrozenRef.current = true;
+        freezeBlackHoleOverlay(true);
+      }
       setOriginGeometry(measureOriginGeometry(sourceEl));
       setActiveIndex(index);
     },
@@ -386,13 +410,22 @@ export default function Experience() {
   React.useEffect(() => {
     if (activeIndex === null) return;
 
-    const scrollbarWidth =
-      window.innerWidth - document.documentElement.clientWidth;
     lenis?.stop();
-    document.body.style.overflow = "hidden";
-    if (scrollbarWidth > 0) {
-      document.body.style.paddingRight = `${scrollbarWidth}px`;
-    }
+
+    const allowScrollWithinModal = (target: EventTarget | null) =>
+      target instanceof Node && Boolean(scrollBodyRef.current?.contains(target));
+
+    const handleWheel = (e: WheelEvent) => {
+      if (!allowScrollWithinModal(e.target)) {
+        e.preventDefault();
+      }
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      if (!allowScrollWithinModal(e.target)) {
+        e.preventDefault();
+      }
+    };
 
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
@@ -401,13 +434,21 @@ export default function Experience() {
         handleStepExperience(1);
       } else if (e.key === "ArrowLeft") {
         handleStepExperience(-1);
+      } else if (
+        [" ", "PageUp", "PageDown", "Home", "End"].includes(e.key) &&
+        !allowScrollWithinModal(document.activeElement)
+      ) {
+        e.preventDefault();
       }
     };
+
+    window.addEventListener("wheel", handleWheel, { passive: false });
+    window.addEventListener("touchmove", handleTouchMove, { passive: false });
     window.addEventListener("keydown", handleKeyDown);
     return () => {
       lenis?.start();
-      document.body.style.overflow = "";
-      document.body.style.paddingRight = "";
+      window.removeEventListener("wheel", handleWheel);
+      window.removeEventListener("touchmove", handleTouchMove);
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [activeIndex, lenis, handleStepExperience]);
@@ -500,7 +541,13 @@ export default function Experience() {
       {/* Focused Fullscreen Work Experience Overlay (Frosted Glass Design Language) */}
       {mounted &&
         createPortal(
-          <AnimatePresence>
+          <AnimatePresence
+            onExitComplete={() => {
+              if (activeIndexRef.current === null) {
+                releaseOverlayFreeze();
+              }
+            }}
+          >
             {activeIndex !== null && activeItem && (
               <motion.div
                 key="experience-backdrop"
@@ -508,11 +555,11 @@ export default function Experience() {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{
-                  duration: reducedMotion ? 0.16 : 0.3,
+                  duration: reducedMotion ? 0.14 : 0.22,
                   ease: [0.22, 1, 0.36, 1],
                 }}
                 onClick={() => setActiveIndex(null)}
-                className="fixed inset-0 z-[10000] bg-white/60 dark:bg-[#040408]/75 backdrop-blur-md cursor-pointer touch-none overscroll-none"
+                className="fixed inset-0 z-[10000] bg-white/75 dark:bg-[#040408]/85 cursor-pointer touch-none overscroll-none will-change-[opacity]"
                 aria-label="Close modal overlay"
               />
             )}
@@ -524,7 +571,7 @@ export default function Experience() {
                 animate={{ opacity: 1 }}
                 exit={{
                   opacity: 1,
-                  transition: { duration: reducedMotion ? 0.16 : 0.38 },
+                  transition: { duration: reducedMotion ? 0.14 : 0.28 },
                 }}
                 className="fixed inset-0 z-[10001] flex items-center justify-center p-3 sm:p-6 md:p-10 pointer-events-none"
               >
@@ -547,27 +594,27 @@ export default function Experience() {
                     y: 0,
                     scale: 1,
                     transition: reducedMotion
-                      ? { duration: 0.16 }
+                      ? { duration: 0.14 }
                       : {
-                          x: { duration: 0.38, ease: [0.22, 1, 0.36, 1] },
-                          y: { duration: 0.38, ease: [0.22, 1, 0.36, 1] },
-                          scale: { duration: 0.38, ease: [0.22, 1, 0.36, 1] },
-                          opacity: { duration: 0.24, ease: "easeOut" },
+                          x: { duration: 0.36, ease: [0.16, 1, 0.3, 1] },
+                          y: { duration: 0.36, ease: [0.16, 1, 0.3, 1] },
+                          scale: { duration: 0.36, ease: [0.16, 1, 0.3, 1] },
+                          opacity: { duration: 0.16, ease: "easeOut" },
                         },
                   }}
                   exit={
                     reducedMotion
-                      ? { opacity: 0, transition: { duration: 0.16 } }
+                      ? { opacity: 0, transition: { duration: 0.14 } }
                       : {
                           opacity: 0,
-                          x: originGeometry.x,
-                          y: originGeometry.y,
-                          scale: originGeometry.scale,
+                          x: originGeometry.x * 0.45,
+                          y: originGeometry.y * 0.45,
+                          scale: 0.88,
                           transition: {
-                            x: { duration: 0.34, ease: [0.32, 0, 0.2, 1] },
-                            y: { duration: 0.34, ease: [0.32, 0, 0.2, 1] },
-                            scale: { duration: 0.34, ease: [0.32, 0, 0.2, 1] },
-                            opacity: { duration: 0.26, delay: 0.06, ease: [0.4, 0, 1, 1] },
+                            x: { duration: 0.26, ease: [0.32, 0, 0.2, 1] },
+                            y: { duration: 0.26, ease: [0.32, 0, 0.2, 1] },
+                            scale: { duration: 0.26, ease: [0.32, 0, 0.2, 1] },
+                            opacity: { duration: 0.2, ease: "easeOut" },
                           },
                         }
                   }
@@ -576,7 +623,7 @@ export default function Experience() {
                   aria-modal="true"
                   aria-labelledby="experience-modal-title"
                   style={{ backfaceVisibility: "hidden" }}
-                  className="pointer-events-auto relative z-10 w-full max-w-3xl max-h-[calc(100dvh-1.5rem)] sm:max-h-[min(86dvh,44rem)] flex flex-col rounded-[1.75rem] sm:rounded-[2rem] bg-white/88 dark:bg-[#090910]/86 backdrop-blur-xl border border-black/10 dark:border-white/15 shadow-[0_24px_80px_rgba(0,0,0,0.12),inset_0_1px_0_rgba(255,255,255,0.6)] dark:shadow-[0_32px_96px_rgba(0,0,0,0.75),inset_0_1px_0_rgba(255,255,255,0.12)] overflow-hidden text-left will-change-[transform,opacity]"
+                  className="pointer-events-auto relative z-10 w-full max-w-3xl max-h-[calc(100dvh-1.5rem)] sm:max-h-[min(86dvh,44rem)] flex flex-col rounded-[1.75rem] sm:rounded-[2rem] bg-white/96 dark:bg-[#090910]/96 backdrop-blur-md border border-black/10 dark:border-white/15 shadow-[0_24px_80px_rgba(0,0,0,0.12),inset_0_1px_0_rgba(255,255,255,0.6)] dark:shadow-[0_32px_96px_rgba(0,0,0,0.75),inset_0_1px_0_rgba(255,255,255,0.12)] overflow-hidden text-left will-change-[transform,opacity]"
                 >
                   {/* Top Specular Edge Hairline (Matches Header Pill Aesthetic) */}
                   <div
@@ -601,7 +648,7 @@ export default function Experience() {
 
                       <div className="min-w-0">
                         <div className="flex flex-wrap items-center gap-2 mb-1.5">
-                          <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-zinc-500 dark:text-zinc-400">
+                          <span className="font-mono text-[11px] uppercase tracking-[0.14em] sm:tracking-[0.2em] whitespace-nowrap text-zinc-500 dark:text-zinc-400">
                             Work Experience ·{" "}
                             {String(activeIndex + 1).padStart(2, "0")} /{" "}
                             {String(experiencesData.length).padStart(2, "0")}
@@ -651,7 +698,11 @@ export default function Experience() {
                   </div>
 
                   {/* Scrollable Editorial Body */}
-                  <div className="relative z-10 flex-1 min-h-0 overflow-y-auto overscroll-contain px-5 sm:px-8 py-5 sm:py-7">
+                  <div
+                    ref={scrollBodyRef}
+                    data-experience-scroll
+                    className="relative z-10 flex-1 min-h-0 overflow-y-auto overscroll-contain px-5 sm:px-8 py-5 sm:py-7 [scrollbar-width:thin] [scrollbar-color:rgba(113,113,122,0.45)_transparent] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-zinc-400/40 dark:[&::-webkit-scrollbar-thumb]:bg-zinc-600/50"
+                  >
                     <AnimatePresence mode="wait" initial={false}>
                       <motion.div
                         key={activeIndex}

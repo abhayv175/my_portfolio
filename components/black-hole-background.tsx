@@ -8,6 +8,18 @@ export type BlackHoleStatus = "pending" | "ready" | "fallback";
 type RendererBackend = "webgpu" | "webgl2";
 type HoleRenderer = ReturnType<typeof createRenderer>;
 
+/**
+ * Temporarily swaps the live 3D BlackHole canvas for a pixel-identical 2D snapshot
+ * while fullscreen modals open/close so macOS OverlayProcessor avoids Dawn/Metal
+ * swapchain stalls.
+ */
+export function freezeBlackHoleOverlay(freeze: boolean): void {
+  if (typeof window === "undefined") return;
+  window.dispatchEvent(
+    new CustomEvent("bh:overlay-freeze", { detail: freeze })
+  );
+}
+
 interface BlackHoleBackgroundProps {
   active?: boolean;
   variant?: HoleVariant;
@@ -24,10 +36,13 @@ export default function BlackHoleBackground({
   onStatusChange,
 }: BlackHoleBackgroundProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const snapshotCanvasRef = useRef<HTMLCanvasElement>(null);
   const rendererRef = useRef<HoleRenderer | null>(null);
   const activeRef = useRef(active);
   const latestVariantRef = useRef(variant);
   const hasMountedVariantRef = useRef(false);
+  const freezeCountRef = useRef(0);
+  const unfreezeRafRef = useRef(0);
   activeRef.current = active;
   latestVariantRef.current = variant;
 
@@ -50,8 +65,68 @@ export default function BlackHoleBackground({
   }, []);
 
   useEffect(() => {
-    rendererRef.current?.setActive(active);
+    if (freezeCountRef.current === 0) {
+      rendererRef.current?.setActive(active);
+    }
   }, [active]);
+
+  useEffect(() => {
+    const onOverlayFreeze = (event: Event) => {
+      const shouldFreeze = Boolean((event as CustomEvent<boolean>).detail);
+      const canvas = canvasRef.current;
+      const snapCanvas = snapshotCanvasRef.current;
+      const renderer = rendererRef.current;
+
+      if (shouldFreeze) {
+        const nextCount = freezeCountRef.current + 1;
+        freezeCountRef.current = nextCount;
+        if (nextCount !== 1) return;
+
+        if (unfreezeRafRef.current) {
+          cancelAnimationFrame(unfreezeRafRef.current);
+          unfreezeRafRef.current = 0;
+        }
+        if (renderer && snapCanvas) {
+          const captured = renderer.captureSnapshot?.(snapCanvas);
+          if (captured) {
+            snapCanvas.style.display = "block";
+          }
+          renderer.setActive(false);
+        }
+        if (canvas) {
+          canvas.style.display = "none";
+        }
+        return;
+      }
+
+      if (freezeCountRef.current === 0) return;
+      const nextCount = freezeCountRef.current - 1;
+      freezeCountRef.current = nextCount;
+      if (nextCount > 0) return;
+
+      if (canvas) {
+        canvas.style.display = "block";
+      }
+      renderer?.setActive(activeRef.current);
+      if (snapCanvas) {
+        unfreezeRafRef.current = requestAnimationFrame(() => {
+          unfreezeRafRef.current = 0;
+          if (freezeCountRef.current === 0 && snapshotCanvasRef.current) {
+            snapshotCanvasRef.current.style.display = "none";
+          }
+        });
+      }
+    };
+
+    window.addEventListener("bh:overlay-freeze", onOverlayFreeze);
+    return () => {
+      window.removeEventListener("bh:overlay-freeze", onOverlayFreeze);
+      if (unfreezeRafRef.current) {
+        cancelAnimationFrame(unfreezeRafRef.current);
+        unfreezeRafRef.current = 0;
+      }
+    };
+  }, []);
 
   useEffect(() => {
     if (!hasMountedVariantRef.current) {
@@ -148,9 +223,14 @@ export default function BlackHoleBackground({
       }`}
     >
       <canvas
+        ref={snapshotCanvasRef}
+        className="pointer-events-none absolute inset-0 block h-full w-full select-none"
+        style={{ display: "none" }}
+      />
+      <canvas
         key={backend}
         ref={canvasRef}
-        className="pointer-events-none block h-full w-full select-none"
+        className="pointer-events-none relative block h-full w-full select-none"
       />
       {/* Subtle center vignettes to preserve contrast for centered Hero & About copy */}
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_58%_50%_at_50%_46%,rgba(255,255,255,0.45),rgba(255,255,255,0.14)_65%,transparent_100%)] opacity-100 dark:opacity-0 transition-opacity duration-500 ease-out" />
